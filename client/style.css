@@ -1,0 +1,124 @@
+body{
+  font-family: sans-serif;
+  background-color: #323232;
+}
+input[type=text]{
+  width: 100%;   
+}
+h1, h2, h3, h4, h5{
+  padding: 0;
+  margin: 0;
+}
+hr{
+  border-bottom: 0px solid #275fba;
+  background-color: #275fba;
+  color: #275fba;
+  height: 1px;
+  border: 0;
+}
+canvas{
+  image-rendering: pixelated;
+  imageSmoothingEnabled: false;
+  webkitImageSmoothingEnabled: false;
+}
+a::before{
+  content: "["
+}
+a::after{
+  content: "]"
+}
+a{
+  cursor: pointer;
+  color: white;
+}
+.button{
+  width: 100%;
+  background-color: #275fba;
+  border: 1px solid #275fba;
+  text-align: center;
+}
+.button:hover{
+  border: 1px solid black;
+  cursor: pointer;
+}
+.radio{
+  margin: 0px;
+  background-color: #275fba;
+  border: 1px solid #275fba;
+  text-align: center;
+  display: inline-block;
+}
+.radio:hover{
+  border: 1px solid black;
+  cursor: pointer;
+}
+.radio-active{
+  background-color: lime;
+}
+.name{
+  color: #42d9f4;
+  font-weight: bold;
+}
+.popup{
+  background-color: rgba(0,0,0,0.4); 
+  padding: 4px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-left: auto; 
+  margin-right: auto; 
+}
+#chat_input{
+  background-color: black;
+  color: white;
+  border: none;
+}
+#chat{
+  transition: margin-left 1s;
+}
+#chat.in{
+  margin-left: -370px;
+}
+#chat_msg{
+
+}
+#chat_msg::-webkit-scrollbar {
+  width: 1em;
+}
+
+#chat_msg::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0);
+  transition: background 2s;
+}
+#chat_msg::-webkit-scrollbar-track:hover {
+  background: rgba(0,0,0,0);;
+}
+
+#chat_msg::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+}
+#server_content{
+position:absolute;
+top: 0;
+left: 0;
+width:99%;
+height:99%;
+color: white; 
+padding: 0px;
+margin: 0px;
+}
+#game_config{
+position:absolute;
+top: 0;
+left: 0;
+right: 0;
+padding: 0px;
+margin: 0px;
+}
+#game_config table tr th{
+background-color: orange;
+}
+#game_config table tr td{
+background-color: orange;
+}

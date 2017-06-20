@@ -1,0 +1,18 @@
+{
+  "version":"0.1",
+  "servername":"Offical Test Server!",
+  "motd":"This is a test server!",
+  "max_players":20,
+  "port":5000,
+  "damage":{
+    "burn": 0.05
+  },
+  "bucket":{
+    "width":16,
+    "height":16
+  },
+  "player":{
+    "walkSpeed": 1.5
+  },
+  "enableAtmos": true 
+}

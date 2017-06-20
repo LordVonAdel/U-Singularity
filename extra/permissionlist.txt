@@ -1,0 +1,11 @@
+world.save
+world.load
+world.clear
+world.edit.spawn
+master.player.burn
+master.player.give
+master.player.teleport
+master.player.noclip
+master.gamemode.start
+admin.reload
+cmd.ping

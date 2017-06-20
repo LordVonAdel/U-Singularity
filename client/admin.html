@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="style.css">
+    <title>Singularity Client - Admin / Debug Page</title>
+    <script src="jquery.js"></script>
+    <script src="url_par.js"></script>
+    <script src="widgets.js"></script>
+    <script src="misc.js"></script>
+    <script src="draw.js"></script>
+    <script src="popup.js"></script>
+    <script src="gamemode.js"></script>
+    <script src="socket.io/socket.io.js"></script>
+    <!--<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>-->
+    <script src="grid.js"></script>
+    <script src="world.js"></script>
+    <script src="ent.js"></script>
+    <script src="input.js"></script>
+    <script src="player.js"></script>
+    <script src="resources.js"></script>
+    <script src="init.js"></script>
+
+    <script src="admin.js"></script>
+
+    <script src="mainloop.js"></script>
+  </head>
+  <body style="margin:0px; padding: 0px;" oncontextmenu="return false;">
+    <canvas id="canvas" style="margin:0px">
+    </canvas>
+    
+    <div style="position:fixed; top:0px;left:0px; color: white" id="info_panel">
+      <br>
+      Infos:<br>
+      FPS: <span id="fps"></span><br>
+      Mouse Position(UI): <span id="mouse_position_ui"></span><br>
+      Mouse Position(World): <span id="mouse_position_world"></span><br>
+      Mouse Bucket: <span id="mouse_bucket"></span><br>
+    </div>
+    
+    <div id="server_content">
+    
+    </div>
+    <div id="chat" style="position:fixed; width:400px; top:10%; left:0px; background-color: rgba(0,0,0,0.4); color: white; height:80%">
+      <a style="float: right" onclick="$(this).parent().toggleClass('in')"><-</a>
+      <div id="chat_msg" style="height: 100%; overflow-y: vertical; overflow-x: hidden;"></div>
+      <input type="text" id="chat_input" style="width:100%; float:bottom;"></input>
+    </div>
+  </body>
+</html>

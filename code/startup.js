@@ -1,0 +1,1 @@
+wrd.load("maps/lab.json");
