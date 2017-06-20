@@ -61,6 +61,6 @@ var update = function(delta) {
 }
 setInterval(function(){
   playerlist.forEach(function(value){
-   value.share();
+    value.share();
   });
 },1000)

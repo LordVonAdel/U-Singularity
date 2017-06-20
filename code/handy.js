@@ -1,3 +1,5 @@
+//some handy misc functions
+
 module.exports = {
   broadcast: function(event,data){
     //console.log("Broadcast: "+event)

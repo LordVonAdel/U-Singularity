@@ -189,10 +189,10 @@ objects: { //-----------------------Objects-----------------------------
   fire_ext_box: {"image":"objects/fire_extinguisher_box.png", "image_number":2, "image_index":0, "collision":false,
                 "sync":{item: null},
                 "onInit":function(ent){ent.sync.item = new loader.Item("fire_ext")},
-                "onClick":function(user,ent){if (ent.sync.item != null && user.inventory[user.inventory_active]==null){user.inventory[user.inventory_active] = ent.sync.item;ent.sync.item = null; ent.image_index = 1; ent.share(); user.share();}},
+                "onClick":function(user,ent){if (ent.sync.item != null && user.inventory[user.inventoryActive]==null){user.inventory[user.inventoryActive] = ent.sync.item;ent.sync.item = null; ent.image_index = 1; ent.share(); user.share();}},
                 "onUpdate":function(ent){if(ent.sync.item == null){ent.image_index = 1}else{ent.image_index = 0}; ent.share()},
                 "actions":{
-                  "fire_ext_box":function(user,ent,item){if (ent.sync.item == null){ent.sync.item = user.inventory[user.inventory_active]; user.inventory[user.inventory_active] = null; ent.image_index = 0; ent.share(); user.share()}}
+                  "fire_ext_box":function(user,ent,item){if (ent.sync.item == null){ent.sync.item = user.inventory[user.inventoryActive]; user.inventory[user.inventoryActive] = null; ent.image_index = 0; ent.share(); user.share()}}
                   }
                 }
 }

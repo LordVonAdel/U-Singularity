@@ -15,8 +15,8 @@ tiles: {},
       "sync":{item: null},
       "image":"items/item_crowbar.png",
       "onClick":function(sender,ent){
-        if(sender.inventory[sender.inventory_active] == null){
-          sender.inventory[sender.inventory_active] = ent.sync.item;
+        if(sender.inventory[sender.inventoryActive] == null){
+          sender.inventory[sender.inventoryActive] = ent.sync.item;
           sender.share();
           ent.destroy();
         }

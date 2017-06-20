@@ -18,7 +18,7 @@ function Player(socket){
   this.job = "phy";
   this.burning = false;
   this.hands = 9;
-  this.inventory_active = 0;
+  this.inventoryActive = 0;
   this.handRange = 1; //in tiles
   this.noclip = false;
   this.permissions = ['admin.*','world.load'] //test permissions
@@ -29,6 +29,7 @@ function Player(socket){
   for(var i=0; i<this.hands; i++){
     inv[i] = null;
   }
+  //giving the player the start items
   inv[0] = new loader.Item("metal");
   inv[1] = new loader.Item("crowbar");
   inv[2] = new loader.Item("glass");
@@ -67,15 +68,15 @@ function Player(socket){
   });
   socket.on('inv_active',function(data){
     if (data.slot < that.hands){
-      that.inventory_active = data.slot;
+      that.inventoryActive = data.slot;
     }
   });
   socket.on('useOnFloor',function(data){
     if (that.config){
       var xx = data.x;
       var yy = data.y;
-      if (that.inventory[that.inventory_active] != null){
-        var fun = res.actions[res.items[that.inventory[that.inventory_active].type].onUseFloor];
+      if (that.inventory[that.inventoryActive] != null){
+        var fun = res.actions[res.items[that.inventory[that.inventoryActive].type].onUseFloor];
         if (Math.hypot(xx-that.tileX, yy-that.tileY)<that.handRange+1){
           if (fun != undefined){
             fun(xx,yy,that);
@@ -83,25 +84,25 @@ function Player(socket){
         }
       }
     }
-    //console.log(that.name+" used "+res.items[that.inventory[that.inventory_active].type].name+" on the floor at: "+xx+", "+yy);
-    //console.log("-> action: "+     res.items[that.inventory[that.inventory_active].type].onUseFloor);
+    //console.log(that.name+" used "+res.items[that.inventory[that.inventoryActive].type].name+" on the floor at: "+xx+", "+yy);
+    //console.log("-> action: "+     res.items[that.inventory[that.inventoryActive].type].onUseFloor);
   });
   socket.on('disconnect',function(data){
     console.log("[Server]"+that.name+" disconnected!");
     that.disconnect();
   });
   socket.on('drop',function(data){
-    var itm = that.inventory[that.inventory_active];
+    var itm = that.inventory[that.inventoryActive];
     if (!wrd.collisionCheck(data.x,data.y)){
       if (itm != null){
         spawn.item(data.x,data.y,itm);
-        that.inventory[that.inventory_active] = null;
+        that.inventory[that.inventoryActive] = null;
         that.share();
       }
     }
   });
   socket.on('ent_click',function(data){
-    var itm = that.inventory[that.inventory_active];
+    var itm = that.inventory[that.inventoryActive];
     if (itm == null){itm={type:"hand"}}
     var ent = wrd.ents[data.id];
     if (ent != undefined){

@@ -9,7 +9,7 @@ function Player(socket){
  this.speed = 3;
  this.socket = socket;
  this.hands = 9;         //the number of hands the player have
- this.inventory_active = 0;
+ this.inventoryActive = 0;
  this.drag = false;
  
  //this.pawn = undefined;
@@ -39,15 +39,15 @@ function Player(socket){
       }
     }
     if (mouseWheelUp()){
-      this.inventory_active = (this.inventory_active + 1) % this.hands; 
-      this.socket.emit('inv_active',{slot: this.inventory_active});
+      this.inventoryActive = (this.inventoryActive + 1) % this.hands; 
+      this.socket.emit('inv_active',{slot: this.inventoryActive});
     }
     if (mouseWheelDown()){
-      this.inventory_active -= 1;
-      if (this.inventory_active < 0){
-        this.inventory_active = this.hands-1;
+      this.inventoryActive -= 1;
+      if (this.inventoryActive < 0){
+        this.inventoryActive = this.hands-1;
       }
-      this.socket.emit('inv_active',{slot: this.inventory_active});
+      this.socket.emit('inv_active',{slot: this.inventoryActive});
     }
     if (keyboardCheckPressed(input.DROP)){
       var tx = Math.floor(mouseX/32);
@@ -60,13 +60,13 @@ function Player(socket){
     var i;
     if (this.pawn != undefined){
       for(i=0; i<this.hands; i++){
-        drawSprite(1000,sprites[(i == this.inventory_active)*1],view_width/2-(this.hands*32/2)+32*i,view_height-32);
+        drawSprite(1000,sprites[(i == this.inventoryActive)*1],view_width/2-(this.hands*32/2)+32*i,view_height-32);
         if(this.pawn.inventory[i] != null){
           drawItem(1000,this.pawn.inventory[i],view_width/2-(this.hands*32/2)+32*i,view_height-32);
         }
       }
-      if (this.pawn.inventory[this.inventory_active] != null){
-        drawText(1000,res.items[this.pawn.inventory[this.inventory_active].type].name,0,view_height-16,"#FFFFFF")
+      if (this.pawn.inventory[this.inventoryActive] != null){
+        drawText(1000,res.items[this.pawn.inventory[this.inventoryActive].type].name,0,view_height-16,"#FFFFFF")
       }
     }
     var xx = view_width/2-(this.hands*32/2)+32*i+16;
