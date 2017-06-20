@@ -1,7 +1,7 @@
 # U-Singularity
 A cooperative web game
 
-##The Idea
+## The Idea
 In this game you play a scientist who works with other players on an experiment. The experiment failed and everything is burning and exploding.
 Can you escape with the other players?
 
