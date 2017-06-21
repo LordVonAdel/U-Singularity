@@ -150,6 +150,7 @@ cam = player;
 var lastTime = new Date;
 
 $(document).ready(function(){
+  initRenderer();
 
   //$("#chat_msg").mCustomScrollbar();
 

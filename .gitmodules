@@ -1,3 +1,0 @@
-[submodule "client/lib/pixi.js"]
-	path = client/lib/pixi.js
-	url = https://github.com/pixijs/pixi.js.git

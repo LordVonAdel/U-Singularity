@@ -103,6 +103,7 @@ function Grid(width,height){
     }
   }
 }
+
 function World(){
   that = this;
   this.width = 100;
@@ -266,7 +267,8 @@ function World(){
     })
   }
   console.log("[World]Initalized World");
-  console.log("[World]Using "+this.buckets.width*this.buckets.height+" buckets");
+  console.log("[World]Using "+this.buckets.width+"x"+this.buckets.height+" ("+this.buckets.width*this.buckets.height+") buckets");
 }
+
 module.exports.Grid = Grid;
 module.exports.World = World;

@@ -48,6 +48,7 @@ function gameLoop()
 
   //draw
   drawAll();
+  renderLoop();
 
 //repeat!
   requestAnimationFrame(gameLoop);
