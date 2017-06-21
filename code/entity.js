@@ -45,10 +45,10 @@ module.exports.Entity = function(type,tx,ty){
       this.event_onclick(user,this);
     }
     var that = this;
-    var item_type = res.items[item.type];
-    if (item_type != undefined){
-      if (item_type.actions != undefined && this.ent != undefined){
-        item_type.actions.forEach(function(value){
+    var itemType = res.items[item.type];
+    if (itemType != undefined){
+      if (itemType.actions != undefined && this.ent != undefined){
+        itemType.actions.forEach(function(value){
           if (that.ent.actions != undefined)
             if (that.ent.actions[value] != undefined){
               that.ent.actions[value](user,that,item)

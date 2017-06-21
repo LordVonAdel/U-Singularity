@@ -14,6 +14,11 @@ function gameLoop()
   mouseX = (mouseX_ui/view_zoom + viewX);
   mouseY = (mouseY_ui/view_zoom + viewY);
 
+  stageWorld.pivot.x = viewX;
+  stageWorld.pivot.y = viewY;
+  stageWorld.scale.x = renderer.width / view_width;
+  stageWorld.scale.y = renderer.height / view_height;
+
   //player
   player.step();
   player.draw();
@@ -48,6 +53,7 @@ function gameLoop()
 
   //draw
   drawAll();
+  renderLoop();
 
 //repeat!
   requestAnimationFrame(gameLoop);

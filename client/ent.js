@@ -1,6 +1,5 @@
 function Entity(id,x,y,image){
   this.image = image;
-  this.sprite = Sprite(subfolder+"sprites/"+image);
   this.x = x;
   this.y = y;
   this.tx = Math.floor(x/32);
@@ -12,6 +11,14 @@ function Entity(id,x,y,image){
   this.image_width = 32;
   this.image_height = 32;
   this.layer = 10;
+
+  var tex = getTextureFrame(subfolder+"sprites/"+image,0,32,32);
+  this.sprite = new PIXI.Sprite(tex);
+
+  this.sprite.x = this.x;
+  this.sprite.y = this.y;
+
+  stageEntities.addChild(this.sprite);
 }
 
 Entity.prototype.update = function(data){
@@ -24,7 +31,7 @@ Entity.prototype.update = function(data){
     this.ty = Math.floor(data.y/32);
   }
   if (data.image != undefined){
-    this.sprite = Sprite(subfolder+"sprites/"+data.image);
+    //this.sprite = Sprite(subfolder+"sprites/"+data.image);
   }
   if (this.tile){
     world.cellSetOverwrite(this.tx,this.ty,this.tile)
@@ -32,6 +39,9 @@ Entity.prototype.update = function(data){
 }
 
 Entity.prototype.step = function(){
+  this.sprite.x = this.x;
+  this.sprite.y = this.y;
+  
   drawSpritePart(this.layer,this.sprite,this.x,this.y,this.image_index*this.image_width,0,this.image_width,this.image_height);
   if (mouseOver(this.x,this.y,this.x+32,this.y+32,this)){
     if (mouseCheckPressed(0)){

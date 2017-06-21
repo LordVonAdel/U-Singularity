@@ -1,6 +1,92 @@
-sprites = {};
+function initRenderer(){
 
-function Sprite(source){
+  var type = PIXI.utils.isWebGLSupported() ? "WebGL" : "canvas";
+  PIXI.utils.sayHello(type);
+
+  renderer = PIXI.autoDetectRenderer(256, 256);
+  //document.body.appendChild(renderer.view);
+  document.body.insertBefore(renderer.view,document.body.firstChild);
+
+  stage = new PIXI.Container();
+  stageUI = new PIXI.Container();
+  stageWorld = new PIXI.Container();
+  stageEntities = new PIXI.Container();
+
+  stage.addChild(stageUI);
+  stage.addChild(stageWorld);
+  stageWorld.addChild(stageEntities);
+
+  renderer.render(stage);
+
+  renderer.view.style.position = "absolute";
+  renderer.view.style.display = "block";
+  renderer.autoResize = true;
+  renderer.resize(window.innerWidth, window.innerHeight);
+
+  var message = new PIXI.Text("Hello There!",{fontFamily: "Arial", fontSize: 32, fill: "white"});
+  stageUI.addChild(message);
+}
+
+function renderLoop(){
+  renderer.resize(window.innerWidth, window.innerHeight);
+  renderer.render(stage);
+}
+
+/*
+var toLoad = [];
+var isLoading = false; 
+
+function loadResources(){
+  if (isLoading == false){
+    isLoading = true;
+    PIXI.loader.add(toLoad).load((loader, res)=>{
+      console.log("Loading sprites... Progress:", Math.round(loader.progress));
+      for (k in res){
+        sprites[res[k].name] = res[k];
+      }
+    }).once('complete',()=>{
+      if (toLoad.length > 0){
+        //some new things to load are added to the que
+        isLoading = false;
+        loadResources();
+      }else{
+        console.log("Everything loaded!");
+        isLoading = false;
+      }
+    });
+    toLoad = [];
+  }
+}
+*/
+
+sprites = {};
+textures = {};
+
+function getTexture(source){
+  if (textures[source] != undefined){
+    return textures[source];
+  }
+  var tex = PIXI.Texture.fromImage(source);
+  textures[source] = tex;
+
+  console.log("[Load]Texture: "+source);
+
+  return textures[source];
+}
+
+function getTextureFrame(source,index,width,height){
+  if (textures[source+":"+index] != undefined){
+    return textures[source+":"+index];
+  }
+  tex = getTexture(source);
+  var len = tex.baseTexture.width / tex.baseTexture.height;
+  textures[source+":"+index] = new PIXI.Texture(tex);
+  textures[source+":"+index].frame = new PIXI.Rectangle(width*index, 0, width, height);
+  return textures[source+":"+index];
+}
+
+function Sprite(source){ 
+  /*
   if (sprites[source] != undefined){
     return sprites[source];
   }else{
@@ -17,6 +103,7 @@ function Sprite(source){
     sprites[source] = spr;
     return spr;
   }
+  */
 }
 function drawSprite(depth,sprite,x,y){
   if (!Array.isArray(draw_pipe[depth])){
@@ -83,7 +170,7 @@ function draw(){
         if (obj.type == "sprite"){
           if (obj.sprite != undefined){
             if (obj.sprite.init){
-            ctx.drawImage(obj.sprite.img,xx,yy);
+              ctx.drawImage(obj.sprite.img,xx,yy);
             }
           }
         }
