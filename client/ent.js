@@ -39,6 +39,9 @@ Entity.prototype.update = function(data){
 }
 
 Entity.prototype.step = function(){
+  this.sprite.x = this.x;
+  this.sprite.y = this.y;
+  
   drawSpritePart(this.layer,this.sprite,this.x,this.y,this.image_index*this.image_width,0,this.image_width,this.image_height);
   if (mouseOver(this.x,this.y,this.x+32,this.y+32,this)){
     if (mouseCheckPressed(0)){

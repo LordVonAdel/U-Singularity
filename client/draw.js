@@ -4,7 +4,8 @@ function initRenderer(){
   PIXI.utils.sayHello(type);
 
   renderer = PIXI.autoDetectRenderer(256, 256);
-  document.body.appendChild(renderer.view);
+  //document.body.appendChild(renderer.view);
+  document.body.insertBefore(renderer.view,document.body.firstChild);
 
   stage = new PIXI.Container();
   stageUI = new PIXI.Container();
