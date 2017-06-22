@@ -9,52 +9,7 @@ function Player() {
   this.hands = 9;         //the number of hands the player have
   this.inventoryActive = 0;
   this.drag = false;
-
-  //this.pawn = undefined;
-  this.step = function () {
-    var speed = player.speed;
-    this.pawn = players[this.id];
-    if (!chat_is_open) {
-      if (keyboardCheck(input.UP)) {
-        socket.emit('move', { dir: 1 })
-      }
-      if (keyboardCheck(input.RIGHT)) {
-        socket.emit('move', { dir: 0 })
-      }
-      if (keyboardCheck(input.DOWN)) {
-        socket.emit('move', { dir: 3 })
-      }
-      if (keyboardCheck(input.LEFT)) {
-        socket.emit('move', { dir: 2 })
-      }
-      //drawSprite(2,player.sprite,player.x,player.y);
-    }
-    if (mouseCheckPressed(0)) {
-      var tx = Math.floor(mouseX / 32);
-      var ty = Math.floor(mouseY / 32);
-      if (input.hlast == null) {
-        socket.emit('useOnFloor', { x: tx, y: ty });
-      }
-    }
-    if (mouseWheelUp()) {
-      this.inventoryActive = (this.inventoryActive + 1) % this.hands;
-      socket.emit('inv_active', { slot: this.inventoryActive });
-      this.updateUI();
-    }
-    if (mouseWheelDown()) {
-      this.inventoryActive -= 1;
-      if (this.inventoryActive < 0) {
-        this.inventoryActive = this.hands - 1;
-      }
-      socket.emit('inv_active', { slot: this.inventoryActive });
-      this.updateUI();
-    }
-    if (keyboardCheckPressed(input.DROP)) {
-      var tx = Math.floor(mouseX / 32);
-      var ty = Math.floor(mouseY / 32);
-      socket.emit('drop', { x: tx, y: ty });
-    }
-  }
+  this.pawn = null;
 
   this.hudInventorySlots = [];
   this.hudInventoryItems = [];
@@ -83,84 +38,109 @@ function Player() {
   this.hudCurrentItemText = new PIXI.Text('',{fontFamily : 'Arial', fontSize: 28, fill : 0xffffff, align : 'left', stroke: 0x000000, strokeThickness: 2});
   stageUI.addChild(this.hudCurrentItemText);
 
-  this.updateUI = function(){
-    //slot sprite
-    var texSlot = getTexture("sprites/ui/ui_inventory_slot.png");
-    var texSlotActive = getTexture("sprites/ui/ui_inventory_slot_active.png");
-
-    var s = config.uiScale * 2 * 32; //size in pixel (width & height)
-
-
-    for (i = 0; i < this.hands; i++) {
-      var sprite = this.hudInventorySlots[i];
-      sprite.scale.x = config.uiScale * 2;
-      sprite.scale.y = config.uiScale * 2;
-      sprite.x = (renderer.screen.width) / 2 - (this.hands * s / 2) + s * i;
-      sprite.y = (renderer.screen.height) - s;
-      if (i == this.inventoryActive){
-        sprite.setTexture(texSlotActive);
-      }else{
-        sprite.setTexture(texSlot);
-      }
-
-      //item sprite
-      var sprite = this.hudInventoryItems[i];
-      var s = config.uiScale * 2 * 32; //size in pixel (width & height)
-      sprite.scale.x = config.uiScale * 2;
-      sprite.scale.y = config.uiScale * 2;
-      sprite.x = renderer.screen.width / 2 - (this.hands * s / 2) + s * i;
-      sprite.y = renderer.screen.height - s;
-      if (this.inventory[i] == null){
-        sprite.setTexture(PIXI.Texture.EMPTY);
-      }else{
-        var url = "sprites/"+res.items[this.inventory[i].type].sprite;
-        sprite.setTexture(getTexture(url));
-      }
-    }
-
-    if (this.inventory[this.inventoryActive] != null){
-      this.hudCurrentItemText.text = res.items[this.inventory[this.inventoryActive].type].name;
-    }else{
-      this.hudCurrentItemText.text = "";
-    }
-    this.hudCurrentItemText.x = 0;
-    this.hudCurrentItemText.y = renderer.screen.height - 32;
-
-    this.hudDragContainer.x = renderer.screen.width / 2 - (this.hands * s / 2) + s * this.hands + 96;
-    this.hudDragContainer.y = renderer.screen.height - s;
-    this.hudDragContainer.scale.x = config.uiScale * 2;
-    this.hudDragContainer.scale.y = config.uiScale * 2;
-    this.hudDragContainer.visible = this.drag;
-  }
-
   this.updateUI();
+}
 
-  this.draw = function () {
-    /*var sprites = [spr_ui_inventory_slot, spr_ui_inventory_slot_active];
-    var i;
-    if (this.pawn != undefined) {
-      for (i = 0; i < this.hands; i++) {
-        drawSprite(1000, sprites[(i == this.inventoryActive) * 1], view_width / 2 - (this.hands * 32 / 2) + 32 * i, view_height - 32);
-        if (this.pawn.inventory[i] != null) {
-          drawItem(1000, this.pawn.inventory[i], view_width / 2 - (this.hands * 32 / 2) + 32 * i, view_height - 32);
-        }
-      }
-      if (this.pawn.inventory[this.inventoryActive] != null) {
-        drawText(1000, res.items[this.pawn.inventory[this.inventoryActive].type].name, 0, view_height - 16, "#FFFFFF")
-      }
+Player.prototype.step = function () {
+  var speed = player.speed;
+  this.pawn = players[this.id];
+  if (!chat_is_open) {
+    if (keyboardCheck(input.UP)) {
+      socket.emit('move', { dir: 1 })
     }
-    var xx = view.width / 2 - (this.hands * 32 / 2) + 32 * i + 16;
-    if (this.drag) {
-      drawSprite(1000, sprites[0], xx, view.height - 32);
-      drawText(1000, "Drag", xx, view.height - 24, "#ffffff");
-    }*/
+    if (keyboardCheck(input.RIGHT)) {
+      socket.emit('move', { dir: 0 })
+    }
+    if (keyboardCheck(input.DOWN)) {
+      socket.emit('move', { dir: 3 })
+    }
+    if (keyboardCheck(input.LEFT)) {
+      socket.emit('move', { dir: 2 })
+    }
+    //drawSprite(2,player.sprite,player.x,player.y);
   }
+  if (mouseCheckPressed(0)) {
+    var tx = Math.floor(mouseX / 32);
+    var ty = Math.floor(mouseY / 32);
+    if (input.hlast == null) {
+      socket.emit('useOnFloor', { x: tx, y: ty });
+    }
+  }
+  if (mouseWheelUp()) {
+    this.inventoryActive = (this.inventoryActive + 1) % this.hands;
+    socket.emit('inv_active', { slot: this.inventoryActive });
+    this.updateUI();
+  }
+  if (mouseWheelDown()) {
+    this.inventoryActive -= 1;
+    if (this.inventoryActive < 0) {
+      this.inventoryActive = this.hands - 1;
+    }
+    socket.emit('inv_active', { slot: this.inventoryActive });
+    this.updateUI();
+  }
+  if (keyboardCheckPressed(input.DROP)) {
+    var tx = Math.floor(mouseX / 32);
+    var ty = Math.floor(mouseY / 32);
+    socket.emit('drop', { x: tx, y: ty });
+  }
+}
+
+Player.prototype.updateUI = function(){
+  //slot sprite
+  var texSlot = getTexture("sprites/ui/ui_inventory_slot.png");
+  var texSlotActive = getTexture("sprites/ui/ui_inventory_slot_active.png");
+
+  var s = config.uiScale * 2 * 32; //size in pixel (width & height)
+
+
+  for (i = 0; i < this.hands; i++) {
+    var sprite = this.hudInventorySlots[i];
+    sprite.scale.x = config.uiScale * 2;
+    sprite.scale.y = config.uiScale * 2;
+    sprite.x = (renderer.screen.width) / 2 - (this.hands * s / 2) + s * i;
+    sprite.y = (renderer.screen.height) - s;
+    if (i == this.inventoryActive){
+      sprite.setTexture(texSlotActive);
+    }else{
+      sprite.setTexture(texSlot);
+    }
+
+    //item sprite
+    var sprite = this.hudInventoryItems[i];
+    var s = config.uiScale * 2 * 32; //size in pixel (width & height)
+    sprite.scale.x = config.uiScale * 2;
+    sprite.scale.y = config.uiScale * 2;
+    sprite.x = renderer.screen.width / 2 - (this.hands * s / 2) + s * i;
+    sprite.y = renderer.screen.height - s;
+    if (this.inventory[i] == null){
+      sprite.setTexture(PIXI.Texture.EMPTY);
+    }else{
+      var url = "sprites/"+res.items[this.inventory[i].type].sprite;
+      sprite.setTexture(getTexture(url));
+    }
+  }
+
+  if (this.inventory[this.inventoryActive] != null){
+    this.hudCurrentItemText.text = res.items[this.inventory[this.inventoryActive].type].name;
+  }else{
+    this.hudCurrentItemText.text = "";
+  }
+  this.hudCurrentItemText.x = 0;
+  this.hudCurrentItemText.y = renderer.screen.height - 32;
+
+  this.hudDragContainer.x = renderer.screen.width / 2 - (this.hands * s / 2) + s * this.hands + 96;
+  this.hudDragContainer.y = renderer.screen.height - s;
+  this.hudDragContainer.scale.x = config.uiScale * 2;
+  this.hudDragContainer.scale.y = config.uiScale * 2;
+  this.hudDragContainer.visible = this.drag;
 }
 
 Player.prototype.getActiveItem = function(){
   return this.inventory[this.inventoryActive];
 }
 
+/*
 function Pawn() {
   this.id = 0;
   this.inventory = {};
@@ -201,3 +181,4 @@ function Pawn() {
     }
   }
 }
+*/

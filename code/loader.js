@@ -34,6 +34,10 @@ tiles: {},
         }
       },
       "actions":{}
+    },
+    "player":{
+      "image":"chars/char_chemist_f.png",
+      "actions": {}
     }
   }
 }

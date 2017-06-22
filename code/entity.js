@@ -1,4 +1,4 @@
-module.exports.Entity = function(type,tx,ty){
+function Entity(type,tx,ty){
   this.id = nextEntId;
   this.ent = res.objects[type];
   if (this.ent == undefined){
@@ -25,123 +25,140 @@ module.exports.Entity = function(type,tx,ty){
   if (this.ent.oninit != undefined){
     this.ent.onInit(this);
   }
-  this.step = function(delta){
-    if (this.ent.onStep != undefined){
-      this.ent.onStep(this);
-    }
-    if (this.x != this.tx*32 || this.y != this.ty*32){
-      this.x = handy.transition(this.x,this.tx*32,this.dragSpeed*(delta*100),0)
-      this.y = handy.transition(this.y,this.ty*32,this.dragSpeed*(delta*100),0)
-      this.share({x:this.x, y:this.y});
-    }
-  }
-  this.animate = function(){
-    if (this.ent.onAnimation != undefined){
-     this.ent.onAnimation(this);
-    }
-  }
-  this.use = function(user,item){
-    if (this.event_onclick){
-      this.event_onclick(user,this);
-    }
-    var that = this;
-    var itemType = res.items[item.type];
-    if (itemType != undefined){
-      if (itemType.actions != undefined && this.ent != undefined){
-        itemType.actions.forEach(function(value){
-          if (that.ent.actions != undefined)
-            if (that.ent.actions[value] != undefined){
-              that.ent.actions[value](user,that,item)
-            }
-          if (value == "destroy"){
-            that.destroy();
-          }
-        });
-      }
-    }
-  }
-  this.changeImage = function(image){
-    this.image = image;
-    this.share({image: image, image_number: this.image_number, image_index: this.image_index, image_number: this.image_number});
-  }
-  this.share = function(data){
-    if (data){
-      var obj = Object.assign({id: this.id},data)
-    }else{
-      var obj = this.getClientData();
-    }
-    if (this.bucket != null){
-      this.bucket.broadcastArea('ent_data',obj);
-    }else{
-      handy.broadcast('ent_data',obj);
-    }
-  }
-  this.update = function(){
-    this.updateBucket();
-    if (this.ent.onUpdate){
-      this.ent.onUpdate(this);
-    }
-    if (this.collision){
-      wrd.collisionAdd(tx,ty,this);
-    }else{
-      wrd.collisionFree(tx,ty,this);
-    }
-  }
-  this.destroy = function(){
-    wrd.collisionFree(tx,ty,this);
-    delete wrd.ents[this.id];
-    handy.broadcast('ent_destroy',{id: this.id});
-    this.bucket.removeObject(this);
-  }
-  this.moveDir = function(direction,speed){
-    var x = this.tx;
-    var y = this.ty;
-    switch (direction){
-      case 0: x+= 1; break;
-      case 1: y-= 1; break;
-      case 2: x-= 1; break;
-      case 3: y+= 1; break;
-    }
-    return this.moveTo(x,y,speed);
-  }
-  this.moveTo = function(x,y,speed){
-    this.dragSpeed = speed;
-    var c = this.move(x,y);
-    this.share();
-    return c;
-  }
-  this.move = function(x,y){
-    if (wrd.collisionCheck(x,y) == []){
-      if (this.collision){
-        wrd.collisionFree(this.tx,this.ty,this);
-        wrd.collisionAdd(x,y,this);
-      }
-      this.tx = x;
-      this.ty = y;
-      this.updateBucket();
-      return true;
-    }else{
-      return false;
-    }
-  }
-  //this.update();
-  
+
   wrd.ents[nextEntId] = this;
   nextEntId ++;
-  this.getClientData = function(){
-    if (this.ent.tile != {}){
-      return {x:this.x, y:this.y, image: this.image, id: this.id, image_index: this.image_index, image_number: this.image_number, layer: this.layer, tile: this.ent.tile}
-    }else{
-      return {x:this.x, y:this.y, image: this.image, id: this.id, image_index: this.image_index, image_number: this.image_number, layer: this.layer} 
+
+  this.updateBucket();
+}
+
+Entity.prototype.step = function(delta){
+  if (this.ent.onStep != undefined){
+    this.ent.onStep(this);
+  }
+  if (this.x != this.tx*32 || this.y != this.ty*32){
+    this.x = handy.transition(this.x,this.tx*32,this.dragSpeed*(delta*100),0)
+    this.y = handy.transition(this.y,this.ty*32,this.dragSpeed*(delta*100),0)
+    this.share({x:this.x, y:this.y});
+  }
+}
+
+Entity.prototype.animate = function(){
+  if (this.ent.onAnimation != undefined){
+    this.ent.onAnimation(this);
+  }
+}
+
+Entity.prototype.use = function(user,item){
+  if (this.event_onclick){
+    this.event_onclick(user,this);
+  }
+  var that = this;
+  var itemType = res.items[item.type];
+  if (itemType != undefined){
+    if (itemType.actions != undefined && this.ent != undefined){
+      itemType.actions.forEach(function(value){
+        if (that.ent.actions != undefined)
+          if (that.ent.actions[value] != undefined){
+            that.ent.actions[value](user,that,item)
+          }
+        if (value == "destroy"){
+          that.destroy();
+        }
+      });
     }
   }
-  this.spawn = function(){
-    handy.broadcast('ent_spawn',this.getClientData())
+}
+
+Entity.prototype.changeImage = function(image){
+  this.image = image;
+  this.share({image: image, image_number: this.image_number, image_index: this.image_index, image_number: this.image_number});
+}
+
+Entity.prototype.share = function(data){
+  if (data){
+    var obj = Object.assign({id: this.id},data)
+  }else{
+    var obj = this.getClientData();
   }
-  this.updateBucket = function(){
-    this.changeBucket(wrd.buckets.cellGet(Math.floor(this.tx/config.bucket.width),Math.floor(this.ty/config.bucket.height)));
+  if (this.bucket != null){
+    this.bucket.broadcastArea('ent_data',obj);
+  }else{
+    handy.broadcast('ent_data',obj);
   }
-  this.changeBucket = function(bucket){
+}
+
+Entity.prototype.update = function(){
+  this.updateBucket();
+  if (this.ent.onUpdate){
+    this.ent.onUpdate(this);
+  }
+  if (this.collision){
+    wrd.collisionAdd(this.tx,this.ty,this);
+  }else{
+    wrd.collisionFree(this.tx,this.ty,this);
+  }
+}
+
+Entity.prototype.destroy = function(){
+  wrd.collisionFree(tx,ty,this);
+  delete wrd.ents[this.id];
+  handy.broadcast('ent_destroy',{id: this.id});
+  this.bucket.removeObject(this);
+}
+
+Entity.prototype.moveDir = function(direction,speed){
+  var x = this.tx;
+  var y = this.ty;
+  switch (direction){
+    case 0: x+= 1; break;
+    case 1: y-= 1; break;
+    case 2: x-= 1; break;
+    case 3: y+= 1; break;
+  }
+  return this.moveTo(x,y,speed);
+}
+
+Entity.prototype.moveTo = function(x,y,speed){
+  this.dragSpeed = speed;
+  var c = this.move(x,y);
+  this.share();
+  return c;
+}
+
+Entity.prototype.move = function(x,y){
+  if (wrd.collisionCheck(x,y) == []){
+    if (this.collision){
+      wrd.collisionFree(this.tx,this.ty,this);
+      wrd.collisionAdd(x,y,this);
+    }
+    this.tx = x;
+    this.ty = y;
+    this.updateBucket();
+    return true;
+  }else{
+    return false;
+  }
+}
+
+Entity.prototype.getClientData = function(){
+  if (this.ent.tile != {}){
+    return {x:this.x, y:this.y, image: this.image, id: this.id, image_index: this.image_index, image_number: this.image_number, layer: this.layer, tile: this.ent.tile}
+  }else{
+    return {x:this.x, y:this.y, image: this.image, id: this.id, image_index: this.image_index, image_number: this.image_number, layer: this.layer} 
+  }
+}
+
+Entity.prototype.spawn = function(){
+  handy.broadcast('ent_spawn',this.getClientData());
+}
+
+Entity.prototype.updateBucket = function(){
+  this.changeBucket(wrd.buckets.cellGet(Math.floor(this.tx/config.bucket.width),Math.floor(this.ty/config.bucket.height)));
+}
+
+Entity.prototype.changeBucket = function(bucket){
+  if (bucket != undefined){
     if (this.bucket != bucket){
       bucket.addObject(this);
       if (this.bucket != null){
@@ -150,5 +167,6 @@ module.exports.Entity = function(type,tx,ty){
       this.bucket = bucket;
     }
   }
-  this.updateBucket();
 }
+
+module.exports.Entity = Entity;

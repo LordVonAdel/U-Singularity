@@ -7,11 +7,19 @@ function initNetworking(){
     socket.emit('welcome',{});
   });
 
+  /*
   socket.on('player_joined',function(data){
     console.log("A player joined the game!");
-    var pawn = new Pawn();
+    //var pawn = new Pawn();
     players[data.id] = pawn;
     pawn.id = data.id;
+  });*/
+  socket.on('cam',function(data){
+    camId = data;
+    var ent = ents[data];
+    if (ent != undefined){
+      cam = ent;
+    }
   });
 
   socket.on('player_move',function(data){
@@ -76,9 +84,10 @@ function initNetworking(){
     world.grid.loadRegion(data.str,data.x,data.y,data.w);
   });
 
+  /*
   socket.on('disc',function(data){
     delete players[data.id]; //player disconnected
-  });
+  });*/
 
   socket.on('ent_spawn',function(data){
     var ent = new Entity(data.id,data.x,data.y,data.image,data.image_number,data.image_index,data.tile)

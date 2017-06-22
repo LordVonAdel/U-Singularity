@@ -19,6 +19,7 @@ spr_chars["phy_f"] = Sprite(subfolder+"sprites/chars/char_physicist_f.png");
 draw_pipe = [];
 
 cam = null;
+camId = null;
 
 players = {};
 ents = {};
@@ -39,7 +40,7 @@ $(document).ready(function(){
 
   initRenderer();
   player = new Player();
-  cam = player;
+  //cam = player;
 
   view = new View(320,320);
   view.setZoom(2);

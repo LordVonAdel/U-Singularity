@@ -8,8 +8,17 @@ function gameLoop(){
     }
   }
 
-  view.x = transition(view.x,cam.x+16-view.width/2,0.4,1);
-  view.y = transition(view.y,cam.y-view.height/2,0.4,1);
+  if (cam != null){
+    view.x = transition(view.x,cam.x+16-view.width/2,0.4,1);
+    view.y = transition(view.y,cam.y-view.height/2,0.4,1);
+  }else{
+    if (camId != null){
+      var ent = ents[camId];
+      if (ent != undefined){
+        cam = ent;
+      }
+    }
+  }
   mouseX = (mouseX_ui/view.zoom + view.x);
   mouseY = (mouseY_ui/view.zoom + view.y);
 
