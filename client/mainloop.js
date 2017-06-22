@@ -1,27 +1,26 @@
-function gameLoop()
-{
-  //global vars
+function gameLoop(){
 
   if (player.id != -1){
     var obj = players[player.id];
     if (obj != undefined){
-    player.x = obj.x;
-    player.y = obj.y;
+      player.x = obj.x;
+      player.y = obj.y;
     }
   }
-  viewX = transition(viewX,cam.x+16-view_width/2,0.4,1);
-  viewY = transition(viewY,cam.y-view_height/2,0.4,1);
-  mouseX = (mouseX_ui/view_zoom + viewX);
-  mouseY = (mouseY_ui/view_zoom + viewY);
 
-  stageWorld.pivot.x = viewX;
-  stageWorld.pivot.y = viewY;
-  stageWorld.scale.x = renderer.width / view_width;
-  stageWorld.scale.y = renderer.height / view_height;
+  view.x = transition(view.x,cam.x+16-view.width/2,0.4,1);
+  view.y = transition(view.y,cam.y-view.height/2,0.4,1);
+  mouseX = (mouseX_ui/view.zoom + view.x);
+  mouseY = (mouseY_ui/view.zoom + view.y);
+
+  stageWorld.pivot.x = view.x;
+  stageWorld.pivot.y = view.y;
+  stageWorld.scale.x = renderer.width / view.width;
+  stageWorld.scale.y = renderer.height / view.height;
 
   //player
   player.step();
-  player.draw();
+  //player.draw();
 
   //admin
   if (isAdmin){
@@ -42,17 +41,11 @@ function gameLoop()
   document.getElementById("mouse_position_ui").innerHTML = mouseX_ui+" , "+mouseY_ui;
   document.getElementById("mouse_position_world").innerHTML = mouseX+" , "+mouseY;
 
-  //update pawns (clients)
-  $.each(players,function(key,value){
-    value.update();
-    value.draw();
-  });
   $.each(ents,function(key,value){
     value.step();
   });
 
   //draw
-  drawAll();
   renderLoop();
 
 //repeat!
@@ -70,10 +63,4 @@ function gameLoop()
     }
   }
   input.next();
-}
-
-function drawAll(){
-  world.draw();
-
-  draw();
 }

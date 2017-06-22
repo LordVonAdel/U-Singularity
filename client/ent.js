@@ -11,8 +11,9 @@ function Entity(id,x,y,image){
   this.image_width = 32;
   this.image_height = 32;
   this.layer = 10;
+  this.imagePath = subfolder+"sprites/"+image
 
-  var tex = getTextureFrame(subfolder+"sprites/"+image,0,32,32);
+  var tex = getTextureFrame(this.imagePath,0,32,32);
   this.sprite = new PIXI.Sprite(tex);
 
   this.sprite.x = this.x;
@@ -41,20 +42,21 @@ Entity.prototype.update = function(data){
 Entity.prototype.step = function(){
   this.sprite.x = this.x;
   this.sprite.y = this.y;
+  this.sprite.setTexture(getTextureFrame(this.imagePath, this.image_index, this.image_width, this.image_height));
   
-  drawSpritePart(this.layer,this.sprite,this.x,this.y,this.image_index*this.image_width,0,this.image_width,this.image_height);
   if (mouseOver(this.x,this.y,this.x+32,this.y+32,this)){
     if (mouseCheckPressed(0)){
       if (keyboardCheck(input.DRAG)){
-        player.socket.emit('ent_drag',{id: this.id});
+        socket.emit('ent_drag',{id: this.id});
       }else{
-        player.socket.emit('ent_click',{id: this.id});
+        socket.emit('ent_click',{id: this.id});
       }
     }
   }
 }
 
 Entity.prototype.destroy = function(){
+  this.sprite.destroy();
   if (this.tile){
     world.cellSetOverwrite(this.tx,this.ty,{})
   }

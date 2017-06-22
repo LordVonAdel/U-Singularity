@@ -1,31 +1,32 @@
 res = {
- tiles: {},
- items: {}
+  tiles: {},
+  items: {}
 };
 
-function Tile(sprite){
- this.sprite = sprite;
+function Tile(sprite) {
+  this.sprite = sprite;
 }
-function Item(sprite,name){
- this.sprite = sprite;
- this.name = name;
+function Item(sprite, name) {
+  this.sprite = sprite;
+  this.name = name;
 }
 
-function load(object){
- console.log("Got asset information from server!");
- if (object.tiles != undefined){
-  $.each(object.tiles,function(key,value){
-   var spr = Sprite(subfolder+"sprites/"+value.image);
-   var obj = new Tile(spr);
-   obj.connectionType = value.connectionType;
-   obj.connectionGroup = value.connectionGroup;
-   res.tiles[key] = obj;
-  });
- }
- if (object.items != undefined){
-  $.each(object.items,function(key,value){
-   var spr = Sprite(subfolder+"sprites/"+value.image);
-   res.items[key] = new Item(spr,value.name);
-  });
- }
+function load(object) {
+  console.log("Got asset information from server!");
+  if (object.tiles != undefined) {
+    for (k in object.tiles){
+      var value = object.tiles[k];
+      var obj = new Tile(object.tiles[k].image);
+      obj.connectionType = value.connectionType;
+      obj.connectionGroup = value.connectionGroup;
+
+      res.tiles[k] = obj;
+    }
+  }
+  if (object.items != undefined) {
+    $.each(object.items, function (key, value) {
+      var spr = value.image;//Sprite(subfolder + "sprites/" + value.image);
+      res.items[key] = new Item(spr, value.name);
+    });
+  }
 }
