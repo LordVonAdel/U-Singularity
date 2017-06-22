@@ -16,7 +16,6 @@ spr_chars["che_f"] = Sprite(subfolder+"sprites/chars/char_chemist_f.png");
 spr_chars["phy_m"] = Sprite(subfolder+"sprites/chars/char_physicist_m.png");
 spr_chars["phy_f"] = Sprite(subfolder+"sprites/chars/char_physicist_f.png");
 */
-
 draw_pipe = [];
 
 cam = null;
@@ -26,31 +25,26 @@ ents = {};
 
 gm = {};
 
-function def(item,def){
-  if (item == null){
-    return def;
-  }else{
-    return item;
-  }
-}
-
 config = {
-  speech_time: def(localStorage.getItem('speech_time'),0.25),
-  speech_enable: def(localStorage.getItem('speech_enable'),true)
+  speech_time: localStorage.getItem('speech_time') || 0.25,
+  speech_enable: localStorage.getItem('speech_enable') ||true,
+  uiScale: 1
 };
 
 server_ip = getParam('ip');
 
-player = new Player();
-//player.sprite = spr_player;
-cam = player;
-
-var lastTime = new Date;
+var lastTime = new Date();
 
 $(document).ready(function(){
+
   initRenderer();
+  player = new Player();
+  cam = player;
+
   view = new View(320,320);
   view.setZoom(2);
+
+  uiZoom = 2;
 
   chat_is_open = false;
 

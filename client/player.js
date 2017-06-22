@@ -1,6 +1,5 @@
 function Player() {
   var player = this;
-  this.sprite = null;
   this.id = -1;
   this.x = 32;
   this.y = 32;
@@ -40,6 +39,7 @@ function Player() {
     if (mouseWheelUp()) {
       this.inventoryActive = (this.inventoryActive + 1) % this.hands;
       socket.emit('inv_active', { slot: this.inventoryActive });
+      this.updateUI();
     }
     if (mouseWheelDown()) {
       this.inventoryActive -= 1;
@@ -47,6 +47,7 @@ function Player() {
         this.inventoryActive = this.hands - 1;
       }
       socket.emit('inv_active', { slot: this.inventoryActive });
+      this.updateUI();
     }
     if (keyboardCheckPressed(input.DROP)) {
       var tx = Math.floor(mouseX / 32);
@@ -54,6 +55,86 @@ function Player() {
       socket.emit('drop', { x: tx, y: ty });
     }
   }
+
+  this.hudInventorySlots = [];
+  this.hudInventoryItems = [];
+  var texSlot = getTexture(subfolder+"sprites/ui/ui_inventory_slot.png");
+  var texSlotActive = getTexture(subfolder+"sprites/ui/ui_inventory_slot_active.png");
+
+  this.hudDragSprite = new PIXI.Sprite(texSlot);
+  this.hudDragText = new PIXI.Text("Drag",{fontFamily : 'Arial', fontSize: 14, fill : 0xffffff, align : 'center'});
+  this.hudDragText.x = 0;
+  this.hudDragText.y = 8;
+  this.hudDragContainer = new PIXI.Container();
+  this.hudDragContainer.addChild(this.hudDragSprite);
+  this.hudDragContainer.addChild(this.hudDragText);
+  stageUI.addChild(this.hudDragContainer);
+
+  this.inventory = [];
+  for (i = 0; i < this.hands; i++) {
+    var sprite = new PIXI.Sprite(texSlot);
+    var itemSprite = new PIXI.Sprite(PIXI.Texture.EMPTY);
+    stageUI.addChild(sprite);
+    stageUI.addChild(itemSprite);
+    this.hudInventorySlots[i] = sprite;
+    this.hudInventoryItems[i] = itemSprite;
+    this.inventory[i] = null;
+  }
+  this.hudCurrentItemText = new PIXI.Text('',{fontFamily : 'Arial', fontSize: 28, fill : 0xffffff, align : 'left', stroke: 0x000000, strokeThickness: 2});
+  stageUI.addChild(this.hudCurrentItemText);
+
+  this.updateUI = function(){
+    //slot sprite
+    var texSlot = getTexture("sprites/ui/ui_inventory_slot.png");
+    var texSlotActive = getTexture("sprites/ui/ui_inventory_slot_active.png");
+
+    var s = config.uiScale * 2 * 32; //size in pixel (width & height)
+
+
+    for (i = 0; i < this.hands; i++) {
+      var sprite = this.hudInventorySlots[i];
+      sprite.scale.x = config.uiScale * 2;
+      sprite.scale.y = config.uiScale * 2;
+      sprite.x = (renderer.screen.width) / 2 - (this.hands * s / 2) + s * i;
+      sprite.y = (renderer.screen.height) - s;
+      if (i == this.inventoryActive){
+        sprite.setTexture(texSlotActive);
+      }else{
+        sprite.setTexture(texSlot);
+      }
+
+      //item sprite
+      var sprite = this.hudInventoryItems[i];
+      var s = config.uiScale * 2 * 32; //size in pixel (width & height)
+      sprite.scale.x = config.uiScale * 2;
+      sprite.scale.y = config.uiScale * 2;
+      sprite.x = renderer.screen.width / 2 - (this.hands * s / 2) + s * i;
+      sprite.y = renderer.screen.height - s;
+      if (this.inventory[i] == null){
+        sprite.setTexture(PIXI.Texture.EMPTY);
+      }else{
+        var url = "sprites/"+res.items[this.inventory[i].type].sprite;
+        sprite.setTexture(getTexture(url));
+      }
+    }
+
+    if (this.inventory[this.inventoryActive] != null){
+      this.hudCurrentItemText.text = res.items[this.inventory[this.inventoryActive].type].name;
+    }else{
+      this.hudCurrentItemText.text = "";
+    }
+    this.hudCurrentItemText.x = 0;
+    this.hudCurrentItemText.y = renderer.screen.height - 32;
+
+    this.hudDragContainer.x = renderer.screen.width / 2 - (this.hands * s / 2) + s * this.hands + 96;
+    this.hudDragContainer.y = renderer.screen.height - s;
+    this.hudDragContainer.scale.x = config.uiScale * 2;
+    this.hudDragContainer.scale.y = config.uiScale * 2;
+    this.hudDragContainer.visible = this.drag;
+  }
+
+  this.updateUI();
+
   this.draw = function () {
     /*var sprites = [spr_ui_inventory_slot, spr_ui_inventory_slot_active];
     var i;
@@ -75,6 +156,11 @@ function Player() {
     }*/
   }
 }
+
+Player.prototype.getActiveItem = function(){
+  return this.inventory[this.inventoryActive];
+}
+
 function Pawn() {
   this.id = 0;
   this.inventory = {};

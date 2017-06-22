@@ -20,7 +20,6 @@ function gameLoop(){
 
   //player
   player.step();
-  //player.draw();
 
   //admin
   if (isAdmin){

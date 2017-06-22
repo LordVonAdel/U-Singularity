@@ -26,15 +26,18 @@ function initNetworking(){
   });
 
   socket.on('player_stats',function(data){
-    var obj = players[data.id];
+    var obj = player;
     if (obj != undefined){
       obj.moveSpeed = data.speed;
       obj.health = data.health;
       obj.name = data.name;
-      obj.inventory = data.inventory;
       obj.gender = data.gender;
       obj.job = data.job;
       obj.burning = data.burning;
+    }
+    if (data.inventory){
+      player.inventory = data.inventory;
+      player.updateUI();
     }
   });
 
@@ -104,6 +107,7 @@ function initNetworking(){
 
   socket.on('pSelf',function(data){
     Object.assign(player, data); //got information about the own player (health, inventory and stuff)
+    player.updateUI();
   });
 
   socket.on('clear',function(data){
