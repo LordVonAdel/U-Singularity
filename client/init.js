@@ -2,20 +2,6 @@ subfolder = ""
 
 isAdmin=false;
 
-/*
-spr_player = Sprite(subfolder+"sprites/player.png");
-spr_ui_inventory_slot = Sprite(subfolder+"sprites/ui/ui_inventory_slot.png");
-spr_ui_inventory_slot_active = Sprite(subfolder+"sprites/ui/ui_inventory_slot_active.png");
-
-spr_eff_fire_human_back = Sprite(subfolder+"sprites/effects/eff_fire_human_back.png")
-spr_eff_fire_human_front = Sprite(subfolder+"sprites/effects/eff_fire_human_front.png")
-
-spr_chars = {};
-spr_chars["che_m"] = Sprite(subfolder+"sprites/chars/char_chemist_m.png");
-spr_chars["che_f"] = Sprite(subfolder+"sprites/chars/char_chemist_f.png");
-spr_chars["phy_m"] = Sprite(subfolder+"sprites/chars/char_physicist_m.png");
-spr_chars["phy_f"] = Sprite(subfolder+"sprites/chars/char_physicist_f.png");
-*/
 draw_pipe = [];
 
 cam = null;

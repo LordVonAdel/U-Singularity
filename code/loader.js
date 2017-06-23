@@ -36,6 +36,7 @@ tiles: {},
       "actions":{}
     },
     "player":{
+      "collision":true,
       "image":"chars/char_chemist_f.png",
       "actions": {}
     }

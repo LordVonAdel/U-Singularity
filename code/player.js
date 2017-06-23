@@ -132,10 +132,13 @@ function Player(socket){
 
   socket.on('ent_drag',function(data){
     var ent = wrd.ents[data.id];
-    if (ent == that.drag){that.resetDrag();}else{
+    if (ent == that.drag){
+      ent.clearDragger();
+    }else{
       if (ent.ent.dragable){
         if (Math.hypot(ent.x-that.x, ent.y-that.y)<(that.handRange+1)*32){
           that.drag = ent;
+          ent.setDragger(that);
         }
       }
     }
@@ -243,10 +246,6 @@ Player.prototype.move = function(direction){
         this.drag = null;
       }
     }
-    
-    this.ent.image_index = direction;
-    this.ent.share({image_index: direction});
-
   }else if(!this.inMovement){
     this.pushCooldown += 1;
     if (this.pushCooldown >= 10){
@@ -255,7 +254,7 @@ Player.prototype.move = function(direction){
       collide.forEach(function(value,index){
         var ent = wrd.ents[value];
         if (ent != undefined){
-          if(ent == that.drag){that.resetDrag()}
+          ent.clearDragger();
           if(ent.ent.dragable){
             ent.moveDir(direction,that.moveSpeed);
           }
@@ -267,6 +266,8 @@ Player.prototype.move = function(direction){
       this.push = false;
     }
   }
+  this.ent.image_index = direction;
+  this.ent.share({image_index: direction});
 }
 
 Player.prototype.share = function(data){

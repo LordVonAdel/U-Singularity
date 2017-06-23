@@ -20,6 +20,7 @@ function Entity(type,tx,ty){
   this.bucket = null;//wrd.buckets.cellGet(Math.floor(tx/config.bucket.width),Math.floor(ty/config.bucket.height));
   this.sync = {};
   this.layer = this.ent.layer || 10;
+  this.dragger = null;
 
   Object.assign(this.sync, this.ent.sync);
   if (this.ent.oninit != undefined){
@@ -30,6 +31,18 @@ function Entity(type,tx,ty){
   nextEntId ++;
 
   this.updateBucket();
+}
+
+Entity.prototype.clearDragger = function(){
+  if (this.dragger != null){
+    this.dragger.resetDrag();
+    this.dragger = null;
+  }
+}
+
+Entity.prototype.setDragger = function(dragger){
+  this.clearDragger();
+  this.dragger = dragger;
 }
 
 Entity.prototype.step = function(delta){

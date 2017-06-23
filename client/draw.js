@@ -24,9 +24,6 @@ function initRenderer(){
   renderer.view.style.display = "block";
   renderer.autoResize = true;
   renderer.resize(window.innerWidth, window.innerHeight);
-
-  var message = new PIXI.Text("Hello There!",{fontFamily: "Arial", fontSize: 32, fill: "white"});
-  stageUI.addChild(message);
 }
 
 function renderLoop(){
@@ -63,47 +60,4 @@ function getTextureFrame(source,index,width,height){
     }
   }
   return PIXI.Texture.EMPTY;
-}
-
-function drawSprite(depth,sprite,x,y){
-  if (!Array.isArray(draw_pipe[depth])){
-    draw_pipe[depth] = [];
-  }
-  draw_pipe[depth].push({"type":"sprite","sprite":sprite,"x":x,"y":y})
-}
-function drawSpriteAngle(depth,sprite,x,y,angle){
-  if (!Array.isArray(draw_pipe[depth])){
-    draw_pipe[depth] = [];
-  }
-  draw_pipe[depth].push({"type":"sprite_angle","sprite":sprite,"x":x,"y":y,"angle":angle})
-}
-function drawSpritePart(depth,sprite,x,y,left,top,width,height){
-  if (!Array.isArray(draw_pipe[depth])){
-    draw_pipe[depth] = [];
-  }
-  draw_pipe[depth].push({"type":"sprite_part","sprite":sprite,"x":x,"y":y,"left":left,"top":top,"width":width,"height":height})
-}
-function drawSpritePartAngle(depth,sprite,x,y,left,top,width,height,angle){
-  if (!Array.isArray(draw_pipe[depth])){
-    draw_pipe[depth] = [];
-  }
-  draw_pipe[depth].push({"type":"sprite_part_angle","sprite":sprite,"x":x,"y":y,"left":left,"top":top,"width":width,"height":height, "angle":angle})
-}
-function drawText(depth,text,x,y,color){
-if (!Array.isArray(draw_pipe[depth])){
-    draw_pipe[depth] = [];
-  }
-  draw_pipe[depth].push({"type":"text","text":text,"x":x,"y":y,"color":color}) 
-}
-function drawItem(depth,item,x,y){
-  if (!Array.isArray(draw_pipe[depth])){
-    draw_pipe[depth] = [];
-  }
-  draw_pipe[depth].push({"type":"item","item":item,"x":x,"y":y}) 
-}
-function drawSpeech(depth,text,x,y){
-  if (!Array.isArray(draw_pipe[depth])){
-    draw_pipe[depth] = [];
-  }
-  draw_pipe[depth].push({"type":"speech","text":text,"x":x,"y":y}) 
 }

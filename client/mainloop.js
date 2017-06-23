@@ -19,6 +19,7 @@ function gameLoop(){
       }
     }
   }
+
   mouseX = (mouseX_ui/view.zoom + view.x);
   mouseY = (mouseY_ui/view.zoom + view.y);
 
@@ -39,12 +40,9 @@ function gameLoop(){
   gamemodeLoop();
 
   //fps calculation
-  thisTime = new Date;
+  thisTime = new Date();
   var fps = Math.floor(1000/(thisTime - lastTime));
   lastTime = thisTime;
-  drawText(1001,"FPS: "+fps,1,1,"#FFFFFF")
-  //drawText(1001,"Mouse Position (UI): "+mouseX_ui+" , "+mouseY_ui,1,16,"#000000");
-  //drawText(1001,"Mouse Position (World): "+mouseX+" , "+mouseY,1,32,"#000000");
   document.getElementById("fps").innerHTML = fps;
   document.getElementById("mouse_position_ui").innerHTML = mouseX_ui+" , "+mouseY_ui;
   document.getElementById("mouse_position_world").innerHTML = mouseX+" , "+mouseY;
@@ -56,7 +54,7 @@ function gameLoop(){
   //draw
   renderLoop();
 
-//repeat!
+  //repeat!
   requestAnimationFrame(gameLoop);
   if (keyboardCheckPressed(13)){
     chat_is_open = !chat_is_open;
