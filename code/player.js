@@ -143,22 +143,24 @@ function Player(socket){
       }
     }
     that.shareSelf({"drag":(that.drag != null)})
-  });
-
-  this.popup = function(id, filename){
-    fs.readFile(filename, "utf-8", function(err, str){
-      socket.emit('server_content',{html: str, id: id});
-    });
-  }
+  }); 
 
   this.updateBucket();
+
   if (this.bucket != null){
     this.bucket.sendMegaPacketArea(this.socket);
   }
 }
 
+Player.prototype.popup = function(id, filename){
+  var that = this;
+  fs.readFile(filename, "utf-8", function(err, str){
+    that.socket.emit('server_content',{html: str, id: id});
+  });
+}
+
 Player.prototype.msg = function(msg){
-  socket.emit('chat',{msg: msg, id: this.id});
+  this.socket.emit('chat',{msg: msg, id: this.id});
 }
 
 Player.prototype.disconnect = function(){
@@ -240,6 +242,7 @@ Player.prototype.move = function(direction){
     //wrd.collisionAdd(this.tileX,this.tileY,this);
     this.updateBucket();
     this.inMovement = true;
+    this.ent.move(this.tileX, this.tileY);
     if (this.drag != null){
       var suc = this.drag.moveTo(startX,startY,this.moveSpeed);
       if (!suc){
@@ -297,7 +300,6 @@ Player.prototype.step = function(delta){
   if (this.burning){
     this.health -= config.damage.burn;
   }
-  this.ent.move(this.tileX, this.tileY);
 }
 
 Player.prototype.give = function(itemData){
