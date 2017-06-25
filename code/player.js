@@ -195,6 +195,7 @@ Player.prototype.resetDrag = function(){
 }
 
 Player.prototype.move = function(direction){
+  var that = this;
   var success = false;
   var startX = this.tileX;
   var startY = this.tileY;
