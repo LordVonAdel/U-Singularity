@@ -1,3 +1,10 @@
+const jobSprites = {
+  "phy_m": "chars/char_physicist_m.png",
+  "phy_f": "chars/char_physicist_f.png",
+  "che_m": "chars/char_chemist_m.png",
+  "che_f": "chars/char_chemist_f.png"
+}
+
 Entity = require('./entity.js').Entity;
 
 function Player(socket){
@@ -75,6 +82,12 @@ function Player(socket){
       that.gender = data.gender;
       that.job = data.job;
       that.share();
+      var img = jobSprites[data.job+"_"+data.gender];
+      if (img != undefined){
+        that.ent.changeImage(img);
+      }else{
+        //Config was not correct!
+      }
     }
   });
 

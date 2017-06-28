@@ -32,7 +32,7 @@ Entity.prototype.update = function(data){
     this.ty = Math.floor(data.y/32);
   }
   if (data.image != undefined){
-    //this.sprite = Sprite(subfolder+"sprites/"+data.image);
+    this.imagePath = subfolder+"sprites/"+data.image;
   }
   if (this.tile){
     world.cellSetOverwrite(this.tx,this.ty,this.tile)

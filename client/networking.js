@@ -78,7 +78,7 @@ function initNetworking(){
       ents[data.id] = new Entity(data.id,data.x,data.y,data.image,data.image_number,data.image_index,data.tile)
       ent = ents[data.id];
     }
-    ent.update(data)
+    ent.update(data);
   });
 
   socket.on('ent_destroy',function(data){
