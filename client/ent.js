@@ -11,7 +11,8 @@ function Entity(id,x,y,image){
   this.image_width = 32;
   this.image_height = 32;
   this.layer = 10;
-  this.imagePath = subfolder+"sprites/"+image
+  this.imagePath = subfolder+"sprites/"+image;
+  this.walkAnimation = null;
 
   var tex = getTextureFrame(this.imagePath,0,32,32);
   this.sprite = new PIXI.Sprite(tex);
@@ -43,6 +44,10 @@ Entity.prototype.step = function(){
   this.sprite.x = this.x;
   this.sprite.y = this.y;
   this.sprite.setTexture(getTextureFrame(this.imagePath, this.image_index, this.image_width, this.image_height));
+  if (this.walkAnimation == "jump"){
+    var f = ((this.x % 32)/32)+((this.y & 32)/32);
+    this.sprite.y = this.y - Math.sin(f*Math.PI)*4+2;
+  }
   
   if (mouseOver(this.x,this.y,this.x+32,this.y+32,this)){
     if (mouseCheckPressed(0)){
