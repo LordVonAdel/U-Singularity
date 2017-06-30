@@ -65,7 +65,7 @@ function Player(socket){
   });
 
   socket.on('chat', function(data){
-    data.msg = handy.stringSave(data.msg)
+    data.msg = handy.stringSave(data.msg);
     console.log(that.name+": "+data.msg);
     if (data.msg.charAt(0)=="/"){
       var args = data.msg.slice(1).split(" ");
