@@ -7,8 +7,8 @@ function Entity(type,tx,ty){
   }
   this.type = type;
   this.image = this.ent.image;
-  this.image_number = this.ent.image_number;
-  this.image_index = this.ent.image_index;
+  this.imageNumber = this.ent.imageNumber;
+  this.imageIndex = this.ent.imageIndex;
   this.collision = this.ent.collision;
   this.event_onclick = this.ent.onClick;
   this.x = tx*32;
@@ -85,7 +85,7 @@ Entity.prototype.use = function(user,item){
 
 Entity.prototype.changeImage = function(image){
   this.image = image;
-  this.share({image: image, image_number: this.image_number, image_index: this.image_index, image_number: this.image_number});
+  this.share({image: image, imageNumber: this.imageNumber, imageIndex: this.imageIndex, imageNumber: this.imageNumber});
 }
 
 Entity.prototype.share = function(data){
@@ -156,9 +156,9 @@ Entity.prototype.move = function(x,y){
 
 Entity.prototype.getClientData = function(){
   if (this.ent.tile != {}){
-    return {x:this.x, y:this.y, image: this.image, id: this.id, image_index: this.image_index, image_number: this.image_number, layer: this.layer, tile: this.ent.tile}
+    return {x:this.x, y:this.y, image: this.image, id: this.id, imageIndex: this.imageIndex, imageNumber: this.imageNumber, layer: this.layer, tile: this.ent.tile}
   }else{
-    return {x:this.x, y:this.y, image: this.image, id: this.id, image_index: this.image_index, image_number: this.image_number, layer: this.layer} 
+    return {x:this.x, y:this.y, image: this.image, id: this.id, imageIndex: this.imageIndex, imageNumber: this.imageNumber, layer: this.layer} 
   }
 }
 

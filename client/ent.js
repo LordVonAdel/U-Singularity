@@ -6,8 +6,8 @@ function Entity(id,x,y,image){
   this.ty = Math.floor(y/32);
   this.id = id;
   this.image_scale = 1;
-  this.image_number = 1;
-  this.image_index = 0;
+  this.imageNumber = 1;
+  this.imageIndex = 0;
   this.image_width = 32;
   this.image_height = 32;
   this.layer = 10;
@@ -43,7 +43,7 @@ Entity.prototype.update = function(data){
 Entity.prototype.step = function(){
   this.sprite.x = this.x;
   this.sprite.y = this.y;
-  this.sprite.setTexture(getTextureFrame(this.imagePath, this.image_index, this.image_width, this.image_height));
+  this.sprite.setTexture(getTextureFrame(this.imagePath, this.imageIndex, this.image_width, this.image_height));
   if (this.walkAnimation == "jump"){
     var f = ((this.x % 32)/32)+((this.y & 32)/32);
     this.sprite.y = this.y - Math.sin(f*Math.PI)*4+2;

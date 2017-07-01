@@ -46,21 +46,21 @@ module.exports = {
   objects: {
     argon_tank:{
       "image":"objects/argon_tank.png",
-      "image_number":2,
-      "image_index":0,
+      "imageNumber":2,
+      "imageIndex":0,
       "sync": {open: 0, fuel: 100},
       "collision":true,
       "dragable":true,
       "onInit":function(ent){ent.sync.fuel = 100, ent.sync.open=0},
-      "onStep":function(ent){if(ent.sync.fuel > 0 && ent.sync.open == 1){ent.sync.fuel -= 1; atmos.addGas(ent.tx,ent.ty,{ar:1}); if(ent.sync.fuel <= 0){ent.image_index=0; ent.update(); ent.share();}}},
+      "onStep":function(ent){if(ent.sync.fuel > 0 && ent.sync.open == 1){ent.sync.fuel -= 1; atmos.addGas(ent.tx,ent.ty,{ar:1}); if(ent.sync.fuel <= 0){ent.imageIndex=0; ent.update(); ent.share();}}},
       "actions":{
-        "hand":function(user,ent){ent.sync.open = 1-ent.sync.open; ent.image_index=ent.sync.open; ent.update(); ent.share();}
+        "hand":function(user,ent){ent.sync.open = 1-ent.sync.open; ent.imageIndex=ent.sync.open; ent.update(); ent.share();}
       }
     },
     gas_argon:{
       "image":"gas/gas_argon.png",
-      "image_number":1,
-      "image_index":0,
+      "imageNumber":1,
+      "imageIndex":0,
       "collision":false,
       "onStep":function(ent){
         var d = Math.floor(Math.random()*4);

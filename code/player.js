@@ -284,8 +284,8 @@ Player.prototype.move = function(direction){
       this.push = false;
     }
   }
-  this.ent.image_index = direction;
-  this.ent.share({image_index: direction});
+  this.ent.imageIndex = direction;
+  this.ent.share({imageIndex: direction});
 }
 
 Player.prototype.share = function(data){
