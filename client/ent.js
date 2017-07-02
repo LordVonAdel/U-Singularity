@@ -13,14 +13,17 @@ function Entity(id,x,y,image){
   this.layer = 10;
   this.imagePath = subfolder+"sprites/"+image;
   this.walkAnimation = null;
+  this.isBurning = false;
 
   var tex = getTextureFrame(this.imagePath,0,32,32);
+  this.container = new PIXI.Container();
   this.sprite = new PIXI.Sprite(tex);
+  this.container.addChild(this.sprite);
 
   this.sprite.x = this.x;
   this.sprite.y = this.y;
 
-  stageEntities.addChild(this.sprite);
+  stageEntities.addChild(this.container);
 }
 
 Entity.prototype.update = function(data){
@@ -47,6 +50,18 @@ Entity.prototype.step = function(){
   if (this.walkAnimation == "jump"){
     var f = ((this.x % 32)/32)+((this.y & 32)/32);
     this.sprite.y = this.y - Math.sin(f*Math.PI)*4+2;
+  }
+  if (this.isBurning){
+    if (this.spriteBurnFront == undefined){
+      this.spriteBurnFront = new PIXI.Sprite(getTextureFrame("sprites/effects/fire_human_front.png",0,32,32));
+      this.spriteBurnBack = new PIXI.Sprite(getTextureFrame("sprites/effects/fire_human_back.png",0,32,32));
+      this.container.addChild(this.spriteBurnFront);
+      this.container.addChild(this.spriteBurnBack);
+    }
+    var current_time = new Date().getMilliseconds();
+    var frame = Math.floor(current_time / 250);
+    this.spriteBurnFront.setTexture(getTextureFrame("sprites/effects/fire_human_front.png",frame,32,32));
+    this.spriteBurnBack.setTexture(getTextureFrame("sprites/effects/fire_human_back.png",frame,32,32));
   }
   
   if (mouseOver(this.x,this.y,this.x+32,this.y+32,this)){
