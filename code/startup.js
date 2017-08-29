@@ -1,1 +1,1 @@
-wrd.load("maps/lab.json");
+//wrd.load("maps/lab.json"); //replaced by config value

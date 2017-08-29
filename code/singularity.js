@@ -36,6 +36,7 @@ loader.auto(function(){ //load all things from the modules directory
   nextPlayerId = 0;
   nextEntId = 0;
   wrd = new world.World(); //Construct World
+  wrd.load("maps/"+config.startWorld+".json");
   gm = require("./gamemode.js");
   require("./startup.js");
   

@@ -1,9 +1,10 @@
 {
-  "version":"0.1",
-  "servername":"Offical Test Server!",
-  "motd":"This is a test server!",
-  "max_players":20,
-  "port":5000,
+  "version": "0.1",
+  "servername": "Offical Test Server!",
+  "motd": "This is a test server!",
+  "maxPlayers": 20,
+  "port": 5000,
+  "startWorld": "lab",
   "damage":{
     "burn": 0.05
   },

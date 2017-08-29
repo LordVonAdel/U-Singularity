@@ -11,95 +11,95 @@ function Grid(width,height){
       grid[i][j] = 0;
     }
   }
-  this.cellGet = function(x,y){
-    if (grid[x] instanceof Array){
-      return grid[x][y];
+}
+Grid.prototype.cellGet = function(x,y){
+  if (this.grid[x] instanceof Array){
+    return this.grid[x][y];
+  }
+}
+Grid.prototype.cellSet = function(x,y,value){
+  if (this.grid[x] instanceof Array){
+    this.grid[x][y] = value;
+  }
+}
+Grid.prototype.resize = function(width, height){
+  this.grid.width = width;
+  this.grid.height = height;
+}
+Grid.prototype.save = function(){
+  var i;
+  var str = "";
+  var last = 0;
+  var now = 0;
+  var len = 0;
+  for(i = 0; i<this.width*this.height; i++){
+    now = this.grid[i % this.width][Math.floor(i / this.height)];
+    if (now == last){
+      len ++;
+    }else{
+      str += len + "x" + last + "x";
+      len = 1;
     }
+    last = now;
   }
-  this.cellSet = function(x,y,value){
-    if (grid[x] instanceof Array){
-      grid[x][y] = value;
+  str += len + "x" + last;
+  return str;
+}
+Grid.prototype.saveRegion = function(x,y,width,height){
+  var i;
+  var str = "";
+  var last = 0;
+  var now = 0;
+  var len = 0;
+  for(i = 0; i<width*height; i++){
+    now = this.cellGet(i % width+x,Math.floor(i / height)+y)//grid[i % width+x][Math.floor(i / height)+y];
+    if (now == last){
+      len ++;
+    }else{
+      str += len + "x" + last + "x";
+      len = 1;
     }
+    last = now;
   }
-  this.resize = function(width, height){
-    grid.width = width;
-    grid.height = height;
-  }
-  this.save = function(){
-    var i;
-    var str = "";
-    var last = 0;
-    var now = 0;
-    var len = 0;
-    for(i = 0; i<this.width*this.height; i++){
-      now = grid[i % this.width][Math.floor(i / this.height)];
-      if (now == last){
-        len ++;
-      }else{
-        str += len + "x" + last + "x";
-        len = 1;
+  str += len + "x" + last;
+  return str;
+}
+Grid.prototype.load = function(str){
+  var res = str.split("x");
+  var cx = 0;
+  var cy = 0;
+  for(i = 0; i < res.length; i+=2){
+    for(j = 0; j < parseInt(res[i],10); j++){
+      if (cx == this.width){
+      cx = 0;
+      cy += 1;
       }
-      last = now;
+      this.grid[cx][cy] = parseInt(res[i+1]);
+      cx++
     }
-    str += len + "x" + last;
-    return str;
   }
-  this.saveRegion = function(x,y,width,height){
-    var i;
-    var str = "";
-    var last = 0;
-    var now = 0;
-    var len = 0;
-    for(i = 0; i<width*height; i++){
-      now = this.cellGet(i % width+x,Math.floor(i / height)+y)//grid[i % width+x][Math.floor(i / height)+y];
-      if (now == last){
-        len ++;
-      }else{
-        str += len + "x" + last + "x";
-        len = 1;
-      }
-      last = now;
-    }
-    str += len + "x" + last;
-    return str;
-  }
-  this.load = function(str){
-    var res = str.split("x");
-    var cx = 0;
-    var cy = 0;
-    for(i = 0; i < res.length; i+=2){
-      for(j = 0; j < parseInt(res[i],10); j++){
-        if (cx == this.width){
+}
+Grid.prototype.loadRegion = function(str,x,y,width){
+  var res = str.split("x");
+  var cx = 0;
+  var cy = 0;
+  for(i = 0; i < res.length; i+=2){
+    for(j = 0; j < parseInt(res[i],10); j++){
+      if (cx == width){
         cx = 0;
         cy += 1;
-        }
-        this.grid[cx][cy] = parseInt(res[i+1]);
-        cx++
       }
+      this.grid[cx+x][cy+y] = res[i+1];
+      cx++
     }
   }
-  this.loadRegion = function(str,x,y,width){
-    var res = str.split("x");
-    var cx = 0;
-    var cy = 0;
-    for(i = 0; i < res.length; i+=2){
-      for(j = 0; j < parseInt(res[i],10); j++){
-        if (cx == width){
-          cx = 0;
-          cy += 1;
-        }
-        this.grid[cx+x][cy+y] = res[i+1];
-        cx++
-      }
-    }
-  }
-  this.forEach = function(callback){
-    var i,j;
-    for(i=0; i<this.width; i++){
-      grid[i] = [];
-      for(j=0; j<this.height; j++){
-        callback(i,j);
-      }
+}
+Grid.prototype.forEach = function(callback){
+  var i,j;
+  for(i=0; i<this.width; i++){
+    //grid[i] = [];
+    for(j=0; j<this.height; j++){
+      callback(i,j);
     }
   }
 }
@@ -174,91 +174,6 @@ function World(){
     }
     });
   }
-  this.clear = function(){
-    handy.broadcast('clear',{});
-    this.gridCollision.forEach(function(tileX,tileY){
-      that.gridCollision.cellSet(tileX,tileY,[]);
-    });
-    this.grid.forEach(function(tileX,tileY){
-      that.grid.cellSet(tileX,tileY,0);
-    });
-    this.spawnX = 0;
-    this.spawnY = 0;
-    this.resize(100,100);
-    /*
-    this.buckets.forEach(function(tileX,tileY){
-      var bucket = that.buckets.cellGet(tileX,tileY);
-      if (bucket){
-        console.log("Clear bucket!")
-        bucket.clear();
-      }
-    });
-    */
-    this.ents = {};
-    handy.broadcast('world',{w:that.width,h:that.height,str:that.grid.save()});
-  }
-  this.load = function(filename){
-    fs.readFile(filename,function(err, data){
-    if (err){
-      handy.broadcast('chat',{msg: "Failed to load map: "+filename});
-    }else{
-      that.clear();
-      var obj = JSON.parse(data);
-      that.resize(obj.world_width, obj.world_height);
-      that.grid.load(obj.grid);
-      that.spawnX = obj.spawnX;
-      that.spawnY = obj.spawnY;
-      nextEntId = obj.nextEntId || 100;
-      var ents = obj.ents;
-      for (var k in ents) {
-        spwn = ents[k];
-        var ent = spawn.entity(spwn.type,spwn.tx,spwn.ty);
-        ent.x = spwn.x;
-        ent.y = spwn.y;
-        if (spwn.sync == undefined){
-          
-        }else{
-          Object.assign(ent.sync, spwn.sync);
-        }
-        ent.update();
-      }
-      handy.broadcast('world',{w:that.width,h:that.height,str:that.grid.save()});
-      }
-    });
-  }
-  this.collisionAdd = function(tileX,tileY,obj){
-    var cell = this.gridCollision.cellGet(tileX,tileY);
-    if (Array.isArray(cell)){
-      var index = cell.indexOf(obj.id);
-      if (index == -1){
-        cell.push(obj.id);
-      }
-    }
-  }
-  this.collisionFree = function(tileX,tileY,obj){
-    var cell = this.gridCollision.cellGet(tileX,tileY);
-    if (Array.isArray(cell)){
-      var index = cell.indexOf(obj.id)
-      if (index != -1){
-        cell.splice(index,1);
-      }
-    }
-  }
-  this.collisionCheck = function(tileX,tileY){
-    var col = 0;
-    var tile_id = this.grid.cellGet(tileX,tileY);
-    var tile = global.res.tiles[tile_id];
-    if (tile != undefined){
-      col = tile.collision;
-    }
-    if (this.gridCollision.cellGet(tileX,tileY) instanceof Array){
-      col += this.gridCollision.cellGet(tileX,tileY).length; 
-    }
-    return (col != 0);
-  }
-  this.dist = function(x1,y1,x2,y2){
-    return Math.sqrt( Math.pow((x1-x2),2)+Math.pow((y1-y2),2));
-  }
   //atmospherics
   if (config.enableAtmos){
     this.gridAtmos = new Grid(100,100);
@@ -268,6 +183,91 @@ function World(){
   }
   console.log("[World]Initalized World");
   console.log("[World]Using "+this.buckets.width+"x"+this.buckets.height+" ("+this.buckets.width*this.buckets.height+") buckets");
+}
+World.prototype.clear = function(){
+  handy.broadcast('clear',{});
+  this.gridCollision.forEach(function(tileX,tileY){
+    that.gridCollision.cellSet(tileX,tileY,[]);
+  });
+  this.grid.forEach(function(tileX,tileY){
+    that.grid.cellSet(tileX,tileY,0);
+  });
+  this.spawnX = 0;
+  this.spawnY = 0;
+  this.resize(100,100);
+  /*
+  this.buckets.forEach(function(tileX,tileY){
+    var bucket = that.buckets.cellGet(tileX,tileY);
+    if (bucket){
+      console.log("Clear bucket!")
+      bucket.clear();
+    }
+  });
+  */
+  this.ents = {};
+  handy.broadcast('world',{w:that.width,h:that.height,str:that.grid.save()});
+}
+World.prototype.load = function(filename){
+  fs.readFile(filename,function(err, data){
+  if (err){
+    handy.broadcast('chat',{msg: "Failed to load map: "+filename});
+  }else{
+    that.clear();
+    var obj = JSON.parse(data);
+    that.resize(obj.world_width, obj.world_height);
+    that.grid.load(obj.grid);
+    that.spawnX = obj.spawnX;
+    that.spawnY = obj.spawnY;
+    nextEntId = obj.nextEntId || 100;
+    var ents = obj.ents;
+    for (var k in ents) {
+      spwn = ents[k];
+      var ent = spawn.entity(spwn.type,spwn.tx,spwn.ty);
+      ent.x = spwn.x;
+      ent.y = spwn.y;
+      if (spwn.sync == undefined){
+        
+      }else{
+        Object.assign(ent.sync, spwn.sync);
+      }
+      ent.update();
+    }
+    handy.broadcast('world',{w:that.width,h:that.height,str:that.grid.save()});
+    }
+  });
+}
+World.prototype.collisionAdd = function(tileX,tileY,obj){
+  var cell = this.gridCollision.cellGet(tileX,tileY);
+  if (Array.isArray(cell)){
+    var index = cell.indexOf(obj.id);
+    if (index == -1){
+      cell.push(obj.id);
+    }
+  }
+}
+World.prototype.collisionFree = function(tileX,tileY,obj){
+  var cell = this.gridCollision.cellGet(tileX,tileY);
+  if (Array.isArray(cell)){
+    var index = cell.indexOf(obj.id)
+    if (index != -1){
+      cell.splice(index,1);
+    }
+  }
+}
+World.prototype.collisionCheck = function(tileX,tileY){
+  var col = 0;
+  var tile_id = this.grid.cellGet(tileX,tileY);
+  var tile = global.res.tiles[tile_id];
+  if (tile != undefined){
+    col = tile.collision;
+  }
+  if (this.gridCollision.cellGet(tileX,tileY) instanceof Array){
+    col += this.gridCollision.cellGet(tileX,tileY).length; 
+  }
+  return (col != 0);
+}
+World.prototype.dist = function(x1,y1,x2,y2){
+  return Math.sqrt( Math.pow((x1-x2),2)+Math.pow((y1-y2),2));
 }
 
 module.exports.Grid = Grid;
