@@ -3,7 +3,7 @@ function Entity(type,tx,ty){
   this.ent = res.objects[type];
   if (this.ent == undefined){
     console.log("Unknown ent-type: "+type)
-    return false;
+    return null;
   }
   this.type = type;
   this.image = this.ent.image;

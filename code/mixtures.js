@@ -2,14 +2,14 @@ Mixture = function(content,temperature){
   this.content = content || {}; //{o2: 40, co2: 60}
   this.temperature = temperature || 0; //kelvin (273,15°C)
   //pressure = sum of content. (kPa)
-  this.getPressure = function(){
-    var press = 0;
-    for (k in this.content){
-      press += this.content[k];
-    }
-    //press *= temperature;
-    return press;
+}
+Mixture.prototype.getPressure = function(){
+  var press = 0;
+  for (k in this.content){
+    press += this.content[k];
   }
+  //press *= temperature;
+  return press;
 }
 
 air = function(){
