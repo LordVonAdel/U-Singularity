@@ -1,9 +1,10 @@
 var fs = require("fs");
 var path = require("path");
 
-var commands = {};
-var res = {
-tiles: {},
+var commands = {}; //object with a list of commands
+//default loaded things, which make no sense to move in external files
+var res = { //object with every dynamic loaded content, excepts maps and commands
+  tiles: {},
   items: {
     "hand":{
       "actions":["hand"]
@@ -42,6 +43,7 @@ tiles: {},
     }
   }
 }
+
 function load(filename,callback){
   function logLoad(num,key,filename){
     if (num[key] > 0){
@@ -88,15 +90,15 @@ function load(filename,callback){
   if(callback){callback();}
 }
 
-function auto(callback){
+function auto(callback){ //loads all the things of the modules directory
   fs.readdir( "./modules", function( err, files ){
     if(err){
-      console.error( "[Loader]Can't list the modules directory.", err );
+      console.error("[Loader]Can't list the modules directory.", err);
     }
     var num = files.length;
     var ind = 0;
-    files.forEach(function(file,index){
-      load(file,function(){
+    files.forEach(function(file, index){
+      load(file, function(){
         ind++
         if (ind >= num){
           if(callback){
@@ -108,16 +110,20 @@ function auto(callback){
   });
 }
 
-function Tile(name,collision,image){
+function Tile(name, collision, image){ 
+  //I don't know if this is called somewhere...
+  //Ok, used the search function and it is not called anywhere.
+  //There is a constructor which uses the name "Tile", but it is in the client code
   this.collision = collision;
   this.image = image;
 }
+
 function Item(type){
-  if (res.items[type]!=undefined){
+  if (res.items[type] != undefined){
     this.type = type;
-    this.sync = Object.assign({},res.items[type].sync || {});
+    this.sync = Object.assign({}, res.items[type].sync || {});
   }else{
-    console.log("Item not found: "+type)
+    console.log("Item not found: " + type)
     return null;
   }
 }

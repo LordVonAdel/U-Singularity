@@ -1,6 +1,7 @@
 //A bucket is used to split the world into multiple parts, like chunks in minecraft
 
-function Bucket(x,y,world){
+//the constructor for a bucket instance
+function Bucket(x,y,world){ 
   this.objects = {};
   this.player = {};
   this.x = x;
@@ -9,24 +10,36 @@ function Bucket(x,y,world){
   this.width = config.bucket.width;
   this.height = config.bucket.height;
 }
+
+//adds an entity to the bucket. Mostly when it moves in there
 Bucket.prototype.addObject = function(object){
   this.objects[object.id] = object;
 }
+
+//removes an entity off the bucket. Mostly when it leaves into another bucket
 Bucket.prototype.removeObject = function(object){
   delete this.objects[object.id];
 }
-Bucket.prototype.addPlayer = function(object){
+
+//the same thing with players instead of entities
+Bucket.prototype.addPlayer = function(object){ 
   this.player[object.id] = object;
 }
-Bucket.prototype.removePlayer = function(object){
+
+//see above
+Bucket.prototype.removePlayer = function(object){ 
   delete this.player[object.id];
 }
+
+//sends a message to every player in the bucket
 Bucket.prototype.broadcast = function(msg,data){
   for(k in this.player){
     this.player[k].socket.emit(msg,data);
   }
 }
-Bucket.prototype.broadcastArea = function(msg,data,range){
+
+//sends a message to every player in this bucket and around
+Bucket.prototype.broadcastArea = function(msg,data,range){ 
   var rad = range || 3;
   for(var i = 0; i<rad*rad; i++){
     var x = Math.max(Math.min((i % rad + this.x) - Math.floor(rad/2),this.world.buckets.width),0);
@@ -34,13 +47,16 @@ Bucket.prototype.broadcastArea = function(msg,data,range){
     this.world.buckets.cellGet(x,y).broadcast(msg,data)
   }
 }
-Bucket.prototype.sendMegaPacket = function(socket){
+
+
+Bucket.prototype.sendMegaPacket = function(socket){ //to left you see a function which tells everything about himself what a player should know about him
   for(k in this.objects){
     socket.emit('ent_data',this.objects[k].getClientData());
   }
   socket.emit('world_region',{str:wrd.grid.saveRegion(this.x*this.width, this.y*this.height, this.width, this.height),x:this.x*this.width,y:this.y*this.height,w:this.width})
-  //socket.emit("bucket",{players:{},objects:{},world:{}});
 }
+
+//and here we have the same but it sends data of his neighbors too
 Bucket.prototype.sendMegaPacketArea = function(socket){
   var rad = 3;
   for(var i = 0; i<rad*rad; i++){
@@ -49,12 +65,17 @@ Bucket.prototype.sendMegaPacketArea = function(socket){
     this.world.buckets.cellGet(x,y).sendMegaPacket(socket)
   }
 }
+
+//and here we kill everything in this bucket. I wonder what happens when a player is removed from the bucket without telling him?
 Bucket.prototype.clear = function(){
   this.objects = {};
   this.player = {};
 }
+
+//encapsulation shit. Don't know why I have done this.
 Bucket.prototype.getClients = function(){
   return this.player;
 }
 
+//and make it so requires can be used to get the bucket. Basic node.js stuff
 module.exports.Bucket = Bucket;

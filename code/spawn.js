@@ -1,11 +1,13 @@
 ent = require("./entity.js");
 
+//spawns an entity at a specific tile or position?
 function entity(type,x,y){
   var entity = new ent.Entity(type,x,y);
   entity.spawn();
   return entity;
 }
 
+//spawns an item at a specific tile
 function item(tx,ty,item){
   var type = item.type;
   var itm = res.items[type];
@@ -16,5 +18,6 @@ function item(tx,ty,item){
     //ent.changeImage(itm.image);
   }
 }
+
 module.exports.item = item;
 module.exports.entity = entity;

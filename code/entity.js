@@ -1,3 +1,4 @@
+//Entity constuctor
 function Entity(type,tx,ty){
   this.id = nextEntId;
   this.ent = res.objects[type];
@@ -10,14 +11,14 @@ function Entity(type,tx,ty){
   this.imageNumber = this.ent.imageNumber;
   this.imageIndex = this.ent.imageIndex;
   this.collision = this.ent.collision;
-  this.event_onclick = this.ent.onClick;
+  this.eventOnClick = this.ent.onClick;
   this.x = tx*32;
   this.y = ty*32;
   this.tx = tx;
   this.ty = ty;
   this.dragSpeed = 1;
   this.animation = false;
-  this.bucket = null;//wrd.buckets.cellGet(Math.floor(tx/config.bucket.width),Math.floor(ty/config.bucket.height));
+  this.bucket = null;
   this.sync = {};
   this.layer = this.ent.layer || 10;
   this.dragger = null;
@@ -33,6 +34,7 @@ function Entity(type,tx,ty){
   this.updateBucket();
 }
 
+//clear the thing that is dragging this thing
 Entity.prototype.clearDragger = function(){
   if (this.dragger != null){
     this.dragger.resetDrag();
@@ -40,11 +42,13 @@ Entity.prototype.clearDragger = function(){
   }
 }
 
+//set another thing which is now dragging this thing
 Entity.prototype.setDragger = function(dragger){
   this.clearDragger();
   this.dragger = dragger;
 }
 
+//called every step. Yes 60 times per second!
 Entity.prototype.step = function(delta){
   if (this.ent.onStep != undefined){
     this.ent.onStep(this);
@@ -56,15 +60,17 @@ Entity.prototype.step = function(delta){
   }
 }
 
+//uhm... there is an animation system in here?
 Entity.prototype.animate = function(){
   if (this.ent.onAnimation != undefined){
     this.ent.onAnimation(this);
   }
 }
 
+//so you can interact with entitys. This happens if somebody dares to interact!
 Entity.prototype.use = function(user,item){
-  if (this.event_onclick){
-    this.event_onclick(user,this);
+  if (this.eventOnClick){
+    this.eventOnClick(user,this);
   }
   var that = this;
   var itemType = res.items[item.type];
@@ -83,11 +89,13 @@ Entity.prototype.use = function(user,item){
   }
 }
 
+//change your image when you old is ruined
 Entity.prototype.changeImage = function(image){
   this.image = image;
   this.share({image: image, imageNumber: this.imageNumber, imageIndex: this.imageIndex, imageNumber: this.imageNumber});
 }
 
+//tell everybody near you how cool you are
 Entity.prototype.share = function(data){
   if (data){
     var obj = Object.assign({id: this.id},data)
@@ -101,6 +109,7 @@ Entity.prototype.share = function(data){
   }
 }
 
+//update because maybe something changed with you and you were not aware about that
 Entity.prototype.update = function(){
   this.updateBucket();
   if (this.ent.onUpdate){
@@ -113,13 +122,16 @@ Entity.prototype.update = function(){
   }
 }
 
+//suicide
 Entity.prototype.destroy = function(){
-  wrd.collisionFree(tx,ty,this);
-  delete wrd.ents[this.id];
-  handy.broadcast('ent_destroy',{id: this.id});
-  this.bucket.removeObject(this);
+  wrd.collisionFree(tx,ty,this); //say the world you are not any more blocking your position
+  delete wrd.ents[this.id]; //let the world forgot about you
+  handy.broadcast('ent_destroy',{id: this.id}); //let anybody know you are no longer existing
+  this.bucket.removeObject(this); //free you from the bucket
+  //now you can go into entity heaven
 }
 
+//move in an direction with a specific speed. The distance is one tile
 Entity.prototype.moveDir = function(direction,speed){
   var x = this.tx;
   var y = this.ty;
@@ -132,6 +144,7 @@ Entity.prototype.moveDir = function(direction,speed){
   return this.moveTo(x,y,speed);
 }
 
+//move onto a specific tile
 Entity.prototype.moveTo = function(x,y,speed){
   this.dragSpeed = speed;
   var c = this.move(x,y);
@@ -139,6 +152,7 @@ Entity.prototype.moveTo = function(x,y,speed){
   return c;
 }
 
+//why are there so many move function!!? Think this is something more teleporty?
 Entity.prototype.move = function(x,y){
   if (wrd.collisionCheck(x,y) == []){
     if (this.collision){
@@ -154,6 +168,7 @@ Entity.prototype.move = function(x,y){
   }
 }
 
+//reveal everything about you, the clients should know
 Entity.prototype.getClientData = function(){
   if (this.ent.tile != {}){
     return {x:this.x, y:this.y, image: this.image, id: this.id, imageIndex: this.imageIndex, imageNumber: this.imageNumber, layer: this.layer, tile: this.ent.tile}
@@ -162,14 +177,17 @@ Entity.prototype.getClientData = function(){
   }
 }
 
+//when you spawn send the things returning from the function above to the clients. This is obviously called when the ent spawns.
 Entity.prototype.spawn = function(){
-  handy.broadcast('ent_spawn',this.getClientData());
+  handy.broadcast('ent_spawn', this.getClientData());
 }
 
+//are you in same bucket as before or somewhere else? 
 Entity.prototype.updateBucket = function(){
   this.changeBucket(wrd.buckets.cellGet(Math.floor(this.tx/config.bucket.width),Math.floor(this.ty/config.bucket.height)));
 }
 
+//this bucket is shit. Go anywhere else where you think you belong more to
 Entity.prototype.changeBucket = function(bucket){
   if (bucket != undefined){
     if (this.bucket != bucket){
