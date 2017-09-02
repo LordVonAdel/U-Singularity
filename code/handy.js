@@ -7,11 +7,6 @@ module.exports = {
       obj.socket.emit(event,data);
     });
   },
-  stringSave: function(str){
-    str = str.replace(/>/g, '&gt');
-    str = str.replace(/</g, '&lt');
-    return str;
-  },
   command: function(sender,args){
     var cmd = loader.commands[args[0]]
     if (cmd !=undefined){
@@ -25,12 +20,12 @@ module.exports = {
     }
   },
   transition: function(now,target,speed,ease){
-  if (ease == 0){ //linear
-    if (Math.abs(target-now)>speed){
-      return now + Math.sign(target-now)*speed;
-      }else{
-      return target;
+    if (ease == 0){ //linear
+      if (Math.abs(target-now)>speed){
+        return now + Math.sign(target-now)*speed;
+        }else{
+        return target;
+      }
     }
   }
-}
 }

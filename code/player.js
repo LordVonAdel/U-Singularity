@@ -65,7 +65,7 @@ function Player(socket){
   });
 
   socket.on('chat', function(data){
-    data.msg = handy.stringSave(data.msg);
+    data.msg = that.stringSave(data.msg);
     console.log(that.name+": "+data.msg);
     if (data.msg.charAt(0)=="/"){
       var args = data.msg.slice(1).split(" ");
@@ -77,8 +77,8 @@ function Player(socket){
 
   socket.on('config',function(data){
     if (!that.config){
-      that.name = handy.stringSave(data.name);
-      that.config = true;
+      that.name = that.stringSave(data.name);
+      that.config = true;6
       that.gender = data.gender;
       that.job = data.job;
       that.share();
@@ -166,6 +166,12 @@ function Player(socket){
   }
 }
 
+Player.prototype.stringSave = function(str){
+  str = str.replace(/>/g, '&gt');
+  str = str.replace(/</g, '&lt');
+  return str;
+}
+
 Player.prototype.popup = function(id, filename){
   var that = this;
   fs.readFile(filename, "utf-8", function(err, str){
@@ -184,7 +190,7 @@ Player.prototype.disconnect = function(){
   playerlist.splice(i, 1);
 }
 
-Player.prototype.teleport= function(tileX,tileY){
+Player.prototype.teleport = function(tileX,tileY){
   //wrd.collisionFree(this.tileX,this.tileY,this);
   //wrd.collisionAdd(tileX,tileY,this);
   this.tileX = tileX;

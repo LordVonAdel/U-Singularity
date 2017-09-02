@@ -12,7 +12,7 @@ var res = { //object with every dynamic loaded content, excepts maps and command
   },
   actions: {},
   objects: {
-    "item":{
+    "item":{ //the item entity
       "sync":{item: null},
       "image":"items/item_crowbar.png",
       "onClick":function(sender,ent){
@@ -44,6 +44,7 @@ var res = { //object with every dynamic loaded content, excepts maps and command
   }
 }
 
+//this thing loads all content found in one file
 function load(filename,callback){
   function logLoad(num,key,filename){
     if (num[key] > 0){
@@ -90,7 +91,8 @@ function load(filename,callback){
   if(callback){callback();}
 }
 
-function auto(callback){ //loads all the things of the modules directory
+//loads all the things of the modules directory
+function auto(callback){
   fs.readdir( "./modules", function( err, files ){
     if(err){
       console.error("[Loader]Can't list the modules directory.", err);
@@ -114,6 +116,7 @@ function Tile(name, collision, image){
   //I don't know if this is called somewhere...
   //Ok, used the search function and it is not called anywhere.
   //There is a constructor which uses the name "Tile", but it is in the client code
+  //As you see down below, this is not event exported
   this.collision = collision;
   this.image = image;
 }
