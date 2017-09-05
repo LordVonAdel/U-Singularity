@@ -49,7 +49,7 @@ Entity.prototype.step = function(){
   this.sprite.setTexture(getTextureFrame(this.imagePath, this.imageIndex, this.image_width, this.image_height));
   if (this.walkAnimation == "jump"){
     var f = ((this.x % 32)/32)+((this.y % 32)/32);
-    this.sprite.y = this.y - Math.sin(f*Math.PI)*4+2;
+    this.sprite.y = this.y - (Math.sin(f*Math.PI)*4);
   }
   if (this.isBurning){
     if (this.spriteBurnFront == undefined){
