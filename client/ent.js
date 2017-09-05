@@ -1,9 +1,9 @@
 function Entity(id,x,y,image){
   this.image = image;
-  this.x = x;
-  this.y = y;
-  this.tx = Math.floor(x/32);
-  this.ty = Math.floor(y/32);
+  this.x = x; //x-coordinate in pixels
+  this.y = y; //y-coordinate in pixels
+  this.tx = Math.floor(x/32); //target x-coordinate in tiles
+  this.ty = Math.floor(y/32); //target y-coordinate in tiles
   this.id = id;
   this.image_scale = 1;
   this.imageNumber = 1;
@@ -14,6 +14,7 @@ function Entity(id,x,y,image){
   this.imagePath = subfolder+"sprites/"+image;
   this.walkAnimation = null;
   this.isBurning = false;
+  this.speed = 3.2;
 
   var tex = getTextureFrame(this.imagePath,0,32,32);
   this.container = new PIXI.Container();
@@ -44,6 +45,11 @@ Entity.prototype.update = function(data){
 }
 
 Entity.prototype.step = function(){
+  this.x += Math.sign(this.tx*32-this.x)*this.speed;
+  this.y += Math.sign(this.ty*32-this.y)*this.speed;
+  if (Math.abs(this.tx*32-this.x)<this.speed){this.x = this.tx*32}
+  if (Math.abs(this.ty*32-this.y)<this.speed){this.y = this.ty*32}
+
   this.sprite.x = this.x;
   this.sprite.y = this.y;
   this.sprite.setTexture(getTextureFrame(this.imagePath, this.imageIndex, this.image_width, this.image_height));

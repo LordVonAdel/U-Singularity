@@ -148,7 +148,7 @@ function Pawn() {
   this.y = 0;
   this.tileX = 0;
   this.tileY = 0;
-  this.moveSpeed = 3.2;
+  this.move = 3.2;
   this.name = "unnamed";
   this.direction = 0;
   this.job = "phy";

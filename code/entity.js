@@ -16,7 +16,7 @@ function Entity(type,tx,ty){
   this.y = ty*32;
   this.tx = tx;
   this.ty = ty;
-  this.dragSpeed = 1;
+  this.moveSpeed = 1;
   this.animation = false;
   this.bucket = null;
   this.sync = {};
@@ -54,9 +54,9 @@ Entity.prototype.step = function(delta){
     this.ent.onStep(this);
   }
   if (this.x != this.tx*32 || this.y != this.ty*32){
-    this.x = handy.transition(this.x,this.tx*32,this.dragSpeed*(delta*100),0)
-    this.y = handy.transition(this.y,this.ty*32,this.dragSpeed*(delta*100),0)
-    this.share({x:this.x, y:this.y});
+    this.x = handy.transition(this.x,this.tx*32,this.moveSpeed*(delta*100),0)
+    this.y = handy.transition(this.y,this.ty*32,this.moveSpeed*(delta*100),0)
+    //this.share({x:this.x, y:this.y});
   }
 }
 
@@ -146,9 +146,9 @@ Entity.prototype.moveDir = function(direction,speed){
 
 //move onto a specific tile
 Entity.prototype.moveTo = function(x,y,speed){
-  this.dragSpeed = speed;
+  this.moveSpeed = speed;
   var c = this.move(x,y);
-  this.share();
+  //this.share(); //already shared in .move()
   return c;
 }
 
@@ -161,6 +161,7 @@ Entity.prototype.move = function(x,y){
     }
     this.tx = x;
     this.ty = y;
+    this.share({tx: this.tx, ty: this.ty, speed: this.speed});
     this.updateBucket();
     return true;
   }else{

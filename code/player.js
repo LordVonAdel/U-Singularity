@@ -36,7 +36,7 @@ function Player(socket){
   this.bucket = null;
 
   this.ent = new Entity("player",this.tileX,this.tileY);
-  this.ent.dragSpeed = this.moveSpeed;
+  this.ent.moveSpeed = this.moveSpeed;
   socket.emit('cam',this.ent.id);
 
   //this.ent = new Entity("player",wrd.spawnX, wrd.spawnY);
