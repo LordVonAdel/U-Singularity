@@ -12,6 +12,7 @@ handy = require("./handy.js");
 mixtures = require("./mixtures.js");
 atmos = require("./atmos.js");
 buckets = require("./bucket.js");
+var Game = require("./game.js");
 
 var http = require("http").createServer(function( req, res){
   url = req.url;///url.parse(req.url);
@@ -35,8 +36,9 @@ loader.auto(function(){ //load all things from the modules directory
   res = loader.res;
   nextPlayerId = 0;
   nextEntId = 0;
-  wrd = new world.World(); //Construct World
-  wrd.load("maps/"+config.startWorld+".json");
+  //wrd = new world.World(); //Construct World
+  //wrd.load("maps/"+config.startWorld+".json");
+  games[0] = new Game();
   gm = require("./gamemode.js");
   require("./startup.js");
   
@@ -45,13 +47,18 @@ loader.auto(function(){ //load all things from the modules directory
 
 
 playerlist = [];
+games = [];
 
 frameCount = 0;
 var update = function(delta) {
-  playerlist.forEach(function(value){
-    value.step(delta);
+  games.forEach(function(game){
+    game.step(delta);
   });
+  /*playerlist.forEach(function(value){
+    value.step(delta);
+  });*/
   gm.loop();
+  /*
   for (k in wrd.ents){
     var ent = wrd.ents[k];
     if (ent.animation){
@@ -59,6 +66,7 @@ var update = function(delta) {
     }
     ent.step(delta);
   }
+  */
 }
 setInterval(function(){
   playerlist.forEach(function(value){

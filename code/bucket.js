@@ -53,7 +53,7 @@ Bucket.prototype.sendMegaPacket = function(socket){ //to left you see a function
   for(k in this.objects){
     socket.emit('ent_data',this.objects[k].getClientData());
   }
-  socket.emit('world_region',{str:wrd.grid.saveRegion(this.x*this.width, this.y*this.height, this.width, this.height),x:this.x*this.width,y:this.y*this.height,w:this.width})
+  socket.emit('world_region',{str: this.world.grid.saveRegion(this.x*this.width, this.y*this.height, this.width, this.height),x:this.x*this.width,y:this.y*this.height,w:this.width})
 }
 
 //and here we have the same but it sends data of his neighbors too

@@ -158,7 +158,7 @@ actions: { //----------------------------Actions-----------------------------
   extinguish: function(tileX,tileY){
     var index = wrd.cellGet(tileX,tileY);
     if (!res.tiles[index].collision){
-      spawn.entity("gas_argon",tileX,tileY);
+      //spawn.entity("gas_argon",tileX,tileY);
     }
   },
   scanAtmo: function(tileX,tileY,user){

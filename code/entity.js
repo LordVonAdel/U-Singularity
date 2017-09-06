@@ -1,9 +1,9 @@
 //Entity constuctor
-function Entity(type,tx,ty){
+function Entity(world, type, tx, ty){
   this.id = nextEntId;
   this.ent = res.objects[type];
   if (this.ent == undefined){
-    console.log("Unknown ent-type: "+type)
+    console.log("Unknown ent-type: "+type);
     return null;
   }
   this.type = type;
@@ -12,8 +12,8 @@ function Entity(type,tx,ty){
   this.imageIndex = this.ent.imageIndex;
   this.collision = this.ent.collision;
   this.eventOnClick = this.ent.onClick;
-  this.x = tx*32;
-  this.y = ty*32;
+  this.x = tx * 32;
+  this.y = ty * 32;
   this.tx = tx;
   this.ty = ty;
   this.moveSpeed = 1;
@@ -22,14 +22,15 @@ function Entity(type,tx,ty){
   this.sync = {};
   this.layer = this.ent.layer || 10;
   this.dragger = null;
+  this.world = world;
 
   Object.assign(this.sync, this.ent.sync);
   if (this.ent.oninit != undefined){
     this.ent.onInit(this);
   }
 
-  wrd.ents[nextEntId] = this;
-  nextEntId ++;
+  this.world.ents[this.world.nextEntId] = this;
+  this.world.nextEntId ++;
 
   this.updateBucket();
 }
@@ -105,7 +106,7 @@ Entity.prototype.share = function(data){
   if (this.bucket != null){
     this.bucket.broadcastArea('ent_data',obj);
   }else{
-    handy.broadcast('ent_data',obj);
+    this.world.broadcast('ent_data',obj);
   }
 }
 
@@ -116,18 +117,20 @@ Entity.prototype.update = function(){
     this.ent.onUpdate(this);
   }
   if (this.collision){
-    wrd.collisionAdd(this.tx,this.ty,this);
+    this.world.collisionAdd(this.tx,this.ty,this);
   }else{
-    wrd.collisionFree(this.tx,this.ty,this);
+    this.world.collisionFree(this.tx,this.ty,this);
   }
 }
 
 //suicide
 Entity.prototype.destroy = function(){
-  wrd.collisionFree(tx,ty,this); //say the world you are not any more blocking your position
-  delete wrd.ents[this.id]; //let the world forgot about you
-  handy.broadcast('ent_destroy',{id: this.id}); //let anybody know you are no longer existing
-  this.bucket.removeObject(this); //free you from the bucket
+  this.world.collisionFree(this.tx,this.ty,this); //say the world you are not any more blocking your position
+  delete this.world.ents[this.id]; //let the world forgot about you
+  this.world.broadcast('ent_destroy',{id: this.id}); //let anybody know you are no longer existing
+  if (this.bucket != null){
+    this.bucket.removeObject(this); //free you from the bucket
+  }
   //now you can go into entity heaven
 }
 
@@ -154,10 +157,10 @@ Entity.prototype.moveTo = function(x,y,speed){
 
 //why are there so many move function!!? Think this is something more teleporty?
 Entity.prototype.move = function(x,y){
-  if (wrd.collisionCheck(x,y) == []){
+  if (this.world.collisionCheck(x,y) == []){
     if (this.collision){
-      wrd.collisionFree(this.tx,this.ty,this);
-      wrd.collisionAdd(x,y,this);
+      this.world.collisionFree(this.tx,this.ty,this);
+      this.world.collisionAdd(x,y,this);
     }
     this.tx = x;
     this.ty = y;
@@ -180,12 +183,12 @@ Entity.prototype.getClientData = function(){
 
 //when you spawn send the things returning from the function above to the clients. This is obviously called when the ent spawns.
 Entity.prototype.spawn = function(){
-  handy.broadcast('ent_spawn', this.getClientData());
+  this.world.broadcast('ent_spawn', this.getClientData());
 }
 
 //are you in same bucket as before or somewhere else? 
 Entity.prototype.updateBucket = function(){
-  this.changeBucket(wrd.buckets.cellGet(Math.floor(this.tx/config.bucket.width),Math.floor(this.ty/config.bucket.height)));
+  this.changeBucket(this.world.buckets.cellGet(Math.floor(this.tx/config.bucket.width),Math.floor(this.ty/config.bucket.height)));
 }
 
 //this bucket is shit. Go anywhere else where you think you belong more to

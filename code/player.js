@@ -9,8 +9,8 @@ Entity = require('./entity.js').Entity;
 
 function Player(socket){
   this.socket = socket;
-  this.tileX = wrd.spawnX;
-  this.tileY = wrd.spawnY;
+  this.tileX = 0;//wrd.spawnX;
+  this.tileY = 0;//wrd.spawnY;
   this.x = this.tileX*32;
   this.y = this.tileY*32;
   this.health = 100;
@@ -35,9 +35,11 @@ function Player(socket){
   this.pushCooldown = 0;
   this.bucket = null;
 
-  this.ent = new Entity("player",this.tileX,this.tileY);
-  this.ent.moveSpeed = this.moveSpeed;
-  socket.emit('cam',this.ent.id);
+  this.ent = null;
+  this.world = null;
+  this.game = null;
+  //this.ent.moveSpeed = this.moveSpeed;
+  //socket.emit('cam',this.ent.id);
 
   //this.ent = new Entity("player",wrd.spawnX, wrd.spawnY);
 
@@ -61,7 +63,10 @@ function Player(socket){
   console.log("Construct Player "+this.id);
 
   socket.on('move',function(data){
-    that.move(data.dir);
+    if (that.game != null){
+      that.move(data.dir);
+      //that.ent.move(data.dir);
+    }
   });
 
   socket.on('chat', function(data){
@@ -71,7 +76,7 @@ function Player(socket){
       var args = data.msg.slice(1).split(" ");
       handy.command(that,args);
     }else{
-      handy.broadcast('chat',{msg: '<span class="name">'+that.name+":</span> "+data.msg, player: that.id, raw: data.msg});
+      that.game.broadcast('chat',{msg: '<span class="name">'+that.name+":</span> "+data.msg, player: that.id, raw: data.msg});
     }
   });
 
@@ -132,34 +137,38 @@ function Player(socket){
   });
 
   socket.on('ent_click',function(data){
-    var itm = that.inventory[that.inventoryActive];
-    if (itm == null){itm={type:"hand"}}
-    var ent = wrd.ents[data.id];
-    if (ent != undefined){
-      if (Math.hypot(ent.x-that.x, ent.y-that.y)<(that.handRange+1)*32){
-        ent.use(that,itm);
+    if (that.game != null){
+      var itm = that.inventory[that.inventoryActive];
+      if (itm == null){itm={type:"hand"}}
+      var ent = that.world.ents[data.id];
+      if (ent != undefined){
+        if (Math.hypot(ent.x-that.x, ent.y-that.y)<(that.handRange+1)*32){
+          ent.use(that,itm);
+        }
       }
+      //console.log("player clicked on "+data.id);
+      //ents.data.id.click();
     }
-    //console.log("player clicked on "+data.id);
-    //ents.data.id.click();
   });
 
   socket.on('ent_drag',function(data){
-    var ent = wrd.ents[data.id];
-    if (ent == that.drag){
-      ent.clearDragger();
-    }else{
-      if (ent.ent.dragable){
-        if (Math.hypot(ent.x-that.x, ent.y-that.y)<(that.handRange+1)*32){
-          that.drag = ent;
-          ent.setDragger(that);
+    if (that.game != null){
+      var ent = wrd.ents[data.id];
+      if (ent == that.drag){
+        ent.clearDragger();
+      }else{
+        if (ent.ent.dragable){
+          if (Math.hypot(ent.x-that.x, ent.y-that.y)<(that.handRange+1)*32){
+            that.drag = ent;
+            ent.setDragger(that);
+          }
         }
       }
+      that.shareSelf({"drag":(that.drag != null)})
     }
-    that.shareSelf({"drag":(that.drag != null)})
   }); 
 
-  this.updateBucket();
+  //this.updateBucket();
 
   if (this.bucket != null){
     this.bucket.sendMegaPacketArea(this.socket);
@@ -184,8 +193,8 @@ Player.prototype.msg = function(msg){
 }
 
 Player.prototype.disconnect = function(){
-  wrd.collisionFree(this.tileX,this.tileY,this);
-  handy.broadcast('disc',{id: this.id});
+  this.world.collisionFree(this.tileX,this.tileY,this);
+  this.game.broadcast('disc',{id: this.id});
   var i = playerlist.indexOf(this);
   playerlist.splice(i, 1);
 }
@@ -230,13 +239,13 @@ Player.prototype.move = function(direction){
     if (!this.inMovement){
       this.move_action = this.move_time;
       if (direction == 0){
-        if (!wrd.collisionCheck(this.tileX+1,this.tileY) || this.noclip ){
+        if (!this.world.collisionCheck(this.tileX+1,this.tileY) || this.noclip ){
           this.tileX += 1;
           success = true;
         }
       }
       if (direction == 2){
-        if (!wrd.collisionCheck(this.tileX-1,this.tileY) || this.noclip){
+        if (!this.world.collisionCheck(this.tileX-1,this.tileY) || this.noclip){
           this.tileX -= 1;
           success = true;
         }
@@ -244,13 +253,13 @@ Player.prototype.move = function(direction){
     }
     if (!this.inMovement){
       if (direction == 1){
-        if (!wrd.collisionCheck(this.tileX,this.tileY-1) || this.noclip){
+        if (!this.world.collisionCheck(this.tileX,this.tileY-1) || this.noclip){
           this.tileY -= 1;
           success = true;
         }
       }
       if (direction == 3){
-        if (!wrd.collisionCheck(this.tileX,this.tileY+1) || this.noclip){
+        if (!this.world.collisionCheck(this.tileX,this.tileY+1) || this.noclip){
           this.tileY += 1;
           success = true;
         }
@@ -274,9 +283,9 @@ Player.prototype.move = function(direction){
     this.pushCooldown += 1;
     if (this.pushCooldown >= 10){
       this.pushCooldown = 0;
-      var collide = wrd.gridCollision.cellGet(targetX,targetY);
-      collide.forEach(function(value,index){
-        var ent = wrd.ents[value];
+      var collide = this.world.gridCollision.cellGet(targetX,targetY);
+      /*collide.forEach(function(value,index){
+        var ent = this.world.ents[value];
         if (ent != undefined){
           ent.clearDragger();
           if(ent.ent.dragable){
@@ -286,7 +295,7 @@ Player.prototype.move = function(direction){
             ent.ent.onPush(this,ent);
           }
         }
-      });
+      });*/
       this.push = false;
     }
   }
@@ -303,7 +312,7 @@ Player.prototype.share = function(data){
   if (this.bucket != null){
     this.bucket.broadcastArea('player_stats',obj,3);
   }else{
-    handy.broadcast('player_stats',obj);
+    this.game.broadcast('player_stats',obj);
   }
 }
 
@@ -317,7 +326,7 @@ Player.prototype.step = function(delta){
   if (this.x == this.tileX*32 && this.y == this.tileY*32){
     this.inMovement = false;
   }
-  handy.broadcast('player_move',{x: this.tileX, y: this.tileY, id: this.id, w_x: this.x, w_y: this.y, dir: this.direction})
+  this.game.broadcast('player_move',{x: this.tileX, y: this.tileY, id: this.id, w_x: this.x, w_y: this.y, dir: this.direction})
   if (this.burning){
     this.health -= config.damage.burn;
   }
@@ -341,7 +350,7 @@ Player.prototype.getPermission = function(permission){
 }
 
 Player.prototype.updateBucket = function(){
-  var tbucket = wrd.buckets.cellGet(Math.floor(this.tileX/config.bucket.width),Math.floor(this.tileY/config.bucket.height))
+  var tbucket = this.world.buckets.cellGet(Math.floor(this.ent.tx/config.bucket.width),Math.floor(this.ent.ty/config.bucket.height))
   this.changeBucket(tbucket);
 }
 
@@ -355,8 +364,6 @@ Player.prototype.changeBucket = function(bucket){
       this.bucket = bucket;
       this.bucket.sendMegaPacketArea(this.socket);
     }
-  }else{
-    console.log("Where is my bucket!?")
   }
 }
 

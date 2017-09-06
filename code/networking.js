@@ -30,10 +30,11 @@ io.on('connection', function(socket){
 
   socket.on('welcome', function(data){
     var pl = new player.Player(socket);
-    playerlist.push(pl);
-    pl.teleport(wrd.spawnX, wrd.spawnY);
+    //playerlist.push(pl);
+    games[0].addPlayer(pl);
+    //pl.teleport(wrd.spawnX, wrd.spawnY);
     pl.popup("config","./html/login.html");
-    handy.broadcast('player_joined',{id: pl.id})
+    games[0].broadcast('player_joined',{id: pl.id});
     nextPlayerId ++;
   });
 });
