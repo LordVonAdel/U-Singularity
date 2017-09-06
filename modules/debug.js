@@ -9,19 +9,13 @@ module.exports = {
     },
     ents: {
       fun: function(sender,args){
-        sender.msg(JSON.stringify(wrd.ents));
+        sender.msg(JSON.stringify(sender.world.ents));
       }
     },
     cellGet: {
       fun: function(sender, args){
-        var index = wrd.cellGet(sender.tileX,sender.tileY);
+        var index = sender.world.grid.cellGet(sender.tileX,sender.tileY);
         sender.msg("TileID: "+index);
-      }
-    },
-    collision_get: {
-      fun: function(sender,args){
-        var list = JSON.stringify(wrd.gridCollision.cellGet(sender.tileX,sender.tileY));
-        sender.msg("Collision: "+list);
       }
     },
     help: {

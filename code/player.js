@@ -9,8 +9,8 @@ Entity = require('./entity.js').Entity;
 
 function Player(socket){
   this.socket = socket;
-  this.tileX = 0;//wrd.spawnX;
-  this.tileY = 0;//wrd.spawnY;
+  this.tileX = 0;
+  this.tileY = 0;
   this.x = this.tileX*32;
   this.y = this.tileY*32;
   this.health = 100;
@@ -64,8 +64,13 @@ function Player(socket){
 
   socket.on('move',function(data){
     if (that.game != null){
-      that.move(data.dir);
-      //that.ent.move(data.dir);
+      //that.move(data.dir);
+      if (!that.ent.isMoving){
+        that.ent.moveDir(data.dir, that.moveSpeed);
+        that.ent.imageIndex = data.dir;
+        that.ent.share({imageIndex: that.ent.imageIndex});
+        that.updateBucket();
+      }
     }
   });
 
@@ -109,9 +114,9 @@ function Player(socket){
       var yy = data.y;
       if (that.inventory[that.inventoryActive] != null){
         var fun = res.actions[res.items[that.inventory[that.inventoryActive].type].onUseFloor];
-        if (Math.hypot(xx-that.tileX, yy-that.tileY)<that.handRange+1){
+        if (Math.hypot(xx-that.ent.tileX, yy-that.ent.tileY)<that.handRange+1){
           if (fun != undefined){
-            fun(xx,yy,that);
+            fun(that.world, xx, yy, that);
           }
         }
       }
@@ -127,9 +132,9 @@ function Player(socket){
 
   socket.on('drop',function(data){
     var itm = that.inventory[that.inventoryActive];
-    if (!wrd.collisionCheck(data.x,data.y)){
+    if (!that.world.collisionCheck(data.x,data.y)){
       if (itm != null){
-        spawn.item(data.x,data.y,itm);
+        world.spawnItem(data.x,data.y,itm);
         that.inventory[that.inventoryActive] = null;
         that.share();
       }
@@ -141,8 +146,8 @@ function Player(socket){
       var itm = that.inventory[that.inventoryActive];
       if (itm == null){itm={type:"hand"}}
       var ent = that.world.ents[data.id];
-      if (ent != undefined){
-        if (Math.hypot(ent.x-that.x, ent.y-that.y)<(that.handRange+1)*32){
+      if (ent){
+        if (Math.hypot(ent.x-that.ent.x, ent.y-that.ent.y)<(that.handRange+1)*32){
           ent.use(that,itm);
         }
       }
@@ -153,18 +158,20 @@ function Player(socket){
 
   socket.on('ent_drag',function(data){
     if (that.game != null){
-      var ent = wrd.ents[data.id];
-      if (ent == that.drag){
-        ent.clearDragger();
-      }else{
-        if (ent.ent.dragable){
-          if (Math.hypot(ent.x-that.x, ent.y-that.y)<(that.handRange+1)*32){
-            that.drag = ent;
-            ent.setDragger(that);
+      var ent = that.world.getEntById(data.id);//that.world.ents[data.id];
+      if (ent != null){
+        if (ent == that.ent.drag){
+          ent.clearDragger();
+        }else{
+          if (ent.ent.dragable){
+            if (Math.hypot(ent.x-that.x, ent.y-that.y)<(that.handRange+1)*32){
+              that.ent.drag = ent;
+              ent.setDragger(that);
+            }
           }
         }
       }
-      that.shareSelf({"drag":(that.drag != null)})
+      that.shareSelf({"drag":(that.ent.drag != null)})
     }
   }); 
 
@@ -193,27 +200,24 @@ Player.prototype.msg = function(msg){
 }
 
 Player.prototype.disconnect = function(){
-  this.world.collisionFree(this.tileX,this.tileY,this);
+  this.ent.destroy();
   this.game.broadcast('disc',{id: this.id});
   var i = playerlist.indexOf(this);
   playerlist.splice(i, 1);
 }
 
 Player.prototype.teleport = function(tileX,tileY){
-  //wrd.collisionFree(this.tileX,this.tileY,this);
-  //wrd.collisionAdd(tileX,tileY,this);
+  this.ent.teleport(tileX, tileY);
   this.tileX = tileX;
   this.tileY = tileY;
-  this.x = tileX*32;
-  this.y = tileY*32;
+  this.ent.tx = tileX;
+  this.ent.ty = tileY;
   this.updateBucket();
 }
 
 Player.prototype.moveTo = function(x,y,speed){
-  //wrd.collisionFree(this.tileX,this.tileY,this);
   this.tileX = x;
   this.tileY = y;
-  //wrd.collisionAdd(this.tileX,this.tileY,this);
   this.updateBucket();
   return true;
 }
@@ -268,8 +272,6 @@ Player.prototype.move = function(direction){
   }
   if (success){
     this.pushCooldown = 0;
-    //wrd.collisionFree(startX,startY,this);
-    //wrd.collisionAdd(this.tileX,this.tileY,this);
     this.updateBucket();
     this.inMovement = true;
     this.ent.move(this.tileX, this.tileY);
@@ -283,7 +285,7 @@ Player.prototype.move = function(direction){
     this.pushCooldown += 1;
     if (this.pushCooldown >= 10){
       this.pushCooldown = 0;
-      var collide = this.world.gridCollision.cellGet(targetX,targetY);
+      var collide = this.world.gridEntities.cellGet(targetX,targetY);
       /*collide.forEach(function(value,index){
         var ent = this.world.ents[value];
         if (ent != undefined){

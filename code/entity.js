@@ -1,6 +1,6 @@
 //Entity constuctor
 function Entity(world, type, tx, ty){
-  this.id = nextEntId;
+  this.id = world.nextEntId;
   this.ent = res.objects[type];
   if (this.ent == undefined){
     console.log("Unknown ent-type: "+type);
@@ -21,8 +21,10 @@ function Entity(world, type, tx, ty){
   this.bucket = null;
   this.sync = {};
   this.layer = this.ent.layer || 10;
-  this.dragger = null;
+  this.dragger = null; //The thing this is dragged by
+  this.drag = null; //The thing this is dragging
   this.world = world;
+  this.isMoving = false;
 
   Object.assign(this.sync, this.ent.sync);
   if (this.ent.oninit != undefined){
@@ -47,6 +49,7 @@ Entity.prototype.clearDragger = function(){
 Entity.prototype.setDragger = function(dragger){
   this.clearDragger();
   this.dragger = dragger;
+  this.dragger.drag = this;
 }
 
 //called every step. Yes 60 times per second!
@@ -55,8 +58,11 @@ Entity.prototype.step = function(delta){
     this.ent.onStep(this);
   }
   if (this.x != this.tx*32 || this.y != this.ty*32){
-    this.x = handy.transition(this.x,this.tx*32,this.moveSpeed*(delta*100),0)
-    this.y = handy.transition(this.y,this.ty*32,this.moveSpeed*(delta*100),0)
+    this.x = handy.transition(this.x,this.tx*32,this.moveSpeed*(delta*100),0);
+    this.y = handy.transition(this.y,this.ty*32,this.moveSpeed*(delta*100),0);
+    if (Math.abs(this.x - this.tx*32)+Math.abs(this.y - this.ty*32) < this.moveSpeed){
+      this.isMoving = false;
+    }
     //this.share({x:this.x, y:this.y});
   }
 }
@@ -116,16 +122,13 @@ Entity.prototype.update = function(){
   if (this.ent.onUpdate){
     this.ent.onUpdate(this);
   }
-  if (this.collision){
-    this.world.collisionAdd(this.tx,this.ty,this);
-  }else{
-    this.world.collisionFree(this.tx,this.ty,this);
-  }
+  this.world.gridEntFree(this.tx,this.ty,this);
+  this.world.gridEntAdd(this.tx,this.ty,this);
 }
 
 //suicide
 Entity.prototype.destroy = function(){
-  this.world.collisionFree(this.tx,this.ty,this); //say the world you are not any more blocking your position
+  this.world.gridEntFree(this.tx,this.ty,this); //say the world you are not any more blocking your position
   delete this.world.ents[this.id]; //let the world forgot about you
   this.world.broadcast('ent_destroy',{id: this.id}); //let anybody know you are no longer existing
   if (this.bucket != null){
@@ -150,24 +153,31 @@ Entity.prototype.moveDir = function(direction,speed){
 //move onto a specific tile
 Entity.prototype.moveTo = function(x,y,speed){
   this.moveSpeed = speed;
-  var c = this.move(x,y);
-  //this.share(); //already shared in .move()
-  return c;
+  return this.move(x,y);
 }
 
-//why are there so many move function!!? Think this is something more teleporty?
+//why are there so many move function!!?
 Entity.prototype.move = function(x,y){
-  if (this.world.collisionCheck(x,y) == []){
-    if (this.collision){
-      this.world.collisionFree(this.tx,this.ty,this);
-      this.world.collisionAdd(x,y,this);
+  if (!this.world.collisionCheck(x,y)){
+    this.world.gridEntFree(this.tx,this.ty,this);
+    this.world.gridEntAdd(x,y,this);
+    if (this.drag){
+      this.drag.moveTo(this.tx, this.ty, this.moveSpeed);
     }
     this.tx = x;
     this.ty = y;
     this.share({tx: this.tx, ty: this.ty, speed: this.speed});
     this.updateBucket();
+    this.isMoving = true;
     return true;
   }else{
+    var c = this.world.collisionsGet(x, y);
+    for (var i=0; i < c.length; i++){
+      ent = c[i];
+      if (ent.ent.onPush){
+        ent.ent.onPush(ent, this);
+      }
+    }
     return false;
   }
 }
@@ -204,4 +214,13 @@ Entity.prototype.changeBucket = function(bucket){
   }
 }
 
-module.exports.Entity = Entity;
+//Teleport this entity
+Entity.prototype.teleport = function(tileX, tileY){
+  this.tx = tileX;
+  this.ty = tileY;
+  this.x = tileX*32;
+  this.y = tileY*32;
+  this.updateBucket();
+}
+
+module.exports = Entity;

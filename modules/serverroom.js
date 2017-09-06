@@ -52,7 +52,7 @@ module.exports = {
       "collision":true,
       "dragable":true,
       "onInit":function(ent){ent.sync.fuel = 100, ent.sync.open=0},
-      "onStep":function(ent){if(ent.sync.fuel > 0 && ent.sync.open == 1){ent.sync.fuel -= 1; atmos.addGas(ent.tx,ent.ty,{ar:1}); if(ent.sync.fuel <= 0){ent.imageIndex=0; ent.update(); ent.share();}}},
+      "onStep":function(ent){if(ent.sync.fuel > 0 && ent.sync.open == 1){ent.sync.fuel -= 1; /*atmos.addGas(ent.tx,ent.ty,{ar:1});*/ if(ent.sync.fuel <= 0){ent.imageIndex=0; ent.update(); ent.share();}}},
       "actions":{
         "hand":function(user,ent){ent.sync.open = 1-ent.sync.open; ent.imageIndex=ent.sync.open; ent.update(); ent.share();}
       }

@@ -6,12 +6,13 @@ function World(game){
   this.width = 100;
   this.height = 100;
   this.ents = {};
-  this.grid = new Grid(this.width,this.height);
-  this.gridCollision = new Grid(this.width,this.height);
+  this.grid = new Grid(this.width, this.height);
+  this.gridEntities = new Grid(this.width, this.height);
   this.nextEntId = 0;
-  this.gridCollision.forEach(function(tileX,tileY){
-    that.gridCollision.cellSet(tileX,tileY,[]);
+  this.gridEntities.forEach(function(tileX,tileY){
+    return [];
   });
+  
   this.spawnX = 0;
   this.spawnY = 0;
   this.buckets = new Grid(this.width/config.bucket.width,this.height/config.bucket.height);
@@ -36,7 +37,7 @@ World.prototype.resize = function(width, height){
   this.width = width;
   this.height = height;
   this.grid.resize(width, height);
-  this.gridCollision.resize(width,height);
+  this.gridEntities.resize(width,height);
   this.buckets.resize(Math.floor(width/config.bucket.width), Math.floor(height/config.bucket.height))
   this.buckets.forEach(function(tileX,tileY){
     that.buckets.cellSet(tileX,tileY,new buckets.Bucket(tileX,tileY,that));
@@ -97,8 +98,8 @@ World.prototype.save = function(filename){
 //clears the world
 World.prototype.clear = function(){
   this.broadcast('clear',{});
-  this.gridCollision.forEach(function(tileX,tileY){
-    that.gridCollision.cellSet(tileX,tileY,[]);
+  this.gridEntities.forEach(function(tileX,tileY){
+    that.gridEntities.cellSet(tileX,tileY,[]);
   });
   this.grid.forEach(function(tileX,tileY){
     that.grid.cellSet(tileX,tileY,0);
@@ -152,21 +153,20 @@ World.prototype.load = function(filename){
 }
 
 //adds a thing at a position to collide with
-World.prototype.collisionAdd = function(tileX,tileY,obj){
-  var cell = this.gridCollision.cellGet(tileX,tileY);
+World.prototype.gridEntAdd = function(tileX,tileY,obj){
+  var cell = this.gridEntities.cellGet(tileX,tileY);
   if (Array.isArray(cell)){
-    var index = cell.indexOf(obj.id);
-    if (index == -1){
-      cell.push(obj.id);
+    if (!cell.includes(obj)){
+      cell.push(obj);
     }
   }
 }
 
 //removes a thing at a position, which could be collided with
-World.prototype.collisionFree = function(tileX,tileY,obj){
-  var cell = this.gridCollision.cellGet(tileX,tileY);
+World.prototype.gridEntFree = function(tileX,tileY,obj){
+  var cell = this.gridEntities.cellGet(tileX,tileY);
   if (Array.isArray(cell)){
-    var index = cell.indexOf(obj.id)
+    var index = cell.indexOf(obj)
     if (index != -1){
       cell.splice(index,1);
     }
@@ -181,10 +181,15 @@ World.prototype.collisionCheck = function(tileX,tileY){
   if (tile != undefined){
     col = tile.collision;
   }
-  if (this.gridCollision.cellGet(tileX,tileY) instanceof Array){
-    col += this.gridCollision.cellGet(tileX,tileY).length; 
+  if (this.gridEntities.cellGet(tileX,tileY) instanceof Array){
+    col += this.collisionsGet(tileX, tileY).length;
   }
   return (col != 0);
+}
+
+//get array of solid ents on position
+World.prototype.collisionsGet = function(tileX, tileY){
+  return this.gridEntities.cellGet(tileX,tileY).filter((ent) => {return ent.collision});
 }
 
 //returns the distance between to points
@@ -210,6 +215,30 @@ World.prototype.broadcast = function(event, data){
       player.socket.emit(event, data);
     }
   });
+}
+
+//gets an entity form this world by its id
+World.prototype.getEntById = function(entId){
+  var ent = this.ents[entId];
+  if (ent == undefined){
+    return null
+  }else{
+    return ent;
+  }
+}
+
+World.prototype.spawnEntity = function(type, x, y){
+  var entity = new Entity(this, type, x, y);
+  entity.spawn();
+  this.nextEntId ++;
+}
+
+World.prototype.spawnItem = function(x, y, item){
+  var entity = new Entity(this, "item", x, y);
+  entity.spawn();
+  entity.sync.item = item;
+  entity.update();
+  this.nextEntId ++;
 }
 
 module.exports = World;

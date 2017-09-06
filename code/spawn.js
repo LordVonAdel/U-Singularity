@@ -1,8 +1,8 @@
-ent = require("./entity.js");
+Entity = require("./entity.js");
 
 //spawns an entity at a specific tile or position?
 function entity(world, type, x, y){
-  var entity = new ent.Entity(world, type,x,y);
+  var entity = new Entity(world, type,x,y);
   entity.spawn();
   return entity;
 }
@@ -12,7 +12,7 @@ function item(world, tx, ty, item){
   var type = item.type;
   var itm = res.items[type];
   if (itm != undefined){
-    var entity = new ent.Entity(world, "item",tx,ty);
+    var entity = new Entity(world, "item", tx, ty);
     entity.sync.item = item;
     entity.update();
     //ent.changeImage(itm.image);

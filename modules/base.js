@@ -47,7 +47,7 @@ commands: {  //-------------------------Commands-----------------------
     fun: function(sender,args){
       if (args.length>=1){
         var filename = "./maps/"+args[1]+".json";
-        wrd.save(filename);
+        sender.world.save(filename);
       }
     }
   },
@@ -57,14 +57,14 @@ commands: {  //-------------------------Commands-----------------------
     fun: function(sender, args){
       if (args.length>=1){
         var filename = "./maps/"+args[1]+".json";
-        wrd.load(filename);
+        sender.world.load(filename);
       }
     }
   },
   world_clear: {
     permission: "world.clear",
     fun: function(sender, args){
-      wrd.clear();
+      sender.world.clear();
     }
   },
   spawn_set: {
@@ -120,42 +120,42 @@ commands: {  //-------------------------Commands-----------------------
   }
 },
 actions: { //----------------------------Actions-----------------------------
-  build_metal: function(tileX,tileY){
-    var index = wrd.cellGet(tileX,tileY);
+  build_metal: function(world, tileX, tileY){
+    var index = world.cellGet(tileX,tileY);
     switch(index){
       case 0:
-      wrd.cellSet(tileX,tileY,6);
+        world.cellSet(tileX,tileY,6);
       break;
       case 5:
-      wrd.cellSet(tileX,tileY,2);
+        world.cellSet(tileX,tileY,2);
       break;
     }
   },
-  build_armor: function(tileX,tileY){
+  build_armor: function(world, tileX, tileY){
     var index = wrd.cellGet(tileX,tileY);
     if (index == 2){
-      wrd.cellSet(tileX,tileY,7);
+      world.cellSet(tileX,tileY,7);
     }
     if (index == 0){
-      wrd.cellSet(tileX,tileY,8);
+      world.cellSet(tileX,tileY,8);
     }
   },
-  build_glass: function(tileX,tileY){
-    var index = wrd.cellGet(tileX,tileY);
+  build_glass: function(world, tileX,tileY){
+    var index = world.cellGet(tileX,tileY);
     if (index == 5){
-      wrd.cellSet(tileX,tileY,4);
+      world.cellSet(tileX,tileY,4);
     }
     if (index == 2){
-      wrd.cellSet(tileX,tileY,3);
+      world.cellSet(tileX,tileY,3);
     }
   },
-  build_wall: function(tileX,tileY){
-    wrd.cellSet(tileX,tileY,5);
+  build_wall: function(world, tileX,tileY){
+    world.cellSet(tileX,tileY,5);
   },
-  crowbar: function(tileX,tileY){
-    wrd.cellSet(tileX,tileY,0);
+  crowbar: function(world, tileX,tileY){
+    world.cellSet(tileX,tileY,0);
   },
-  extinguish: function(tileX,tileY){
+  extinguish: function(world, tileX,tileY){
     var index = wrd.cellGet(tileX,tileY);
     if (!res.tiles[index].collision){
       //spawn.entity("gas_argon",tileX,tileY);
@@ -167,7 +167,7 @@ actions: { //----------------------------Actions-----------------------------
     for(k in tile.content){
       str+="<br>|"+k+": "+tile.content[k];
     }
-    str+="<br>Temperature: "+tile.temperature+"K"
+    str+="<br>Temperature: "+tile.temperature+"K";
     user.msg(str);
   }
 },
@@ -177,7 +177,7 @@ objects: { //-----------------------Objects-----------------------------
                 "onInit":function(ent){ent.sync.open = 0; ent.sync.frame = 0;},
                 "onClick":function(user,ent){ent.sync.open = 1-ent.sync.open; ent.share(); ent.update(); ent.animation = true;},
                 "onAnimation":function(ent){ent.sync.frame = handy.transition(ent.sync.frame,ent.sync.open,1/30,0);ent.imageIndex = Math.floor(ent.sync.frame*(ent.imageNumber-1)); ent.collision = (Math.floor(ent.sync.frame)==0); ent.update(); ent.share(); if(ent.sync.frame == ent.sync.open){ent.animation = false}},
-                "onPush":function(user,ent){ent.sync.open = 1; ent.animation = true},
+                "onPush":function(ent,user){ent.sync.open = 1; ent.animation = true},
                 "onUpdate":function(ent){ent.imageIndex = Math.floor(ent.sync.frame*(ent.imageNumber-1)); ent.collision = (Math.floor(ent.sync.frame)==0);},
                 "actions":{},
                 "tile":{"connectionGroup":"walls"},
