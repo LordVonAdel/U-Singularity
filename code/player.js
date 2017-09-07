@@ -6,6 +6,7 @@ const jobSprites = {
 }
 
 Entity = require('./entity.js').Entity;
+handy = require('./handy.js');
 
 function Player(socket){
   this.socket = socket;
@@ -77,9 +78,10 @@ function Player(socket){
   socket.on('chat', function(data){
     data.msg = that.stringSave(data.msg);
     console.log(that.name+": "+data.msg);
-    if (data.msg.charAt(0)=="/"){
+    if (data.msg.charAt(0)=="/"){ //if the message is a command
       var args = data.msg.slice(1).split(" ");
-      handy.command(that,args);
+      var sender = that;
+      that.executeCommand();
     }else{
       that.game.broadcast('chat',{msg: '<span class="name">'+that.name+":</span> "+data.msg, player: that.id, raw: data.msg});
     }
@@ -164,9 +166,9 @@ function Player(socket){
           ent.clearDragger();
         }else{
           if (ent.ent.dragable){
-            if (Math.hypot(ent.x-that.x, ent.y-that.y)<(that.handRange+1)*32){
+            if (Math.hypot(ent.x-that.ent.x, ent.y-that.ent.y)<(that.handRange+1)*32){
               that.ent.drag = ent;
-              ent.setDragger(that);
+              ent.setDragger(that.ent);
             }
           }
         }
@@ -179,6 +181,19 @@ function Player(socket){
 
   if (this.bucket != null){
     this.bucket.sendMegaPacketArea(this.socket);
+  }
+}
+
+Player.prototype.executeCommand = function(args){
+  var cmd = loader.commands[args[0]]
+  if (cmd !=undefined){
+    if (args.length > cmd.argNum || cmd.argNum == undefined){
+      cmd.fun(this,args);
+    }else{
+      this.msg('<span style="color: red;">Command expects '+cmd.argNum+" arguments or more</span>");
+    }
+  }else{
+    this.msg('<span style="color: red;">Unknown command: '+args[0]+"</span>");
   }
 }
 
@@ -223,86 +238,8 @@ Player.prototype.moveTo = function(x,y,speed){
 }
 
 Player.prototype.resetDrag = function(){
-  this.drag = null;
+  this.ent.drag = null;
   this.shareSelf({drag: false});
-}
-
-Player.prototype.move = function(direction){
-  var that = this;
-  var success = false;
-  var startX = this.tileX;
-  var startY = this.tileY;
-  var targetX = this.tileX;
-  var targetY = this.tileY;
-  if (direction == 0){targetX += 1;}
-  if (direction == 1){targetY -= 1;}
-  if (direction == 2){targetX -= 1;}
-  if (direction == 3){targetY += 1;}
-  this.direction = direction;
-  if (this.config){
-    if (!this.inMovement){
-      this.move_action = this.move_time;
-      if (direction == 0){
-        if (!this.world.collisionCheck(this.tileX+1,this.tileY) || this.noclip ){
-          this.tileX += 1;
-          success = true;
-        }
-      }
-      if (direction == 2){
-        if (!this.world.collisionCheck(this.tileX-1,this.tileY) || this.noclip){
-          this.tileX -= 1;
-          success = true;
-        }
-      }
-    }
-    if (!this.inMovement){
-      if (direction == 1){
-        if (!this.world.collisionCheck(this.tileX,this.tileY-1) || this.noclip){
-          this.tileY -= 1;
-          success = true;
-        }
-      }
-      if (direction == 3){
-        if (!this.world.collisionCheck(this.tileX,this.tileY+1) || this.noclip){
-          this.tileY += 1;
-          success = true;
-        }
-      }
-    }
-  }
-  if (success){
-    this.pushCooldown = 0;
-    this.updateBucket();
-    this.inMovement = true;
-    this.ent.move(this.tileX, this.tileY);
-    if (this.drag != null){
-      var suc = this.drag.moveTo(startX,startY,this.moveSpeed);
-      if (!suc){
-        this.drag = null;
-      }
-    }
-  }else if(!this.inMovement){
-    this.pushCooldown += 1;
-    if (this.pushCooldown >= 10){
-      this.pushCooldown = 0;
-      var collide = this.world.gridEntities.cellGet(targetX,targetY);
-      /*collide.forEach(function(value,index){
-        var ent = this.world.ents[value];
-        if (ent != undefined){
-          ent.clearDragger();
-          if(ent.ent.dragable){
-            ent.moveDir(direction,that.moveSpeed);
-          }
-          if(ent.ent.onPush != undefined){
-            ent.ent.onPush(this,ent);
-          }
-        }
-      });*/
-      this.push = false;
-    }
-  }
-  this.ent.imageIndex = direction;
-  this.ent.share({imageIndex: direction});
 }
 
 Player.prototype.share = function(data){

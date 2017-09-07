@@ -6,9 +6,7 @@ player = require("./player.js");
 var gameloop = require("node-gameloop");
 var world = require("./world.js");
 var url = require('url');
-spawn = require("./spawn.js");
 config = JSON.parse(fs.readFileSync("config.json"));
-handy = require("./handy.js");
 mixtures = require("./mixtures.js");
 atmos = require("./atmos.js");
 buckets = require("./bucket.js");
@@ -36,14 +34,11 @@ loader.auto(function(){ //load all things from the modules directory
   res = loader.res;
   nextPlayerId = 0;
   nextEntId = 0;
-  //wrd = new world.World(); //Construct World
-  //wrd.load("maps/"+config.startWorld+".json");
   games[0] = new Game();
-  gm = require("./gamemode.js");
   require("./startup.js");
   
   gameloop.setGameLoop(update,1000/60);
-}) 
+});
 
 
 playerlist = [];
@@ -54,19 +49,6 @@ var update = function(delta) {
   games.forEach(function(game){
     game.step(delta);
   });
-  /*playerlist.forEach(function(value){
-    value.step(delta);
-  });*/
-  gm.loop();
-  /*
-  for (k in wrd.ents){
-    var ent = wrd.ents[k];
-    if (ent.animation){
-      wrd.ents[k].animate();
-    }
-    ent.step(delta);
-  }
-  */
 }
 setInterval(function(){
   playerlist.forEach(function(value){

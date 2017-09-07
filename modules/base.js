@@ -89,16 +89,6 @@ commands: {  //-------------------------Commands-----------------------
       }
     }
   },
-  start: {
-    permission: "master.gamemode.start",
-    fun: function(sender,args){
-      if (args.length > 1){
-        gm.startCountdown(args[1]);
-      }else{
-        gm.startCountdown(120);
-      }
-    }
-  },
   reload: {
     permission: "admin.reload",
     fun: function(sender,args){
@@ -149,16 +139,16 @@ actions: { //----------------------------Actions-----------------------------
       world.cellSet(tileX,tileY,3);
     }
   },
-  build_wall: function(world, tileX,tileY){
+  build_wall: function(world, tileX, tileY){
     world.cellSet(tileX,tileY,5);
   },
-  crowbar: function(world, tileX,tileY){
+  crowbar: function(world, tileX, tileY){
     world.cellSet(tileX,tileY,0);
   },
   extinguish: function(world, tileX,tileY){
     var index = wrd.cellGet(tileX,tileY);
     if (!res.tiles[index].collision){
-      //spawn.entity("gas_argon",tileX,tileY);
+      //world.spawnEntity("gas_argon",tileX,tileY);
     }
   },
   scanAtmo: function(tileX,tileY,user){

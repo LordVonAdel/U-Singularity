@@ -7,8 +7,8 @@ module.exports = {
     lampertz: {"id":"lampertz" ,"name":"Lampertz Plating","onUseFloor":"build_lampertz","image":"items/item_lampertz.png"}
   },
   actions:{
-    build_lampertz: function(tileX,tileY){
-      var index = wrd.cellGet(tileX,tileY);
+    build_lampertz: function(world, tileX,tileY){
+      var index = world.cellGet(tileX,tileY);
       if (index == 5){ //base wall frame
         wrd.cellSet(tileX,tileY,102);
       }
@@ -20,26 +20,26 @@ module.exports = {
   commands: {
     create_door: {
       fun: function(sender,args){
-        spawn.entity(sender.world, "door_default",sender.tileX,sender.tileY);
+        sender.world.spawnEntity("door_default",sender.tileX,sender.tileY);
       }
     },
     create_detail: {
       argNum: 1,
       fun: function(sender,args){
         if (args.length > 1){
-          var ent = spawn.entity(sender.world, "detail",sender.tileX,sender.tileY);
+          var ent = sender.world.spawnEntity("detail",sender.tileX,sender.tileY);
           ent.image = args[1];
         }
       }
     },
     create_fire_ext: {
       fun: function(sender,args){
-        spawn.entity(sender.world, "fire_ext_box",sender.tileX,sender.tileY);
+        sender.world.spawnEntity("fire_ext_box",sender.tileX,sender.tileY);
       }
     },
     create_argon_tank: {
       fun: function(sender,args){
-        spawn.entity(sender.world, "argon_tank",sender.tileX,sender.tileY);
+        sender.world.spawnEntity("argon_tank",sender.tileX,sender.tileY);
       }
     }
   },

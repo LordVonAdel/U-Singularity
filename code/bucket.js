@@ -49,7 +49,7 @@ Bucket.prototype.broadcastArea = function(msg,data,range){
 }
 
 
-Bucket.prototype.sendMegaPacket = function(socket){ //to left you see a function which tells everything about himself what a player should know about him
+Bucket.prototype.sendMegaPacket = function(socket){ //to the left you see a function which tells everything about himself what a player should know about him
   for(k in this.objects){
     socket.emit('ent_data',this.objects[k].getClientData());
   }

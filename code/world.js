@@ -1,4 +1,5 @@
 Grid = require('./grid.js');
+Entity = require('./entity.js');
 
 //The constructor for a world instance
 function World(game){
@@ -136,8 +137,8 @@ World.prototype.load = function(filename){
       that.nextEntId = obj.nextEntId || 100;
       var ents = obj.ents;
       for (var k in ents) {
-        spwn = ents[k];
-        var ent = spawn.entity(that, spwn.type,spwn.tx,spwn.ty);
+        var spwn = ents[k];
+        var ent = that.spawnEntity(spwn.type, spwn.tx, spwn.ty);
         ent.x = spwn.x;
         ent.y = spwn.y;
         if (spwn.sync == undefined){
@@ -210,8 +211,9 @@ World.prototype.step = function(delta){
 
 //sends a packet to all player on this world
 World.prototype.broadcast = function(event, data){
+  var that = this;
   this.game.players.forEach(function(player){
-    if (player.world == this){
+    if (player.world == that){
       player.socket.emit(event, data);
     }
   });
@@ -231,6 +233,7 @@ World.prototype.spawnEntity = function(type, x, y){
   var entity = new Entity(this, type, x, y);
   entity.spawn();
   this.nextEntId ++;
+  return entity;
 }
 
 World.prototype.spawnItem = function(x, y, item){
@@ -239,6 +242,7 @@ World.prototype.spawnItem = function(x, y, item){
   entity.sync.item = item;
   entity.update();
   this.nextEntId ++;
+  return entity;
 }
 
 module.exports = World;

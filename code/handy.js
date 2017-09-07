@@ -1,24 +1,6 @@
 //some handy misc functions
 
 module.exports = {
-  broadcast: function(event,data){
-    //console.log("Broadcast: "+event)
-    playerlist.forEach(function(obj){
-      obj.socket.emit(event,data);
-    });
-  },
-  command: function(sender,args){
-    var cmd = loader.commands[args[0]]
-    if (cmd !=undefined){
-      if (args.length > cmd.argNum || cmd.argNum == undefined){
-        cmd.fun(sender,args);
-      }else{
-        sender.msg('<span style="color: red;">Command expects '+cmd.argNum+" arguments or more</span>");
-      }
-    }else{
-      sender.msg('<span style="color: red;">Unknown command: '+args[0]+"</span>");
-    }
-  },
   transition: function(now,target,speed,ease){
     if (ease == 0){ //linear
       if (Math.abs(target-now)>speed){

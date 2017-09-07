@@ -1,4 +1,6 @@
 //Entity constuctor
+handy = require('./handy.js');
+
 function Entity(world, type, tx, ty){
   this.id = world.nextEntId;
   this.ent = res.objects[type];
@@ -40,7 +42,7 @@ function Entity(world, type, tx, ty){
 //clear the thing that is dragging this thing
 Entity.prototype.clearDragger = function(){
   if (this.dragger != null){
-    this.dragger.resetDrag();
+    this.dragger.drag = null;
     this.dragger = null;
   }
 }
@@ -122,8 +124,6 @@ Entity.prototype.update = function(){
   if (this.ent.onUpdate){
     this.ent.onUpdate(this);
   }
-  this.world.gridEntFree(this.tx,this.ty,this);
-  this.world.gridEntAdd(this.tx,this.ty,this);
 }
 
 //suicide
@@ -147,6 +147,14 @@ Entity.prototype.moveDir = function(direction,speed){
     case 2: x-= 1; break;
     case 3: y+= 1; break;
   }
+  var c = this.world.collisionsGet(x, y);
+  for (var i=0; i<c.length; i++){
+    var ent = c[i];
+    if (ent.ent.dragable){
+      ent.moveDir(direction, speed);
+      ent.clearDragger();
+    }
+  }
   return this.moveTo(x,y,speed);
 }
 
@@ -161,14 +169,16 @@ Entity.prototype.move = function(x,y){
   if (!this.world.collisionCheck(x,y)){
     this.world.gridEntFree(this.tx,this.ty,this);
     this.world.gridEntAdd(x,y,this);
-    if (this.drag){
-      this.drag.moveTo(this.tx, this.ty, this.moveSpeed);
-    }
+    var dx = this.tx;
+    var dy = this.ty;
     this.tx = x;
     this.ty = y;
     this.share({tx: this.tx, ty: this.ty, speed: this.speed});
     this.updateBucket();
     this.isMoving = true;
+    if (this.drag){
+      this.drag.moveTo(dx, dy, this.moveSpeed);
+    }
     return true;
   }else{
     var c = this.world.collisionsGet(x, y);
@@ -193,7 +203,7 @@ Entity.prototype.getClientData = function(){
 
 //when you spawn send the things returning from the function above to the clients. This is obviously called when the ent spawns.
 Entity.prototype.spawn = function(){
-  this.world.broadcast('ent_spawn', this.getClientData());
+  this.bucket.broadcastArea('ent_spawn', this.getClientData());
 }
 
 //are you in same bucket as before or somewhere else? 
