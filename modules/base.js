@@ -76,8 +76,9 @@ commands: {  //-------------------------Commands-----------------------
     }
   },
   spawn: {
+    permission: "master.player.spawn",
     fun: function(sender, args){
-      sender.teleport(wrd.spawnX, wrd.spawnY);
+      sender.teleport(sender.world.spawnX, sender.world.spawnY);
     }
   },
   tp: {

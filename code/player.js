@@ -31,7 +31,7 @@ function Player(socket){
   this.inventoryActive = 0;
   this.handRange = 1; //in tiles
   this.noclip = false;
-  this.permissions = ['admin.*','world.load'] //test permissions
+  this.permissions = ['admin.*','world.load','master.*','world.*'] //test permissions
   this.drag = null;
   this.pushCooldown = 0;
   this.bucket = null;
@@ -39,10 +39,6 @@ function Player(socket){
   this.ent = null;
   this.world = null;
   this.game = null;
-  //this.ent.moveSpeed = this.moveSpeed;
-  //socket.emit('cam',this.ent.id);
-
-  //this.ent = new Entity("player",wrd.spawnX, wrd.spawnY);
 
   var inv = this.inventory;
   for(var i=0; i<this.hands; i++){
@@ -81,7 +77,7 @@ function Player(socket){
     if (data.msg.charAt(0)=="/"){ //if the message is a command
       var args = data.msg.slice(1).split(" ");
       var sender = that;
-      that.executeCommand();
+      that.executeCommand(args);
     }else{
       that.game.broadcast('chat',{msg: '<span class="name">'+that.name+":</span> "+data.msg, player: that.id, raw: data.msg});
     }
@@ -184,25 +180,36 @@ function Player(socket){
   }
 }
 
+//Executes a command as the player
 Player.prototype.executeCommand = function(args){
-  var cmd = loader.commands[args[0]]
+  var cmd = loader.commands[args[0]];
   if (cmd !=undefined){
-    if (args.length > cmd.argNum || cmd.argNum == undefined){
-      cmd.fun(this,args);
+    var allowed = true;
+    if (cmd.permission){
+      allowed = this.getPermission(cmd.permission)
+    }
+    if (allowed){
+      if (args.length > cmd.argNum || cmd.argNum == undefined){
+        cmd.fun(this,args);
+      }else{
+        this.msg('<span style="color: red;">Command expects '+cmd.argNum+" arguments or more</span>");
+      }
     }else{
-      this.msg('<span style="color: red;">Command expects '+cmd.argNum+" arguments or more</span>");
+      this.msg(`<span style="color: red;">You don't have the permission to do that! If you think you should be allowed to do this, please contact an admin.</span>`)
     }
   }else{
     this.msg('<span style="color: red;">Unknown command: '+args[0]+"</span>");
   }
 }
 
+//Makes a string save
 Player.prototype.stringSave = function(str){
   str = str.replace(/>/g, '&gt');
   str = str.replace(/</g, '&lt');
   return str;
 }
 
+//shows a popup at the client
 Player.prototype.popup = function(id, filename){
   var that = this;
   fs.readFile(filename, "utf-8", function(err, str){
@@ -210,10 +217,12 @@ Player.prototype.popup = function(id, filename){
   });
 }
 
+//Sends a chat message to the player
 Player.prototype.msg = function(msg){
   this.socket.emit('chat',{msg: msg, id: this.id});
 }
 
+//When the player disconnects
 Player.prototype.disconnect = function(){
   this.ent.destroy();
   this.game.broadcast('disc',{id: this.id});
@@ -221,6 +230,7 @@ Player.prototype.disconnect = function(){
   playerlist.splice(i, 1);
 }
 
+//Teleports the player to a specific position
 Player.prototype.teleport = function(tileX,tileY){
   this.ent.teleport(tileX, tileY);
   this.tileX = tileX;
@@ -230,18 +240,13 @@ Player.prototype.teleport = function(tileX,tileY){
   this.updateBucket();
 }
 
-Player.prototype.moveTo = function(x,y,speed){
-  this.tileX = x;
-  this.tileY = y;
-  this.updateBucket();
-  return true;
-}
-
+//Resets the dragging of an object. So you don't drag anymore, since this is executed
 Player.prototype.resetDrag = function(){
   this.ent.drag = null;
   this.shareSelf({drag: false});
 }
 
+//send data from this player all over the place
 Player.prototype.share = function(data){
   if (data){
     var obj = Object.assign({id: this.id},data)
@@ -255,10 +260,12 @@ Player.prototype.share = function(data){
   }
 }
 
+//sends data to the client about his player
 Player.prototype.shareSelf = function(data){
   this.socket.emit('pSelf',data)
 }
 
+//will be executed every step
 Player.prototype.step = function(delta){
   this.x = handy.transition(this.x,this.tileX*32,this.moveSpeed*(delta*100),0)
   this.y = handy.transition(this.y,this.tileY*32,this.moveSpeed*(delta*100),0)
@@ -271,6 +278,7 @@ Player.prototype.step = function(delta){
   }
 }
 
+//Gives the player an item
 Player.prototype.give = function(itemData){
   for(var val in this.inventory){
     if (this.inventory[val] == null){
@@ -280,19 +288,20 @@ Player.prototype.give = function(itemData){
   }
 }
 
+//Checks if the player have a permission to do something
 Player.prototype.getPermission = function(permission){
-  if (this.permissions.indexOf(permission) >= 0){
-    return true;
-  }else{
-    return false;
-  }
+  var tree = permission.split(".");
+  var allowed = this.permissions.includes(permission);
+  return (allowed);
 }
 
+//Updated the bucket the player is in
 Player.prototype.updateBucket = function(){
   var tbucket = this.world.buckets.cellGet(Math.floor(this.ent.tx/config.bucket.width),Math.floor(this.ent.ty/config.bucket.height))
   this.changeBucket(tbucket);
 }
 
+//Changes the bucket, the player belongs to
 Player.prototype.changeBucket = function(bucket){
   if (bucket){
     if (this.bucket != bucket){
