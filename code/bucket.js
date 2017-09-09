@@ -3,7 +3,7 @@
 //the constructor for a bucket instance
 function Bucket(x,y,world){ 
   this.objects = {};
-  this.player = {};
+  this.players = {};
   this.x = x;
   this.y = y;
   this.world = world;
@@ -23,18 +23,18 @@ Bucket.prototype.removeObject = function(object){
 
 //the same thing with players instead of entities
 Bucket.prototype.addPlayer = function(object){ 
-  this.player[object.id] = object;
+  this.players[object.id] = object;
 }
 
 //see above
 Bucket.prototype.removePlayer = function(object){ 
-  delete this.player[object.id];
+  delete this.players[object.id];
 }
 
 //sends a message to every player in the bucket
 Bucket.prototype.broadcast = function(msg,data){
-  for(k in this.player){
-    this.player[k].socket.emit(msg,data);
+  for(k in this.players){
+    this.players[k].socket.emit(msg,data);
   }
 }
 
@@ -69,12 +69,12 @@ Bucket.prototype.sendMegaPacketArea = function(socket){
 //and here we kill everything in this bucket. I wonder what happens when a player is removed from the bucket without telling him?
 Bucket.prototype.clear = function(){
   this.objects = {};
-  this.player = {};
+  this.players = {};
 }
 
 //encapsulation shit. Don't know why I have done this.
 Bucket.prototype.getClients = function(){
-  return this.player;
+  return this.players;
 }
 
 //and make it so requires can be used to get the bucket. Basic node.js stuff

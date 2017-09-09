@@ -22,7 +22,7 @@ io.on('connection', function(socket){
   }*/
   
   if (isPlayerNew){
-    socket.emit('welcome',{id: nextEntId});
+    socket.emit('welcome',{id: 0});
     console.log("[Server]A user connected! ("+ip+")");
   }else{
     console.log("[Server]A user reconnected! ("+ip+")");
