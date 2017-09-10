@@ -107,7 +107,7 @@ Entity.prototype.changeImage = function(image){
 //tell everybody near you how cool you are
 Entity.prototype.share = function(data){
   if (data){
-    var obj = Object.assign({id: this.id},data)
+    var obj = Object.assign({id: this.id},data);
   }else{
     var obj = this.getClientData();
   }
