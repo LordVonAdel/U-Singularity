@@ -12,7 +12,7 @@ tiles: { //-------------------------Tiles-----------------------
   9:  {"id":0, "name":"base.grass"        ,"collision":false, "image":"tiles/tile_grass.png"}
 },
 items: { //-------------------------Items-----------------------
-  knife:             {"id":"knife"            ,"name":"Knife"            ,"onUseFloor":"test"       ,"image":"items/item_knife.png"},
+  knife:             {"id":"knife"            ,"name":"Knife"            ,"onUseFloor":"test"       ,"image":"items/item_knife.png"            ,"actions":["knife"]},
   metal:             {"id":"metal"	          ,"name":"Metal Sheet"      ,"onUseFloor":"build_metal","image":"items/item_metal.png"},
   crowbar:           {"id":"crowbar"          ,"name":"Crowbar"          ,"onUseFloor":"crowbar"    ,"image":"items/item_crowbar.png"},
   wall_frame:        {"id":"wall_frame"       ,"name":"Wall Frame"       ,"onUseFloor":"build_wall" ,"image":"items/item_wall_frame.png"},

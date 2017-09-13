@@ -39,7 +39,11 @@ var res = { //object with every dynamic loaded content, excepts maps and command
     "player":{
       "collision":true,
       "image":"chars/char_chemist_f.png",
-      "actions": {}
+      "actions": {
+        "knife": function(ent){
+          ent.hp -= 1;
+        }
+      }
     }
   }
 }
