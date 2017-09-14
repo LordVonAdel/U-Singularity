@@ -165,11 +165,11 @@ actions: { //----------------------------Actions-----------------------------
 objects: { //-----------------------Objects-----------------------------
   door_default: {"image":"objects/door_default.png", "imageNumber":8, "imageIndex":0, "collision":true, 
                 "sync":{open: 0, frame: 0},
-                "onInit":function(ent){ent.sync.open = 0; ent.sync.frame = 0;},
-                "onClick":function(user,ent){ent.sync.open = 1-ent.sync.open; ent.share(); ent.update(); ent.animation = true;},
-                "onAnimation":function(ent){ent.sync.frame = handy.transition(ent.sync.frame,ent.sync.open,1/30,0);ent.imageIndex = Math.floor(ent.sync.frame*(ent.imageNumber-1)); ent.collision = (Math.floor(ent.sync.frame)==0); ent.update(); ent.share(); if(ent.sync.frame == ent.sync.open){ent.animation = false}},
-                "onPush":function(ent,user){ent.sync.open = 1; ent.animation = true},
-                "onUpdate":function(ent){ent.imageIndex = Math.floor(ent.sync.frame*(ent.imageNumber-1)); ent.collision = (Math.floor(ent.sync.frame)==0);},
+                "onInit":function(){this.sync.open = 0; this.sync.frame = 0;},
+                "onClick":function(user){this.sync.open = 1-this.sync.open; this.share(); this.update(); this.animation = true;},
+                "onAnimation":function(){this.sync.frame = handy.transition(this.sync.frame,this.sync.open,1/30,0);this.imageIndex = Math.floor(this.sync.frame*(this.imageNumber-1)); this.collision = (Math.floor(this.sync.frame)==0);this.update(); this.share(); if(this.sync.frame == this.sync.open){this.animation = false}},
+                "onPush":function(pusher){this.sync.open = 1; this.animation = true},
+                "onUpdate":function(){this.imageIndex = Math.floor(this.sync.frame*(this.imageNumber-1)); this.collision = (Math.floor(this.sync.frame)==0);},
                 "actions":{},
                 "tile":{"connectionGroup":"walls"},
                 "layer":30
@@ -179,11 +179,11 @@ objects: { //-----------------------Objects-----------------------------
                 },
   fire_ext_box: {"image":"objects/fire_extinguisher_box.png", "imageNumber":2, "imageIndex":0, "collision":false,
                 "sync":{item: null},
-                "onInit":function(ent){ent.sync.item = new loader.Item("fire_ext")},
-                "onClick":function(user,ent){if (ent.sync.item != null && user.inventory[user.inventoryActive]==null){user.inventory[user.inventoryActive] = ent.sync.item;ent.sync.item = null; ent.imageIndex = 1; ent.share(); user.share();}},
-                "onUpdate":function(ent){if(ent.sync.item == null){ent.imageIndex = 1}else{ent.imageIndex = 0}; ent.share()},
+                "onInit":function(){this.sync.item = new loader.Item("fire_ext")},
+                "onClick":function(user){if (this.sync.item != null && user.inventory[user.inventoryActive]==null){user.inventory[user.inventoryActive] = this.sync.item;this.sync.item = null; this.imageIndex = 1; this.share(); user.share();}},
+                "onUpdate":function(){if(this.sync.item == null){this.imageIndex = 1}else{this.imageIndex = 0}; this.share()},
                 "actions":{
-                  "fire_ext_box":function(user,ent,item){if (ent.sync.item == null){ent.sync.item = user.inventory[user.inventoryActive]; user.inventory[user.inventoryActive] = null; ent.imageIndex = 0; ent.share(); user.share()}}
+                  "fire_ext_box":function(user,item){if (this.sync.item == null){this.sync.item = user.inventory[user.inventoryActive]; user.inventory[user.inventoryActive] = null; this.imageIndex = 0; this.share(); user.share()}}
                   }
                 }
 }

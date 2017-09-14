@@ -15,22 +15,22 @@ var res = { //object with every dynamic loaded content, excepts maps and command
     "item":{ //the item entity
       "sync":{item: null},
       "image":"items/item_crowbar.png",
-      "onClick":function(sender,ent){
+      "onClick":function(sender){
         if(sender.inventory[sender.inventoryActive] == null){
-          sender.inventory[sender.inventoryActive] = ent.sync.item;
+          sender.inventory[sender.inventoryActive] = this.sync.item;
           sender.share();
-          ent.destroy();
+          this.destroy();
         }
       },
-      "onUpdate":function(ent){
-        if (ent.sync.item == null){
-          ent.destroy()
-          console.log("Destroyed Null Item")
+      "onUpdate":function(){
+        if (this.sync.item == null){
+          this.destroy();
+          console.log("Destroyed Null Item");
         }else{
-          var itm = res.items[ent.sync.item.type];
+          var itm = res.items[this.sync.item.type];
           if (itm){
-            ent.image = itm.image;
-            ent.share();
+            this.image = itm.image;
+            this.share();
           }
         }
       },
@@ -40,8 +40,8 @@ var res = { //object with every dynamic loaded content, excepts maps and command
       "collision":true,
       "image":"chars/char_chemist_f.png",
       "actions": {
-        "knife": function(ent){
-          ent.hp -= 1;
+        "knife": function(){
+          this.hp -= 1;
         }
       }
     }
@@ -65,7 +65,7 @@ function load(filename,callback){
     objects: 0
   };
   if (ext == ".js"){
-    var exp = require("../modules/"+filename);
+    var exp = require("../content/"+filename);
     if (exp.tiles != undefined){
       Object.assign(res.tiles,exp.tiles);
       num.tiles = Object.keys(exp.tiles).length;
@@ -97,9 +97,10 @@ function load(filename,callback){
 
 //loads all the things of the modules directory
 function auto(callback){
-  fs.readdir( "./modules", function( err, files ){
+  fs.readdir( "./content", function( err, files ){
     if(err){
       console.error("[Loader]Can't list the modules directory.", err);
+      return false;
     }
     var num = files.length;
     var ind = 0;

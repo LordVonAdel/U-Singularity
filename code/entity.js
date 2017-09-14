@@ -29,9 +29,7 @@ function Entity(world, type, tx, ty){
   this.isMoving = false;
 
   Object.assign(this.sync, this.ent.sync);
-  if (this.ent.oninit != undefined){
-    this.ent.onInit(this);
-  }
+  this.fire("onInit");
 
   this.world.ents[this.world.nextEntId] = this;
   this.world.nextEntId ++;
@@ -71,15 +69,16 @@ Entity.prototype.step = function(delta){
 
 //uhm... there is an animation system in here?
 Entity.prototype.animate = function(){
-  if (this.ent.onAnimation != undefined){
-    this.ent.onAnimation(this);
-  }
+  this.fire("onAnimation");
+  /*if (this.ent.onAnimation != undefined){
+    this.ent.onAnimation.call(this);
+  }*/
 }
 
 //so you can interact with entitys. This happens if somebody dares to interact!
 Entity.prototype.use = function(user,item){
   if (this.eventOnClick){
-    this.eventOnClick(user,this);
+    this.eventOnClick.call(this, user);
   }
   var that = this;
   var itemType = res.items[item.type];
@@ -88,7 +87,7 @@ Entity.prototype.use = function(user,item){
       itemType.actions.forEach(function(value){
         if (that.ent.actions != undefined)
           if (that.ent.actions[value] != undefined){
-            that.ent.actions[value](user,that,item)
+            that.ent.actions[value].call(that, user, item)
           }
         if (value == "destroy"){
           that.destroy();
@@ -122,7 +121,8 @@ Entity.prototype.share = function(data){
 Entity.prototype.update = function(){
   this.updateBucket();
   if (this.ent.onUpdate){
-    this.ent.onUpdate(this);
+    this.fire("onUpdate");
+    //this.ent.onUpdate.call(this);
   }
 }
 
@@ -185,7 +185,7 @@ Entity.prototype.move = function(x,y){
     for (var i=0; i < c.length; i++){
       ent = c[i];
       if (ent.ent.onPush){
-        ent.ent.onPush(ent, this);
+        ent.ent.onPush.call(this, ent);
       }
     }
     return false;
@@ -231,6 +231,13 @@ Entity.prototype.teleport = function(tileX, tileY){
   this.x = tileX*32;
   this.y = tileY*32;
   this.updateBucket();
+}
+
+//Fires an event
+Entity.prototype.fire = function(event){
+  if (this.ent[event] != undefined){
+    this.ent[event].call(this);
+  }
 }
 
 module.exports = Entity;
