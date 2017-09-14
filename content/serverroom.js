@@ -51,10 +51,10 @@ module.exports = {
       "sync": {open: 0, fuel: 100},
       "collision":true,
       "dragable":true,
-      "onInit":function(ent){ent.sync.fuel = 100, ent.sync.open=0},
-      "onStep":function(ent){if(ent.sync.fuel > 0 && ent.sync.open == 1){ent.sync.fuel -= 1; /*atmos.addGas(ent.tx,ent.ty,{ar:1});*/ if(ent.sync.fuel <= 0){ent.imageIndex=0; ent.update(); ent.share();}}},
+      "onInit":function(){this.sync.fuel = 100, this.sync.open=0},
+      "onStep":function(){if(this.sync.fuel > 0 && this.sync.open == 1){this.sync.fuel -= 1; /*atmos.addGas(ent.tx,ent.ty,{ar:1});*/ if(this.sync.fuel <= 0){this.imageIndex=0; this.update(); this.share();}}},
       "actions":{
-        "hand":function(user,ent){ent.sync.open = 1-ent.sync.open; ent.imageIndex=ent.sync.open; ent.update(); ent.share();}
+        "hand":function(user){this.sync.open = 1-this.sync.open; this.imageIndex=this.sync.open; this.update(); this.share();}
       }
     },
     gas_argon:{

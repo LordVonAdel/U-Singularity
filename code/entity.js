@@ -34,6 +34,8 @@ function Entity(world, type, tx, ty){
   this.world.ents[this.world.nextEntId] = this;
   this.world.nextEntId ++;
 
+  this.world.gridEntAdd(this.tx, this.ty, this);
+
   this.updateBucket();
 }
 

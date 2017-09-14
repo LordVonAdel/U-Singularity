@@ -15,9 +15,9 @@ items: { //-------------------------Items-----------------------
   knife:             {"id":"knife"            ,"name":"Knife"            ,"onUseFloor":"test"       ,"image":"items/item_knife.png"            ,"actions":["knife"]},
   metal:             {"id":"metal"	          ,"name":"Metal Sheet"      ,"onUseFloor":"build_metal","image":"items/item_metal.png"},
   crowbar:           {"id":"crowbar"          ,"name":"Crowbar"          ,"onUseFloor":"crowbar"    ,"image":"items/item_crowbar.png"},
-  wall_frame:        {"id":"wall_frame"       ,"name":"Wall Frame"       ,"onUseFloor":"build_wall" ,"image":"items/item_wall_frame.png"},
-  glass:             {"id":"glass"            ,"name":"Glass"            ,"onUseFloor":"build_glass","image":"items/item_glass.png"},
-  armor_plating:     {"id":"armor_plating"    ,"name":"Armor Plating"    ,"onUseFloor":"build_armor","image":"items/item_armor_plating.png"},
+  wall_frame:        {"id":"wall_frame"       ,"name":"Wall Frame"       ,"onUseFloor":"buildWall" ,"image":"items/item_wall_frame.png"},
+  glass:             {"id":"glass"            ,"name":"Glass"            ,"onUseFloor":"buildGlass","image":"items/item_glass.png"},
+  armor_plating:     {"id":"armor_plating"    ,"name":"Armor Plating"    ,"onUseFloor":"buildArmor","image":"items/item_armor_plating.png"},
   destroyer:         {"id":"destroyer"        ,"name":"Destroyer"                                   ,"image":"items/item_destroyer.png"        ,"actions":["destroy"]},
   fire_ext:          {"id":"fire_ext"         ,"name":"Fire Extinguisher","onUseFloor":"extinguish" ,"image":"items/item_fire_extinguisher.png","actions":["fire_ext_box"]},
   atmo_scanner:      {"id":"atmo_scanner"     ,"name":"Atmo scanner"     ,"onUseFloor":"scanAtmo"   ,"image":"items/item_atmo_scanner.png"},
@@ -122,7 +122,7 @@ actions: { //----------------------------Actions-----------------------------
       break;
     }
   },
-  build_armor: function(world, tileX, tileY){
+  buildArmor: function(world, tileX, tileY){
     var index = wrd.cellGet(tileX,tileY);
     if (index == 2){
       world.cellSet(tileX,tileY,7);
@@ -131,7 +131,7 @@ actions: { //----------------------------Actions-----------------------------
       world.cellSet(tileX,tileY,8);
     }
   },
-  build_glass: function(world, tileX,tileY){
+  buildGlass: function(world, tileX,tileY){
     var index = world.cellGet(tileX,tileY);
     if (index == 5){
       world.cellSet(tileX,tileY,4);
@@ -140,7 +140,7 @@ actions: { //----------------------------Actions-----------------------------
       world.cellSet(tileX,tileY,3);
     }
   },
-  build_wall: function(world, tileX, tileY){
+  buildWall: function(world, tileX, tileY){
     world.cellSet(tileX,tileY,5);
   },
   crowbar: function(world, tileX, tileY){

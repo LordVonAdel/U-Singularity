@@ -16,6 +16,7 @@ module.exports = {
       fun: function(sender, args){
         var index = sender.world.grid.cellGet(sender.tileX,sender.tileY);
         sender.msg("TileID: "+index);
+        sender.msg("Collisions: "+sender.world.collisionsGet(sender.tileX, sender.tileY).length);
       }
     },
     help: {
