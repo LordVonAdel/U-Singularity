@@ -18,7 +18,6 @@ function Player(socket) {
   this.id = nextEntId;
   nextEntId += 1;
   this.name = "unnamed(" + this.id + ")";
-  this.move_time = 20;
   this.moveSpeed = config.player.walkSpeed;//3.2;
   this.inMovement = 0;
   this.config = false;

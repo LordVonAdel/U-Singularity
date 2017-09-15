@@ -69,7 +69,6 @@ Entity.prototype.step = function(delta){
     if (Math.abs(this.x - this.tx*32)+Math.abs(this.y - this.ty*32) < this.moveSpeed){
       this.isMoving = false;
     }
-    //this.share({x:this.x, y:this.y});
   }
 }
 
@@ -126,10 +125,10 @@ Entity.prototype.share = function(data){
 //update because maybe something changed with you and you were not aware about that
 Entity.prototype.update = function(){
   this.updateBucket();
-  if (this.ent.onUpdate){
-    this.fire("onUpdate");
+  this.fire("onUpdate");
+  //if (this.ent.onUpdate){
     //this.ent.onUpdate.call(this);
-  }
+  //}
 }
 
 //suicide
@@ -191,7 +190,7 @@ Entity.prototype.move = function(x,y){
     for (var i=0; i < c.length; i++){
       ent = c[i];
       if (ent.ent.onPush){
-        ent.ent.onPush.call(this, ent);
+        ent.ent.onPush.call(ent, this);
       }
     }
     return false;
