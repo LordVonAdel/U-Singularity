@@ -38,6 +38,7 @@ var res = { //object with every dynamic loaded content, excepts maps and command
     },
     "player":{
       "collision":true,
+      "sync":{client: null},
       "image":"chars/char_chemist_f.png",
       "actions": {
         "knife": function(){

@@ -27,6 +27,7 @@ function Entity(world, type, tx, ty){
   this.drag = null; //The thing this is dragging
   this.world = world;
   this.isMoving = false;
+  this.client = null;
 
   Object.assign(this.sync, this.ent.sync);
   this.fire("onInit");
@@ -42,6 +43,9 @@ function Entity(world, type, tx, ty){
 //clear the thing that is dragging this thing
 Entity.prototype.clearDragger = function(){
   if (this.dragger != null){
+    if (this.dragger.client){
+      this.dragger.client.shareSelf({ drag: false });
+    }
     this.dragger.drag = null;
     this.dragger = null;
   }

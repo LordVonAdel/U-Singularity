@@ -45,6 +45,7 @@ Game.prototype.changeWorld = function(player, index){
   var world = this.worlds[index];
   player.world = world;1
   player.ent = new Entity(world, "player", world.spawnX, world.spawnY);
+  player.ent.client = player;
   player.updateBucket();
   if (player.ent.bucket != null){
     player.ent.bucket.sendMegaPacket(player.socket);
