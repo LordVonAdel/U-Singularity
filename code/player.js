@@ -172,6 +172,13 @@ function Player(socket) {
     }
   });
 
+  socket.on('ent_request', function(id){
+    var ent = that.world.getEntById(id);
+    if (ent){
+      socket.emit('ent_data', ent.getClientData());
+    }
+  });
+
   //this.updateBucket();
 
   if (this.bucket != null) {
@@ -234,8 +241,8 @@ Player.prototype.teleport = function (tileX, tileY) {
   this.ent.teleport(tileX, tileY);
   this.tileX = tileX;
   this.tileY = tileY;
-  this.ent.tx = tileX;
-  this.ent.ty = tileY;
+  //this.ent.tx = tileX;
+  //this.ent.ty = tileY;
   this.updateBucket();
 }
 
@@ -294,7 +301,7 @@ Player.prototype.getPermission = function (permission) {
   return (allowed);
 }
 
-//Updated the bucket the player is in
+//Updates the bucket the player is in
 Player.prototype.updateBucket = function () {
   var tbucket = this.world.buckets.cellGet(Math.floor(this.ent.tx / config.bucket.width), Math.floor(this.ent.ty / config.bucket.height));
   this.changeBucket(tbucket);

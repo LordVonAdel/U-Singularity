@@ -43,6 +43,7 @@ var res = { //object with every dynamic loaded content, excepts maps and command
       "actions": {
         "knife": function(){
           this.hp -= 1;
+          this.client.msg("Ouch!");
         }
       }
     }

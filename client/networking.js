@@ -75,16 +75,23 @@ function initNetworking(){
   socket.on('ent_data',function(data){
     var ent = ents[data.id];
     if (ent == undefined){
-      ents[data.id] = new Entity(data.id,data.x,data.y,data.image,data.imageNumber,data.imageIndex,data.tile)
-      ent = ents[data.id];
+      if (data.x == undefined || data.image == undefined){
+        socket.emit('ent_request',data.id);
+      }else{
+        ents[data.id] = new Entity(data.id,data.x,data.y,data.image,data.imageNumber,data.imageIndex,data.tile)
+        ent = ents[data.id];
+      }
+    }else{
+      ent.update(data);
     }
-    ent.update(data);
   });
 
   socket.on('ent_destroy',function(data){
     var ent = ents[data.id];
-    ent.destroy();
-    delete ents[data.id];
+    if (ent){
+      ent.destroy();
+      delete ents[data.id];
+    }
   });
 
   socket.on('gm',function(data){
