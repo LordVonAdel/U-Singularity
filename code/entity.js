@@ -208,7 +208,10 @@ Entity.prototype.getClientData = function(){
 
 //when you spawn send the things returning from the function above to the clients. This is obviously called when the ent spawns.
 Entity.prototype.spawn = function(){
-  this.bucket.broadcastArea('ent_spawn', this.getClientData());
+  this.updateBucket();
+  if (this.bucket != null){
+    this.bucket.broadcastArea('ent_spawn', this.getClientData());
+  }
 }
 
 //are you in same bucket as before or somewhere else? 

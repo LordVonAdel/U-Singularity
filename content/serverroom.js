@@ -20,26 +20,27 @@ module.exports = {
   commands: {
     create_door: {
       fun: function(sender,args){
-        sender.world.spawnEntity("door_default",sender.tileX,sender.tileY);
+        sender.world.spawnEntity("door_default",sender.ent.tx,sender.ent.ty);
+      
       }
     },
     create_detail: {
       argNum: 1,
       fun: function(sender,args){
         if (args.length > 1){
-          var ent = sender.world.spawnEntity("detail",sender.tileX,sender.tileY);
+          var ent = sender.world.spawnEntity("detail",sender.ent.tx,sender.ent.ty);
           ent.image = args[1];
         }
       }
     },
     create_fire_ext: {
       fun: function(sender,args){
-        sender.world.spawnEntity("fire_ext_box",sender.tileX,sender.tileY);
+        sender.world.spawnEntity("fire_ext_box",sender.ent.tileX,sender.ent.ty);
       }
     },
     create_argon_tank: {
       fun: function(sender,args){
-        sender.world.spawnEntity("argon_tank",sender.tileX,sender.tileY);
+        sender.world.spawnEntity("argon_tank",sender.ent.tx,sender.ent.ty);
       }
     }
   },
