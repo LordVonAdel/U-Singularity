@@ -113,6 +113,7 @@ commands: {  //-------------------------Commands-----------------------
 actions: { //----------------------------Actions-----------------------------
   build_metal: function(world, tileX, tileY){
     var index = world.cellGet(tileX,tileY);
+    console.log("Build metal! Floor has index: "+index);
     switch(index){
       case 0:
         world.cellSet(tileX,tileY,6);

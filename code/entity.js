@@ -75,9 +75,6 @@ Entity.prototype.step = function(delta){
 //uhm... there is an animation system in here?
 Entity.prototype.animate = function(){
   this.fire("onAnimation");
-  /*if (this.ent.onAnimation != undefined){
-    this.ent.onAnimation.call(this);
-  }*/
 }
 
 //so you can interact with entitys. This happens if somebody dares to interact!
@@ -126,9 +123,6 @@ Entity.prototype.share = function(data){
 Entity.prototype.update = function(){
   this.updateBucket();
   this.fire("onUpdate");
-  //if (this.ent.onUpdate){
-    //this.ent.onUpdate.call(this);
-  //}
 }
 
 //suicide

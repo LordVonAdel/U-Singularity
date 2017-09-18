@@ -111,7 +111,7 @@ function Player(socket) {
       var yy = data.y;
       if (that.inventory[that.inventoryActive] != null) {
         var fun = res.actions[res.items[that.inventory[that.inventoryActive].type].onUseFloor];
-        if (Math.hypot(xx - that.ent.tileX, yy - that.ent.tileY) < that.handRange + 1) {
+        if (Math.hypot(xx - that.ent.tx, yy - that.ent.ty) < that.handRange + 1) {
           if (fun != undefined) {
             fun(that.world, xx, yy, that);
           }
