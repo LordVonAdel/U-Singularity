@@ -67,7 +67,7 @@ function initNetworking(){
   });
 
   socket.on('ent_spawn',function(data){
-    var ent = new Entity(data.id,data.x,data.y,data.image,data.imageNumber,data.imageIndex,data.tile)
+    var ent = new Entity(data.id,data.tx*32,data.ty*32,data.image,data.imageNumber,data.imageIndex,data.tile)
     ent.update(data);
     ents[data.id] = ent;
   });
@@ -75,10 +75,10 @@ function initNetworking(){
   socket.on('ent_data',function(data){
     var ent = ents[data.id];
     if (ent == undefined){
-      if (data.x == undefined || data.image == undefined){
+      if (data.tx == undefined || data.image == undefined){
         socket.emit('ent_request',data.id);
       }else{
-        ents[data.id] = new Entity(data.id,data.x,data.y,data.image,data.imageNumber,data.imageIndex,data.tile)
+        ents[data.id] = new Entity(data.id,data.tx*32,data.ty*32,data.image,data.imageNumber,data.imageIndex,data.tile)
         ent = ents[data.id];
       }
     }else{
