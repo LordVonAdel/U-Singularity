@@ -71,6 +71,19 @@ World.prototype.updateView = function(view){
               }
             }
           break;
+          case "wall":
+            var tile_top = (this.tileGet(cx, cy - 1).connectionGroup == tile.connectionGroup);
+            var tile_left = (this.tileGet(cx - 1, cy).connectionGroup == tile.connectionGroup);
+            var tile_right = (this.tileGet(cx + 1,cy).connectionGroup == tile.connectionGroup);
+            var tile_bottom = (this.tileGet(cx, cy + 1).connectionGroup == tile.connectionGroup);
+            image_index = 0;
+            if (tile_top || tile_bottom){
+              imageIndex = 1;
+            }
+            if (tile_right || tile_left){
+              imageIndex = 0;
+            }
+          break;
         }
         view.sprites[i].setTexture(getTextureFrame(subfolder+"sprites/"+tile.sprite,imageIndex,32,32));
       }

@@ -89,6 +89,7 @@ function Player(socket) {
       that.gender = data.gender;
       that.job = data.job;
       that.share();
+      that.ent.walkAnimation = "jump";
       that.ent.share({ "walkAnimation": "jump" });
       var img = jobSprites[data.job + "_" + data.gender];
       if (img != undefined) {

@@ -148,7 +148,7 @@ actions: { //----------------------------Actions-----------------------------
     world.cellSet(tileX,tileY,0);
   },
   extinguish: function(world, tileX,tileY){
-    var index = wrd.cellGet(tileX,tileY);
+    var index = world.cellGet(tileX,tileY);
     if (!res.tiles[index].collision){
       //world.spawnEntity("gas_argon",tileX,tileY);
     }

@@ -194,7 +194,7 @@ Entity.prototype.move = function(x,y){
 //reveal everything about you, the clients should know
 Entity.prototype.getClientData = function(){
   if (this.ent.tile != {}){
-    return {tx:this.tx, ty:this.ty, image: this.image, id: this.id, imageIndex: this.imageIndex, imageNumber: this.imageNumber, layer: this.layer, tile: this.ent.tile}
+    return {tx:this.tx, ty:this.ty, image: this.image, id: this.id, imageIndex: this.imageIndex, imageNumber: this.imageNumber, layer: this.layer, tile: this.ent.tile, walkAnimation: this.ent.walkAnimation}
   }else{
     return {tx:this.tx, ty:this.ty, image: this.image, id: this.id, imageIndex: this.imageIndex, imageNumber: this.imageNumber, layer: this.layer} 
   }
