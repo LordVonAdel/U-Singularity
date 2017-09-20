@@ -173,9 +173,9 @@ function Player(socket) {
     }
   });
 
-  socket.on('ent_request', function(id){
+  socket.on('ent_request', function (id) {
     var ent = that.world.getEntById(id);
-    if (ent){
+    if (ent) {
       socket.emit('ent_data', ent.getClientData());
     }
   });
@@ -242,8 +242,6 @@ Player.prototype.teleport = function (tileX, tileY) {
   this.ent.teleport(tileX, tileY);
   this.tileX = tileX;
   this.tileY = tileY;
-  //this.ent.tx = tileX;
-  //this.ent.ty = tileY;
   this.updateBucket();
 }
 

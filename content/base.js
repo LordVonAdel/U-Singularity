@@ -153,9 +153,9 @@ actions: { //----------------------------Actions-----------------------------
       //world.spawnEntity("gas_argon",tileX,tileY);
     }
   },
-  scanAtmo: function(tileX,tileY,user){
+  scanAtmo: function(world, tileX,tileY,user){
     var str = "---Atmosphere---"
-    var tile = wrd.gridAtmos.cellGet(tileX,tileY);
+    var tile = world.gridAtmos.cellGet(tileX,tileY);
     for(k in tile.content){
       str+="<br>|"+k+": "+tile.content[k];
     }
