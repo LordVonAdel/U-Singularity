@@ -1,28 +1,36 @@
-function Entity(id,x,y,image){
-  this.image = image;
+function Entity(id,x,y,spriteData){
   this.x = x; //x-coordinate in pixels
   this.y = y; //y-coordinate in pixels
   this.tx = Math.floor(x/32); //target x-coordinate in tiles
   this.ty = Math.floor(y/32); //target y-coordinate in tiles
   this.id = id;
-  this.image_scale = 1;
-  this.imageNumber = 1;
-  this.imageIndex = 0;
-  this.image_width = 32;
-  this.image_height = 32;
   this.layer = 10;
-  this.imagePath = subfolder+"sprites/"+image;
+  this.spriteData = spriteData;
+  this.sprites = [];
   this.walkAnimation = null;
   this.isBurning = false;
   this.speed = 3.2;
 
-  var tex = getTextureFrame(this.imagePath,0,32,32);
   this.container = new PIXI.Container();
-  this.sprite = new PIXI.Sprite(tex);
-  this.container.addChild(this.sprite);
+  for (var i=0; i < this.spriteData.length; i++){
+    var data = this.spriteData[i];
+    var spr = {
+      source: data.source,
+      x: data.x || 0,
+      y: data.y || 0,
+      index: data.index || 0
+    }
+    var imagePath = subfolder+"sprites/"+spr.source;
+    var tex = getTextureFrame(imagePath,spr.index,32,32);
+    var sprite = new PIXI.Sprite(tex);
+    this.container.addChild(sprite);
+    this.sprites[i] = sprite;
 
-  this.sprite.x = this.x;
-  this.sprite.y = this.y;
+    this.container.x = this.x;
+    this.container.y = this.y;
+    sprite.x = spr.x;
+    sprite.y = spr.y;
+  }
 
   stageEntities.addChild(this.container);
 }
@@ -36,8 +44,8 @@ Entity.prototype.update = function(data){
   if (data.y != undefined){
     this.ty = Math.floor(data.y/32);
   }
-  if (data.image != undefined){
-    this.imagePath = subfolder+"sprites/"+data.image;
+  if (data.sprites != undefined){
+    
   }
   if (this.tile){
     world.cellSetOverwrite(this.tx,this.ty,this.tile)
@@ -50,13 +58,19 @@ Entity.prototype.step = function(){
   if (Math.abs(this.tx*32-this.x)<this.speed){this.x = this.tx*32}
   if (Math.abs(this.ty*32-this.y)<this.speed){this.y = this.ty*32}
 
-  this.sprite.x = this.x;
-  this.sprite.y = this.y;
-  this.sprite.setTexture(getTextureFrame(this.imagePath, this.imageIndex, this.image_width, this.image_height));
-  if (this.walkAnimation == "jump"){
-    var f = ((this.x % 32)/32)+((this.y % 32)/32);
-    this.sprite.y = this.y - (Math.sin(f*Math.PI)*4);
+  this.container.x = this.x;
+  this.container.y = this.y;
+  for (var i = 0; i < this.spriteData.length; i++){
+    var data = this.spriteData[i];
+    var sprite = this.sprites[i];
+    var path = subfolder+"sprites/"+data.source;
+    sprite.setTexture(getTextureFrame(path, data.index, data.width, data.height));
+    if (data.walkAnimation == "jump"){
+      var f = ((this.x % 32)/32)+((this.y % 32)/32);
+      sprite.y = this.y - (Math.sin(f*Math.PI)*4);
+    }
   }
+
   if (this.isBurning){
     if (this.spriteBurnFront == undefined){
       this.spriteBurnFront = new PIXI.Sprite(getTextureFrame("sprites/effects/fire_human_front.png",0,32,32));
@@ -82,7 +96,9 @@ Entity.prototype.step = function(){
 }
 
 Entity.prototype.destroy = function(){
-  this.sprite.destroy();
+  for (var i = 0; i < this.sprites.lenght; i++){
+    this.sprites[i].destroy();
+  }
   if (this.tile){
     world.cellSetOverwrite(this.tx,this.ty,{})
   }

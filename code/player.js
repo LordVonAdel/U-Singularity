@@ -63,8 +63,7 @@ function Player(socket) {
       //that.move(data.dir);
       if (!that.ent.isMoving) {
         that.ent.moveDir(data.dir, that.moveSpeed);
-        that.ent.imageIndex = data.dir;
-        that.ent.share({ imageIndex: that.ent.imageIndex });
+        that.ent.changeImageIndex(0, data.dir);
         that.updateBucket();
       }
     }
@@ -89,11 +88,9 @@ function Player(socket) {
       that.gender = data.gender;
       that.job = data.job;
       that.share();
-      that.ent.walkAnimation = "jump";
-      that.ent.share({ "walkAnimation": "jump" });
       var img = jobSprites[data.job + "_" + data.gender];
       if (img != undefined) {
-        that.ent.changeImage(img);
+        that.ent.changeImageIndex(0, img);
       } else {
         //Config was not correct!
       }

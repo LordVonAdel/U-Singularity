@@ -39,7 +39,15 @@ var res = { //object with every dynamic loaded content, excepts maps and command
     "player":{
       "collision":true,
       "sync":{client: null},
-      "image":"chars/char_chemist_f.png",
+      "image":[
+        {
+          source: "chars/char_chemist_f.png",
+          image: 0,
+          width: 32,
+          height: 32,
+          animation: "jump"
+        }
+      ],
       "actions": {
         "knife": function(){
           this.hp -= 1;

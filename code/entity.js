@@ -8,10 +8,32 @@ function Entity(world, type, tx, ty){
     console.log("Unknown ent-type: "+type);
     return null;
   }
+
   this.type = type;
-  this.image = this.ent.image;
-  this.imageNumber = this.ent.imageNumber;
-  this.imageIndex = this.ent.imageIndex;
+  this.sprites = [];
+  if (typeof this.ent.image == typeof []){
+    for (var i = 0; i < this.ent.image.length; i++){
+      var img = this.ent.image[i];
+      this.sprites[i] = {
+        index: img.index || 0,
+        number: img.number || 0,
+        source: img.source,
+        x: img.x || 0,
+        y: img.y || 0,
+        animation: "none"
+      };
+    }
+    this.sprites = this.ent.image;
+  }else{
+    this.sprites[0] = {
+      index: 0,
+      number: this.ent.imageNumber,
+      source: this.ent.image,
+      x: 0,
+      y: 0,
+      animation: "none"
+    }
+  }
   this.collision = this.ent.collision;
   this.eventOnClick = this.ent.onClick;
   this.x = tx * 32;
@@ -102,7 +124,13 @@ Entity.prototype.use = function(user,item){
 //change your image when you old is ruined
 Entity.prototype.changeImage = function(image){
   this.image = image;
-  this.share({image: image, imageNumber: this.imageNumber, imageIndex: this.imageIndex, imageNumber: this.imageNumber});
+  this.share({spriteData: this.sprites});
+}
+
+//change the image index of a sprite with a specific index
+Entity.prototype.changeImageIndex = function(sprite, index){
+  this.sprites[sprite].index = index;
+  this.share({spriteData: this.sprites});
 }
 
 //tell everybody near you how cool you are
@@ -194,9 +222,9 @@ Entity.prototype.move = function(x,y){
 //reveal everything about you, the clients should know
 Entity.prototype.getClientData = function(){
   if (this.ent.tile != {}){
-    return {tx:this.tx, ty:this.ty, image: this.image, id: this.id, imageIndex: this.imageIndex, imageNumber: this.imageNumber, layer: this.layer, tile: this.ent.tile, walkAnimation: this.ent.walkAnimation}
+    return {id: this.id, tx:this.tx, ty:this.ty, spriteData: this.sprites, layer: this.layer, tile: this.ent.tile}
   }else{
-    return {tx:this.tx, ty:this.ty, image: this.image, id: this.id, imageIndex: this.imageIndex, imageNumber: this.imageNumber, layer: this.layer} 
+    return {id: this.id, tx:this.tx, ty:this.ty, spriteData: this.sprites, layer: this.layer} 
   }
 }
 
