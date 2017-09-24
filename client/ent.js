@@ -12,6 +12,8 @@ function Entity(id,x,y,spriteData){
   this.speed = 3.2;
 
   this.container = new PIXI.Container();
+  this.container.x = this.x;
+  this.container.y = this.y;
   for (var i=0; i < this.spriteData.length; i++){
     var data = this.spriteData[i];
     var spr = {
@@ -26,8 +28,6 @@ function Entity(id,x,y,spriteData){
     this.container.addChild(sprite);
     this.sprites[i] = sprite;
 
-    this.container.x = this.x;
-    this.container.y = this.y;
     sprite.x = spr.x;
     sprite.y = spr.y;
   }

@@ -121,6 +121,13 @@ Entity.prototype.use = function(user,item){
   }
 }
 
+//Change the sprite data
+Entity.prototype.changeSprite = function(index, sprite){
+  var spr = this.sprites[index];
+  Object.assign(spr, sprite);
+  this.share({spriteData: this.sprites});
+}
+
 //change your image when you old is ruined
 Entity.prototype.changeImage = function(image){
   this.image = image;
