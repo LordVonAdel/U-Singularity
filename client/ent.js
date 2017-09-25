@@ -44,8 +44,16 @@ Entity.prototype.update = function(data){
   if (data.y != undefined){
     this.ty = Math.floor(data.y/32);
   }
-  if (data.sprites != undefined){
-    
+  if (data.spriteData != undefined){
+    for (var i=0; i<this.spriteData.length; i++){
+      var sprite = this.sprites[sprite];
+      var data = data.spriteData[i];
+      var path = subfolder+"sprites/"+data.source;
+      if (!sprite){
+        sprite = new PIXI.Sprite(getTextureFrame(path,data.index, data.width || 32, data.height || 32));
+      }
+      sprite.setTexture(getTextureFrame(path, data.index, data.width || 32, data.height || 32));
+    }
   }
   if (this.tile){
     world.cellSetOverwrite(this.tx,this.ty,this.tile)
@@ -64,7 +72,7 @@ Entity.prototype.step = function(){
     var data = this.spriteData[i];
     var sprite = this.sprites[i];
     var path = subfolder+"sprites/"+data.source;
-    sprite.setTexture(getTextureFrame(path, data.index, data.width, data.height));
+    sprite.setTexture(getTextureFrame(path, data.index, data.width || 32, data.height || 32));
     if (data.walkAnimation == "jump"){
       var f = ((this.x % 32)/32)+((this.y % 32)/32);
       sprite.y = this.y - (Math.sin(f*Math.PI)*4);
@@ -99,6 +107,7 @@ Entity.prototype.destroy = function(){
   for (var i = 0; i < this.sprites.lenght; i++){
     this.sprites[i].destroy();
   }
+  this.container.destroy();
   if (this.tile){
     world.cellSetOverwrite(this.tx,this.ty,{})
   }

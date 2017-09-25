@@ -91,7 +91,6 @@ function Player(socket) {
       var img = jobSprites[data.job + "_" + data.gender];
       if (img != undefined) {
         that.ent.changeSprite(0, {source: img});
-        //that.ent.changeImageIndex(0, img);
       } else {
         //Config was not correct!
       }

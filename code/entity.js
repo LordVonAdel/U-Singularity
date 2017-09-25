@@ -20,7 +20,9 @@ function Entity(world, type, tx, ty){
         source: img.source,
         x: img.x || 0,
         y: img.y || 0,
-        animation: "none"
+        animation: "none",
+        width: 32,
+        height: 32
       };
     }
     this.sprites = this.ent.image;
@@ -125,12 +127,6 @@ Entity.prototype.use = function(user,item){
 Entity.prototype.changeSprite = function(index, sprite){
   var spr = this.sprites[index];
   Object.assign(spr, sprite);
-  this.share({spriteData: this.sprites});
-}
-
-//change your image when you old is ruined
-Entity.prototype.changeImage = function(image){
-  this.image = image;
   this.share({spriteData: this.sprites});
 }
 
