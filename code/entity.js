@@ -20,12 +20,11 @@ function Entity(world, type, tx, ty){
         source: img.source,
         x: img.x || 0,
         y: img.y || 0,
-        animation: "none",
+        animation: img.animation || "none",
         width: 32,
         height: 32
       };
     }
-    this.sprites = this.ent.image;
   }else{
     this.sprites[0] = {
       index: 0,

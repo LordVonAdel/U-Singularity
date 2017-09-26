@@ -7,7 +7,6 @@ function Entity(id,x,y,spriteData){
   this.layer = 10;
   this.spriteData = spriteData;
   this.sprites = [];
-  this.walkAnimation = null;
   this.isBurning = false;
   this.speed = 3.2;
 
