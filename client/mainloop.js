@@ -30,6 +30,7 @@ function gameLoop(){
 
   //player
   player.step();
+  player.updateUI();
 
   //admin
   if (isAdmin){
