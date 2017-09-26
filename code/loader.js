@@ -29,8 +29,7 @@ var res = { //object with every dynamic loaded content, excepts maps and command
         }else{
           var itm = res.items[this.sync.item.type];
           if (itm){
-            this.image = itm.image;
-            this.share();
+            this.changeSprite(0, {source: itm.image});
           }
         }
       },

@@ -132,8 +132,11 @@ Entity.prototype.changeSprite = function(index, sprite){
 
 //change the image index of a sprite with a specific index
 Entity.prototype.changeImageIndex = function(sprite, index){
-  this.sprites[sprite].index = index;
-  this.share({spriteData: this.sprites});
+  var oldIndex = this.sprites[sprite].index;
+  if (oldIndex != index){
+    this.sprites[sprite].index = index;
+    this.share({spriteData: this.sprites});
+  }
 }
 
 //tell everybody near you how cool you are

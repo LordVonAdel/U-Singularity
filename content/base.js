@@ -15,9 +15,9 @@ items: { //-------------------------Items-----------------------
   knife:             {"id":"knife"            ,"name":"Knife"            ,"onUseFloor":"test"       ,"image":"items/item_knife.png"            ,"actions":["knife"]},
   metal:             {"id":"metal"	          ,"name":"Metal Sheet"      ,"onUseFloor":"build_metal","image":"items/item_metal.png"},
   crowbar:           {"id":"crowbar"          ,"name":"Crowbar"          ,"onUseFloor":"crowbar"    ,"image":"items/item_crowbar.png"},
-  wall_frame:        {"id":"wall_frame"       ,"name":"Wall Frame"       ,"onUseFloor":"buildWall" ,"image":"items/item_wall_frame.png"},
-  glass:             {"id":"glass"            ,"name":"Glass"            ,"onUseFloor":"buildGlass","image":"items/item_glass.png"},
-  armor_plating:     {"id":"armor_plating"    ,"name":"Armor Plating"    ,"onUseFloor":"buildArmor","image":"items/item_armor_plating.png"},
+  glass:             {"id":"glass"            ,"name":"Glass"            ,"onUseFloor":"buildGlass" ,"image":"items/item_glass.png"},
+  wall_frame:        {"id":"wall_frame"       ,"name":"Wall Frame"       ,"onUseFloor":"buildWall"  ,"image":"items/item_wall_frame.png"},
+  armor_plating:     {"id":"armor_plating"    ,"name":"Armor Plating"    ,"onUseFloor":"buildArmor" ,"image":"items/item_armor_plating.png"},
   destroyer:         {"id":"destroyer"        ,"name":"Destroyer"                                   ,"image":"items/item_destroyer.png"        ,"actions":["destroy"]},
   fire_ext:          {"id":"fire_ext"         ,"name":"Fire Extinguisher","onUseFloor":"extinguish" ,"image":"items/item_fire_extinguisher.png","actions":["fire_ext_box"]},
   atmo_scanner:      {"id":"atmo_scanner"     ,"name":"Atmo scanner"     ,"onUseFloor":"scanAtmo"   ,"image":"items/item_atmo_scanner.png"},
@@ -164,13 +164,13 @@ actions: { //----------------------------Actions-----------------------------
   }
 },
 objects: { //-----------------------Objects-----------------------------
-  door_default: {"image":"objects/door_default.png", "collision":true, 
+  door_default: {"image":[{"number":8,"source":"objects/door_default.png", "width": 32, "height": 32}], "collision":true, 
                 "sync":{open: 0, frame: 0},
                 "onInit":function(){this.sync.open = 0; this.sync.frame = 0;},
                 "onClick":function(user){this.sync.open = 1-this.sync.open; this.share(); this.update(); this.animation = true;},
                 "onAnimation":function(){this.sync.frame = handy.transition(this.sync.frame,this.sync.open,1/30,0);this.sprites[0].index = Math.floor(this.sync.frame*(this.imageNumber-1)); this.collision = (Math.floor(this.sync.frame)==0);this.update(); this.share(); if(this.sync.frame == this.sync.open){this.animation = false}},
                 "onPush":function(pusher){this.sync.open = 1; this.animation = true},
-                "onUpdate":function(){this.changeImageIndex(0, Math.floor(this.sync.frame*(this.imageNumber-1))); this.collision = (Math.floor(this.sync.frame)==0);},
+                "onUpdate":function(){this.changeImageIndex(0, Math.floor(this.sync.frame*(this.sprites[0].number-1))); this.collision = (Math.floor(this.sync.frame)==0);},
                 "actions":{},
                 "tile":{"connectionGroup":"walls"},
                 "layer":30

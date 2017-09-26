@@ -52,7 +52,7 @@ Entity.prototype.update = function(data){
       if (!sprite){
         sprite = new PIXI.Sprite(getTextureFrame(path,data.index, data.width || 32, data.height || 32));
       }
-      sprite.setTexture(getTextureFrame(path, data.index, data.width || 32, data.height || 32));
+      //sprite.setTexture(getTextureFrame(path, data.index, data.width || 32, data.height || 32));
     }
   }
   if (this.tile){
@@ -99,6 +99,9 @@ Entity.prototype.step = function(){
       }else{
         socket.emit('ent_click',{id: this.id});
       }
+    }
+    if (mouseCheckPressed(2)){
+      console.log(this);
     }
   }
 }
