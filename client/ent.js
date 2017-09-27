@@ -55,13 +55,13 @@ Entity.prototype.update = function(data){
     }
   }
   if (this.tile){
-    world.cellSetOverwrite(this.tx,this.ty,this.tile)
+    world.cellSetOverwrite(this.tx,this.ty,this.tile);
   }
 }
 
-Entity.prototype.step = function(){
-  this.x += Math.sign(this.tx*32-this.x)*this.speed;
-  this.y += Math.sign(this.ty*32-this.y)*this.speed;
+Entity.prototype.step = function(delta){
+  this.x += Math.sign(this.tx*32-this.x)*this.speed*(delta/10);
+  this.y += Math.sign(this.ty*32-this.y)*this.speed*(delta/10);
   if (Math.abs(this.tx*32-this.x)<this.speed){this.x = this.tx*32}
   if (Math.abs(this.ty*32-this.y)<this.speed){this.y = this.ty*32}
 

@@ -1,5 +1,9 @@
 function gameLoop(){
 
+  var delta = Date.now() - lastTime;
+  lastTime = Date.now();
+
+
   if (player.id != -1){
     var obj = players[player.id];
     if (obj != undefined){
@@ -41,15 +45,13 @@ function gameLoop(){
   gamemodeLoop();
 
   //fps calculation
-  thisTime = new Date();
-  var fps = Math.floor(1000/(thisTime - lastTime));
-  lastTime = thisTime;
+  var fps = Math.floor(1000/(delta));
   document.getElementById("fps").innerHTML = fps;
   document.getElementById("mouse_position_ui").innerHTML = mouseX_ui+" , "+mouseY_ui;
   document.getElementById("mouse_position_world").innerHTML = mouseX+" , "+mouseY;
 
   $.each(ents,function(key,value){
-    value.step();
+    value.step(delta);
   });
 
   //draw

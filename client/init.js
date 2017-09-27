@@ -20,7 +20,7 @@ config = {
 
 server_ip = getParam('ip');
 
-var lastTime = new Date();
+var lastTime = Date.now();
 
 $(document).ready(function(){
 

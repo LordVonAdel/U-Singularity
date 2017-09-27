@@ -41,7 +41,7 @@ function Entity(world, type, tx, ty){
   this.y = ty * 32;
   this.tx = tx;
   this.ty = ty;
-  this.moveSpeed = 1;
+  this.speed = 1;
   this.animation = false;
   this.bucket = null;
   this.sync = {};
@@ -87,9 +87,9 @@ Entity.prototype.step = function(delta){
     this.ent.onStep(this);
   }
   if (this.x != this.tx*32 || this.y != this.ty*32){
-    this.x = handy.transition(this.x,this.tx*32,this.moveSpeed*(delta*100),0);
-    this.y = handy.transition(this.y,this.ty*32,this.moveSpeed*(delta*100),0);
-    if (Math.abs(this.x - this.tx*32)+Math.abs(this.y - this.ty*32) < this.moveSpeed){
+    this.x = handy.transition(this.x,this.tx*32,this.speed*(delta*100),0);
+    this.y = handy.transition(this.y,this.ty*32,this.speed*(delta*100),0);
+    if (Math.abs(this.x - this.tx*32)+Math.abs(this.y - this.ty*32) < this.speed){
       this.isMoving = false;
     }
   }
@@ -192,7 +192,7 @@ Entity.prototype.moveDir = function(direction,speed){
 
 //move onto a specific tile
 Entity.prototype.moveTo = function(x,y,speed){
-  this.moveSpeed = speed;
+  this.speed = speed;
   return this.move(x,y);
 }
 
@@ -209,7 +209,7 @@ Entity.prototype.move = function(x,y){
     this.updateBucket();
     this.isMoving = true;
     if (this.drag){
-      this.drag.moveTo(dx, dy, this.moveSpeed);
+      this.drag.moveTo(dx, dy, this.speed);
     }
     return true;
   }else{

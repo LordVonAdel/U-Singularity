@@ -18,7 +18,7 @@ function Player(socket) {
   this.id = nextEntId;
   nextEntId += 1;
   this.name = "unnamed(" + this.id + ")";
-  this.moveSpeed = config.player.walkSpeed;//3.2;
+  this.speed = config.player.walkSpeed;//3.2;
   this.inMovement = 0;
   this.config = false;
   this.inventory = {};
@@ -62,7 +62,7 @@ function Player(socket) {
     if (that.game != null) {
       //that.move(data.dir);
       if (!that.ent.isMoving) {
-        that.ent.moveDir(data.dir, that.moveSpeed);
+        that.ent.moveDir(data.dir, that.speed);
         that.ent.changeImageIndex(0, data.dir);
         that.updateBucket();
       }
@@ -253,7 +253,7 @@ Player.prototype.share = function (data) {
   if (data) {
     var obj = Object.assign({ id: this.id }, data);
   } else {
-    var obj = { id: this.id, health: this.health, speed: this.moveSpeed, nick: this.name, inventory: this.inventory, job: this.job, gender: this.gender, name: this.name, burning: this.burning }
+    var obj = { id: this.id, health: this.health, speed: this.speed, nick: this.name, inventory: this.inventory, job: this.job, gender: this.gender, name: this.name, burning: this.burning }
   }
   if (this.bucket != null) {
     this.bucket.broadcastArea('player_stats', obj, 3);
@@ -269,8 +269,8 @@ Player.prototype.shareSelf = function (data) {
 
 //will be executed every step
 Player.prototype.step = function (delta) {
-  this.x = handy.transition(this.x, this.tileX * 32, this.moveSpeed * (delta * 100), 0);
-  this.y = handy.transition(this.y, this.tileY * 32, this.moveSpeed * (delta * 100), 0);
+  this.x = handy.transition(this.x, this.tileX * 32, this.speed * (delta * 100), 0);
+  this.y = handy.transition(this.y, this.tileY * 32, this.speed * (delta * 100), 0);
   if (this.x == this.tileX * 32 && this.y == this.tileY * 32) {
     this.inMovement = false;
   }

@@ -20,7 +20,7 @@ function initNetworking(){
   socket.on('player_stats',function(data){
     var obj = player;
     if (obj != undefined){
-      obj.moveSpeed = data.speed;
+      obj.speed = data.speed;
       obj.health = data.health;
       obj.name = data.name;
       obj.gender = data.gender;
