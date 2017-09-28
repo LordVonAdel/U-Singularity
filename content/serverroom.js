@@ -10,10 +10,10 @@ module.exports = {
     build_lampertz: function(world, tileX,tileY){
       var index = world.cellGet(tileX,tileY);
       if (index == 5){ //base wall frame
-        wrd.cellSet(tileX,tileY,102);
+        world.cellSet(tileX,tileY,102);
       }
       if (index == 6){ //base floor metal
-        wrd.cellSet(tileX,tileY,101);
+        world.cellSet(tileX,tileY,101);
       }
     }
   },
@@ -63,29 +63,30 @@ module.exports = {
       "imageNumber":1,
       "imageIndex":0,
       "collision":false,
-      "onStep":function(ent){
+      "onStep":function(){
         var d = Math.floor(Math.random()*4);
+        var wrd = this.world;
         if (d == 0){
-          if (!wrd.collisionCheck(ent.tx+1,ent.ty)){
-            ent.move(ent.tx+1,ent.ty);
+          if (!wrd.collisionCheck(this.tx+1,this.ty)){
+            this.move(this.tx+1,this.ty);
           }
         }
         if (d == 1){
-          if (!wrd.collisionCheck(ent.tx,ent.ty-1)){
-            ent.move(ent.tx,ent.ty-1);
+          if (!wrd.collisionCheck(this.tx,this.ty-1)){
+            this.move(this.tx,this.ty-1);
           }
         }
         if (d == 2){
-          if (!wrd.collisionCheck(ent.tx-1,ent.ty)){
-            ent.move(ent.tx-1,ent.ty);
+          if (!wrd.collisionCheck(this.tx-1,this.ty)){
+            this.move(this.tx-1,this.ty);
           }
         }
         if (d == 3){
-          if (!wrd.collisionCheck(ent.tx,ent.ty+1)){
-            ent.move(ent.tx,ent.ty+1);
+          if (!wrd.collisionCheck(this.tx,this.ty+1)){
+            this.move(this.tx,this.ty+1);
           }
         }
-        ent.share();
+        this.share();
       }
     }
   }

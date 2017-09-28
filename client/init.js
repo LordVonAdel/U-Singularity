@@ -14,9 +14,11 @@ gm = {};
 
 config = {
   speech_time: localStorage.getItem('speech_time') || 0.25,
-  speech_enable: localStorage.getItem('speech_enable') ||true,
+  speech_enable: localStorage.getItem('speech_enable') || true,
   uiScale: 1
 };
+
+useFOV = false;
 
 server_ip = getParam('ip');
 

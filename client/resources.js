@@ -19,6 +19,7 @@ function load(object) {
       var obj = new Tile(object.tiles[k].image);
       obj.connectionType = value.connectionType;
       obj.connectionGroup = value.connectionGroup;
+      obj.transparent = value.transparent;
 
       res.tiles[k] = obj;
     }

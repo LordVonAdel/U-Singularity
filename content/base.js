@@ -1,13 +1,13 @@
 module.exports = {
 tiles: { //-------------------------Tiles-----------------------
-  0:  {"id":9, "name":"base.rock"         ,"collision":true , "image":"tiles/tile_rock.png"},
+  0:  {"id":9, "name":"base.rock"         ,"collision":true , "image":"tiles/tile_rock.png", "transparent":false},
   1:  {"id":1, "name":"base.concrete"     ,"collision":false, "image":"tiles/tile_concrete.png"},
-  2:  {"id":2, "name":"base.wall"         ,"collision":true , "image":"tiles/tile_wall.png"         ,"connectionType":"wall"   ,"connectionGroup": "walls"},
+  2:  {"id":2, "name":"base.wall"         ,"collision":true , "image":"tiles/tile_wall.png"         ,"connectionType":"wall"   ,"connectionGroup": "walls", "transparent": false},
   3:  {"id":3, "name":"base.wall_window"  ,"collision":true , "image":"tiles/tile_wall_window.png"  ,"connectionType":"wall"   ,"connectionGroup": "walls"},
   4:  {"id":4, "name":"base.wall_glass"   ,"collision":true , "image":"tiles/tile_wall_glass.png"   ,"connectionType":"wall"   ,"connectionGroup": "walls"},
   5:  {"id":5, "name":"base.wall_frame"   ,"collision":true , "image":"tiles/tile_wall_frame.png"},
   6:  {"id":6, "name":"base.floor_metal"  ,"collision":false, "image":"tiles/tile_floor_metalC.png"},
-  7:  {"id":7, "name":"base.wall_chamber" ,"collision":true , "image":"tiles/tile_wall_chamber.png" ,"connectionType":"wall"   ,"connectionGroup": "walls"},
+  7:  {"id":7, "name":"base.wall_chamber" ,"collision":true , "image":"tiles/tile_wall_chamber.png" ,"connectionType":"wall"   ,"connectionGroup": "walls", "transparent": false},
   8:  {"id":8, "name":"base.floor_chamber","collision":false, "image":"tiles/tile_floor_chamber.png","connectionType":"simple" ,"connectionGroup": "floor_chamber"},
   9:  {"id":0, "name":"base.grass"        ,"collision":false, "image":"tiles/tile_grass.png"}
 },
@@ -124,7 +124,7 @@ actions: { //----------------------------Actions-----------------------------
     }
   },
   buildArmor: function(world, tileX, tileY){
-    var index = wrd.cellGet(tileX,tileY);
+    var index = world.cellGet(tileX,tileY);
     if (index == 2){
       world.cellSet(tileX,tileY,7);
     }
