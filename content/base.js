@@ -108,6 +108,12 @@ commands: {  //-------------------------Commands-----------------------
         sender.msg(args[1]+" is no item!");
       }
     }
+  },
+  start: {
+    permission: "master.start",
+    fun: function(sender, args){
+      sender.game.gamemode.start();
+    }
   }
 },
 actions: { //----------------------------Actions-----------------------------

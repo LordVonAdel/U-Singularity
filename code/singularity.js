@@ -15,6 +15,27 @@ var Game = require("./game.js");
 var http = require("http").createServer(function( req, res){
   url = req.url;///url.parse(req.url);
   if (url == "/"){url="/game.html"}
+  //The api
+  if (url == "/api"){
+
+    var gameList = [];
+    var playersOnline = 0;
+    for (var i = 0; i < games.length; i++){
+      var game = games[i];
+      playersOnline += game.players.length;
+      gameList.push(Object.assign({
+        playersOnline: game.players.length,
+        gamemode: game.gamemode.name,
+      }, game.gamemode.getAPIData()));
+    }
+
+    res.writeHead(500);
+    return res.end(JSON.stringify({
+      serverPort: config.port,
+      playersOnline: playersOnline,
+      games: gameList
+    }));
+  }
   var filename = __dirname+"/../client"+url;
   //console.log(filename)
   fs.readFile(filename,function (err, data) {

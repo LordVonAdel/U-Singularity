@@ -213,10 +213,13 @@ Player.prototype.stringSave = function (str) {
 }
 
 //shows a popup at the client
-Player.prototype.popup = function (id, filename) {
+Player.prototype.popup = function (id, filename, data) {
   var that = this;
   fs.readFile(filename, "utf-8", function (err, str) {
-    that.socket.emit('server_content', { html: str, id: id });
+    for (var k in data){
+      str = str.replace("{"+k+"}", data[k]);
+    }
+    that.socket.emit('server_content', { html: str, id: id});
   });
 }
 
@@ -229,6 +232,7 @@ Player.prototype.msg = function (msg) {
 Player.prototype.disconnect = function () {
   this.ent.destroy();
   this.game.broadcast('disc', { id: this.id });
+  this.game.players.splice(this.game.players.indexOf(this), 1);
   var i = playerlist.indexOf(this);
   playerlist.splice(i, 1);
 }

@@ -3,12 +3,14 @@ var World = require("./world.js");
 
 function Game(){
   this.players = [];
-  //Create worlds
   this.worlds = [];
   //Load a map
   world = new World(this);
   world.load("maps/"+config.startWorld+".json");
   this.worlds[0] = world;
+
+  var GM = require("./../gamemodes/gmSingularity.js");
+  this.gamemode = new GM(this);
 }
 
 //Sends a packet to all players in the game
@@ -34,6 +36,7 @@ Game.prototype.step = function(delta){
   this.players.forEach(function(player){
     player.step(delta);
   });
+  this.gamemode.step(delta);
 }
 
 //Change the world for one player
@@ -51,6 +54,24 @@ Game.prototype.changeWorld = function(player, index){
     player.ent.bucket.sendMegaPacket(player.socket);
   }
   player.socket.emit('cam', player.ent.id);
+}
+
+Game.prototype.showGlobalPopup = function(id, str, data){
+  for (var k in data){
+    str = str.replace("{"+k+"}", data[k]);
+  }
+  for (var i = 0; i < this.players.length; i++){
+    var player = this.players[i];
+    player.socket.emit('server_content', { html: str, id: id });
+  }
+}
+
+Game.prototype.showGlobalPopupFromFile = function(id, filename, data){
+  var game = this;
+  fs.readFile(filename, "utf-8", function (err, str) {
+    if (err){return err;}
+    game.showGlobalPopup(id, str, data);
+  });
 }
 
 module.exports = Game;
