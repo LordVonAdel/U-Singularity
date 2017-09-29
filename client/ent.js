@@ -7,8 +7,8 @@ function Entity(id,x,y,spriteData){
   this.layer = 10;
   this.spriteData = spriteData;
   this.sprites = [];
-  this.isBurning = false;
   this.speed = 3.2;
+  this.states = [];
 
   this.container = new PIXI.Container();
   this.container.x = this.x;
@@ -80,17 +80,27 @@ Entity.prototype.step = function(delta){
     }
   }
 
-  if (this.isBurning){
+  if (this.states.includes("burning")){
     if (this.spriteBurnFront == undefined){
-      this.spriteBurnFront = new PIXI.Sprite(getTextureFrame("sprites/effects/fire_human_front.png",0,32,32));
-      this.spriteBurnBack = new PIXI.Sprite(getTextureFrame("sprites/effects/fire_human_back.png",0,32,32));
-      this.container.addChild(this.spriteBurnFront);
+      this.spriteBurnFront = new PIXI.Sprite(getTextureFrame("sprites/effects/eff_fire_human_front.png",0,32,32));
+      this.spriteBurnBack = new PIXI.Sprite(getTextureFrame("sprites/effects/eff_fire_human_back.png",0,32,32));
       this.container.addChild(this.spriteBurnBack);
+      this.container.swapChildren(this.spriteBurnBack, this.sprites[0]);
+      this.container.addChild(this.spriteBurnFront);
     }
-    var current_time = new Date().getMilliseconds();
-    var frame = Math.floor(current_time / 250);
-    this.spriteBurnFront.setTexture(getTextureFrame("sprites/effects/fire_human_front.png",frame,32,32));
-    this.spriteBurnBack.setTexture(getTextureFrame("sprites/effects/fire_human_back.png",frame,32,32));
+    var current_time = (Date.now() % 500);
+    var frame = Math.floor(current_time / 125);
+    this.spriteBurnFront.visible = true;
+    this.spriteBurnBack.visible = true;
+    this.spriteBurnFront.setTexture(getTextureFrame("sprites/effects/eff_fire_human_front.png",frame,32,32));
+    this.spriteBurnBack.setTexture(getTextureFrame("sprites/effects/eff_fire_human_back.png",frame,32,32));
+  }else{
+    if (this.spriteBurnFront){
+      this.spriteBurnFront.visible = false;
+    }
+    if (this.spriteBurnBack){
+      this.spriteBurnBack.visible = false;
+    }
   }
   
   if (mouseOver(this.x,this.y,this.x+32,this.y+32,this)){
@@ -114,5 +124,9 @@ Entity.prototype.destroy = function(){
   this.container.destroy();
   if (this.tile){
     world.cellSetOverwrite(this.tx,this.ty,{})
+  }
+  if (this.spriteBurnBack){
+    this.spriteBurnBack.destroy();
+    this.spriteBurnFront.destroy();
   }
 }

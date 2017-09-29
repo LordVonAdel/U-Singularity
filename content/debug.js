@@ -3,8 +3,7 @@ module.exports = {
     burn: {
       permission: "master.player.burn",
       fun: function(sender,args){
-        sender.burning = !sender.burning;
-        sender.share();
+        sender.ent.toggleState("burning", true);
       }
     },
     ents: {

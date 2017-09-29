@@ -42,7 +42,6 @@ function Entity(world, type, tx, ty){
   this.tx = tx;
   this.ty = ty;
   this.speed = 1;
-  this.animation = false;
   this.bucket = null;
   this.sync = {};
   this.layer = this.ent.layer || 10;
@@ -52,6 +51,8 @@ function Entity(world, type, tx, ty){
   this.isMoving = false;
   this.client = null;
   this.noclip = false;
+
+  this.states = [];
 
   Object.assign(this.sync, this.ent.sync);
   this.fire("onInit");
@@ -228,9 +229,15 @@ Entity.prototype.move = function(x,y){
 //reveal everything about you, the clients should know
 Entity.prototype.getClientData = function(){
   if (this.ent.tile != {}){
-    return {id: this.id, tx:this.tx, ty:this.ty, spriteData: this.sprites, layer: this.layer, tile: this.ent.tile}
-  }else{
-    return {id: this.id, tx:this.tx, ty:this.ty, spriteData: this.sprites, layer: this.layer} 
+    return {
+      id: this.id, 
+      tx:this.tx, 
+      ty:this.ty, 
+      spriteData: this.sprites,
+      layer: this.layer,
+      tile: this.ent.tile != {} ? this.ent.tile : undefined,
+      states: this.states
+    }
   }
 }
 
@@ -275,6 +282,29 @@ Entity.prototype.fire = function(event){
   if (this.ent[event] != undefined){
     this.ent[event].call(this);
   }
+}
+
+//sets or unset a state. A state can be for example: "burning"
+Entity.prototype.setState = function(state, value){
+  if (value == true){
+    if (!this.states.includes(state)){
+      this.states.push(state);
+    }
+  }else{
+    if (this.states.includes(state)){
+      delete this.states[this.states.indexOf(state)];
+    }
+  }
+  this.share();
+}
+
+Entity.prototype.getState = function(state){
+  return this.states.includes(state);
+}
+
+//toggles the state of a state
+Entity.prototype.toggleState = function(state){
+  this.setState(state, !this.getState(state));
 }
 
 module.exports = Entity;
