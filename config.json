@@ -13,7 +13,8 @@
     "height":16
   },
   "player":{
-    "walkSpeed": 1.5
+    "walkSpeed": 1.5,
+    "allowEmptyName": true
   },
   "enableAtmos": true 
 }

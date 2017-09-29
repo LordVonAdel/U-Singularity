@@ -26,6 +26,7 @@ Game.prototype.addPlayer = function(player){
   this.players.push(player);
   player.ent = new Entity(this.worlds[0], "player", this.spawnX, this.spawnY);
   this.changeWorld(player, 0);
+  this.gamemode.playerJoined(player);
 }
 
 //Step / Tick in the game

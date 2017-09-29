@@ -57,7 +57,7 @@ function Player(socket) {
   console.log("Construct Player " + this.id);
 
   socket.on('move', function (data) {
-    if (that.game != null) {
+    if (that.game != null && that.config) {
       //that.move(data.dir);
       if (!that.ent.isMoving) {
         that.ent.moveDir(data.dir, that.speed);
@@ -82,10 +82,12 @@ function Player(socket) {
   socket.on('config', function (data) {
     if (!that.config) {
       that.name = that.stringSave(data.name);
-      that.config = true; 6
+      if (that.name == "" && !config.player.allowEmptyName){that.popup("config","./html/login.html", {error: "You need a name to play this great game!"}); return false;}
+      that.config = true;
       that.gender = data.gender;
       that.job = data.job;
       that.share();
+      that.shareSelf({hp: that.ent.sync.hp, drag: false});
       var img = jobSprites[data.job + "_" + data.gender];
       if (img != undefined) {
         that.ent.changeSprite(0, {source: img});

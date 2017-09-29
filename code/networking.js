@@ -25,7 +25,7 @@ io.on('connection', function(socket){
     //playerlist.push(pl);
     games[0].addPlayer(pl);
     //pl.teleport(wrd.spawnX, wrd.spawnY);
-    pl.popup("config","./html/login.html");
+    pl.popup("config","./html/login.html", {error: ""});
     games[0].broadcast('player_joined',{id: pl.id});
     nextPlayerId ++;
   });

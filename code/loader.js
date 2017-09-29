@@ -127,6 +127,11 @@ function auto(callback){
   });
 }
 
+function config(){
+  config = JSON.parse(fs.readFileSync("config.json"));
+  return config;
+}
+
 function Tile(name, collision, image){ 
   //I don't know if this is called somewhere...
   //Ok, used the search function and it is not called anywhere.
@@ -151,3 +156,4 @@ module.exports.load = load;
 module.exports.res = res;
 module.exports.commands = commands;
 module.exports.Item = Item;
+module.exports.config = config;
