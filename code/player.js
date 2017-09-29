@@ -14,7 +14,6 @@ function Player(socket) {
   this.tileY = 0;
   this.x = this.tileX * 32;
   this.y = this.tileY * 32;
-  this.health = 100;
   this.id = nextEntId;
   nextEntId += 1;
   this.name = "unnamed(" + this.id + ")";
@@ -165,7 +164,7 @@ function Player(socket) {
           }
         }
       }
-      that.shareSelf({ "drag": (that.ent.drag != null) })
+      that.shareSelf({ "drag": (that.ent.drag != null) });
     }
   });
 

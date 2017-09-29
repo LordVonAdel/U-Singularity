@@ -1,3 +1,7 @@
+:root{
+  --primary: #275fba;
+}
+
 body{
   font-family: sans-serif;
   background-color: #323232;
@@ -10,9 +14,9 @@ h1, h2, h3, h4, h5{
   margin: 0;
 }
 hr{
-  border-bottom: 0px solid #275fba;
-  background-color: #275fba;
-  color: #275fba;
+  border-bottom: 0px solid var(--primary);
+  background-color: var(--primary);
+  color: var(--primary);
   height: 1px;
   border: 0;
 }
@@ -31,8 +35,8 @@ a{
 }
 .button{
   width: 100%;
-  background-color: #275fba;
-  border: 1px solid #275fba;
+  background-color: var(--primary);
+  border: 1px solid var(--primary);
   text-align: center;
 }
 .button:hover{
@@ -71,8 +75,9 @@ a{
   color: white;
   border: none;
 }
-#chat{
+#chat, .popup{
   transition: margin-left 1s;
+  border-top: 3px solid var(--primary);
 }
 #chat.in{
   margin-left: -370px;
@@ -94,26 +99,26 @@ a{
   outline: 1px solid slategrey;
 }
 #server_content{
-position:absolute;
-top: 0;
-left: 0;
-width:99%;
-height:99%;
-color: white; 
-padding: 0px;
-margin: 0px;
+  position:absolute;
+  top: 0;
+  left: 0;
+  width:99%;
+  height:99%;
+  color: white; 
+  padding: 0px;
+  margin: 0px;
 }
 #game_config{
-position:absolute;
-top: 0;
-left: 0;
-right: 0;
-padding: 0px;
-margin: 0px;
+  position:absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 0px;
+  margin: 0px;
 }
 #game_config table tr th{
-background-color: orange;
+  background-color: orange;
 }
 #game_config table tr td{
-background-color: orange;
+  background-color: orange;
 }

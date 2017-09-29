@@ -37,7 +37,7 @@ var res = { //object with every dynamic loaded content, excepts maps and command
     },
     "player":{
       "collision":true,
-      "sync":{client: null},
+      "sync":{client: null, hp: 100},
       "image":[
         {
           source: "chars/char_chemist_f.png",
@@ -48,9 +48,10 @@ var res = { //object with every dynamic loaded content, excepts maps and command
         }
       ],
       "actions": {
-        "knife": function(){
-          this.hp -= 1;
+        "cut": function(){
+          this.sync.hp -= 5;
           this.client.msg("Ouch!");
+          this.client.shareSelf({hp: this.sync.hp});
         }
       }
     }

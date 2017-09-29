@@ -74,4 +74,10 @@ Game.prototype.showGlobalPopupFromFile = function(id, filename, data){
   });
 }
 
+Game.prototype.sendChatMessage = function(message){
+  for (var i = 0; i < this.players.length; i++){
+    this.players[i].msg(message);
+  }
+}
+
 module.exports = Game;

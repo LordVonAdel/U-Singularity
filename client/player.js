@@ -10,6 +10,7 @@ function Player() {
   this.inventoryActive = 0;
   this.drag = false;
   this.pawn = null;
+  this.hp = 0;
 
   this.hudInventorySlots = [];
   this.hudInventoryItems = [];
@@ -20,6 +21,8 @@ function Player() {
   this.hudDragText = new PIXI.Text("Drag",{fontFamily : 'Arial', fontSize: 14, fill : 0xffffff, align : 'center'});
   this.hudDragText.x = 0;
   this.hudDragText.y = 8;
+  this.hudHealthText = new PIXI.Text("Health: 100HP",{fontFamily : 'Arial', fontSize: 28, fill : 0x000000, align : 'bottom', stroke: 0xffffff, strokeThickness: 1});
+  stageUI.addChild(this.hudHealthText);
   this.hudDragContainer = new PIXI.Container();
   this.hudDragContainer.addChild(this.hudDragSprite);
   this.hudDragContainer.addChild(this.hudDragText);
@@ -128,6 +131,10 @@ Player.prototype.updateUI = function(){
   }
   this.hudCurrentItemText.x = 0;
   this.hudCurrentItemText.y = renderer.screen.height - 32;
+
+  this.hudHealthText.text = "Health: " + this.hp + "HP";
+  this.hudHealthText.x = this.hudInventorySlots[0].x;
+  this.hudHealthText.y = this.hudInventorySlots[0].y - 32;
 
   this.hudDragContainer.x = renderer.screen.width / 2 - (this.hands * s / 2) + s * this.hands + 96;
   this.hudDragContainer.y = renderer.screen.height - s;

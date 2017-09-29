@@ -10,6 +10,7 @@ gm.prototype.start = function(){
   if (this.stage == "lobby"){
     this.countdown = 5;
     this.stage = "countdown";
+    this.game.sendChatMessage("Starting countdown...");
   }
 }
 gm.prototype.step = function(delta){
@@ -19,6 +20,7 @@ gm.prototype.step = function(delta){
       this.stage = "ingame";
       this.roundStartTime = Date.now();
       this.game.showGlobalPopup("countdown", "");
+      this.game.sendChatMessage("Experiment starts!");
     }else{
       this.game.showGlobalPopupFromFile("countdown", "./html/countdown.html", {time: Math.floor(this.countdown)});
     }
