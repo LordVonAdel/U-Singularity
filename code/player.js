@@ -30,7 +30,7 @@ function Player(socket) {
   this.inventoryActive = 0;
   this.handRange = 1; //in tiles
   this.noclip = false;
-  this.permissions = ['admin.*', 'world.load', 'master.*', 'world.*'] //test permissions
+  this.permissions = ['master.*', 'world.*','admin.*'];
   this.drag = null;
   this.pushCooldown = 0;
   this.bucket = null;
@@ -292,9 +292,23 @@ Player.prototype.give = function (itemData) {
 
 //Checks if the player have a permission to do something
 Player.prototype.getPermission = function (permission) {
+  if (this.permissions.includes("*.*")){
+    return true;
+  }
+  if (this.permissions.includes(permission)){
+    return true;
+  }
+
   var tree = permission.split(".");
-  var allowed = this.permissions.includes(permission);
-  return (allowed);
+  var perm = tree[0];
+  for (var i = 1; i < tree.length; i++){
+    if (this.permissions.includes(perm+".*")){
+      return true;
+    }
+    perm += "." + tree[i];
+  }
+
+  return flase;
 }
 
 //Updates the bucket the player is in
