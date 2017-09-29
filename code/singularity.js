@@ -49,6 +49,9 @@ var update = function(delta) {
   games.forEach(function(game){
     game.step(delta);
   });
+  if (delta >= (1000/60)){
+    console.log("The server is overloaded! Delta: " + delta);
+  }
 }
 setInterval(function(){
   playerlist.forEach(function(value){

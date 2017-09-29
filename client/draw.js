@@ -13,16 +13,22 @@ function initRenderer(){
   stageTiles = new PIXI.Container();
   stageEntities = new PIXI.Container();
   stageFOV = new PIXI.Container();
+  stageLight = new PIXI.Container();
 
   //Field of View setup
   grFOV = new PIXI.Graphics();
+
+  //Light setup
+  grLight = new PIXI.Graphics();
 
   stage.addChild(stageWorld);
   stage.addChild(stageUI);
   stageWorld.addChild(stageTiles);
   stageWorld.addChild(stageEntities);
+  stageWorld.addChild(stageLight);
   stageWorld.addChild(stageFOV);
   stageFOV.addChild(grFOV);
+  stageLight.addChild(grLight);
 
   renderer.render(stage);
 
@@ -37,6 +43,7 @@ function renderLoop(){
   view.setZoom(2);
   world.updateView(view);
   player.updateFOV();
+  world.updateLight(view);
   renderer.render(stage);
 }
 
