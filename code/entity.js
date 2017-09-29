@@ -51,6 +51,7 @@ function Entity(world, type, tx, ty){
   this.world = world;
   this.isMoving = false;
   this.client = null;
+  this.noclip = false;
 
   Object.assign(this.sync, this.ent.sync);
   this.fire("onInit");
@@ -198,7 +199,7 @@ Entity.prototype.moveTo = function(x,y,speed){
 
 //why are there so many move function!!?
 Entity.prototype.move = function(x,y){
-  if (!this.world.collisionCheck(x,y)){
+  if (!this.world.collisionCheck(x,y) || this.noclip){
     this.world.gridEntFree(this.tx,this.ty,this);
     this.world.gridEntAdd(x,y,this);
     var dx = this.tx;
@@ -266,6 +267,7 @@ Entity.prototype.teleport = function(tileX, tileY){
   this.x = tileX*32;
   this.y = tileY*32;
   this.updateBucket();
+  this.share({tx: this.tx, ty: this.ty, x: this.x, y: this.y});
 }
 
 //Fires an event

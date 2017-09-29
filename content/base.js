@@ -33,8 +33,8 @@ commands: {  //-------------------------Commands-----------------------
   noclip: {
     permission: "master.player.noclip",
     fun: function(sender, args){
-      sender.noclip = !sender.noclip;
-      if (sender.noclip){
+      sender.ent.noclip = !sender.ent.noclip;
+      if (sender.ent.noclip){
         sender.msg("Noclip enabled!");
       }else{
         sender.msg("Noclip disabled!");

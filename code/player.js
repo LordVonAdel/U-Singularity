@@ -29,7 +29,6 @@ function Player(socket) {
   this.hands = 9;
   this.inventoryActive = 0;
   this.handRange = 1; //in tiles
-  this.noclip = false;
   this.permissions = ['master.*', 'world.*','admin.*'];
   this.drag = null;
   this.pushCooldown = 0;
@@ -308,7 +307,7 @@ Player.prototype.getPermission = function (permission) {
     perm += "." + tree[i];
   }
 
-  return flase;
+  return false;
 }
 
 //Updates the bucket the player is in
