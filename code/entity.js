@@ -22,7 +22,9 @@ function Entity(world, type, tx, ty){
         y: img.y || 0,
         animation: img.animation || "none",
         width: 32,
-        height: 32
+        height: 32,
+        visible: img.visible,
+        scale: img.scale
       };
     }
   }else{

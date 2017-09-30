@@ -16,10 +16,11 @@ var res = { //object with every dynamic loaded content, excepts maps and command
     "item":{ //the item entity
       "sync":{item: null},
       "image":"items/item_crowbar.png",
-      "onClick":function(sender){
-        if(sender.inventory[sender.inventoryActive] == null){
-          sender.inventory[sender.inventoryActive] = this.sync.item;
-          sender.shareSelf();
+      "onClick":function(user){
+        if(user.inventory[user.inventoryActive] == null){
+          user.inventory[user.inventoryActive] = this.sync.item;
+          user.shareSelf();
+          user.update();
           this.destroy();
         }
       },
@@ -47,6 +48,17 @@ var res = { //object with every dynamic loaded content, excepts maps and command
           width: 32,
           height: 32,
           animation: "jump"
+        },
+        {
+          visible: false,
+          source: "", //makes errors
+          width: 32,
+          height: 32,
+          scale: 0.5,
+          image: 0,
+          animation: "jump",
+          x: 8,
+          y: 8
         }
       ],
       "actions": {

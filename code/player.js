@@ -90,6 +90,7 @@ function Player(socket) {
       }
 
       that.shareSelf();
+      that.update();
       if (img != undefined) {
         that.ent.changeSprite(0, {source: img});
       } else {
@@ -102,6 +103,7 @@ function Player(socket) {
   socket.on('inv_active', function (data) {
     if (data.slot < that.hands) {
       that.inventoryActive = data.slot;
+      that.update();
     }
   });
 
@@ -117,6 +119,7 @@ function Player(socket) {
           }
         }
       }
+      that.update();
     }
     //console.log(that.name+" used "+res.items[that.inventory[that.inventoryActive].type].name+" on the floor at: "+xx+", "+yy);
     //console.log("-> action: "+     res.items[that.inventory[that.inventoryActive].type].onUseFloor);
@@ -137,6 +140,7 @@ function Player(socket) {
           that.shareSelf();
         }
       }
+      that.update();
     }
   });
 
@@ -282,12 +286,22 @@ Player.prototype.step = function (delta) {
   }
 }
 
+Player.prototype.update = function(){
+  var hand = this.inventory[this.inventoryActive];
+  if (hand != null){
+    this.ent.changeSprite(1, {source: loader.res.items[hand.type].image, visible: true});
+  }else{
+    this.ent.changeSprite(1, {visible: false});
+  }
+}
+
 //Gives the player an item
 Player.prototype.give = function (itemData) {
   for (var val in this.inventory) {
     if (this.inventory[val] == null) {
       this.inventory[val] = itemData;
       this.shareSelf();
+      this.update();
       break;
     }
   }

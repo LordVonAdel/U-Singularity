@@ -46,10 +46,10 @@ Entity.prototype.update = function(data){
   if (data.spriteData != undefined){
     for (var i=0; i<this.spriteData.length; i++){
       var sprite = this.sprites[sprite];
-      var data = data.spriteData[i];
-      var path = subfolder+"sprites/"+data.source;
+      var sprData = data.spriteData[i];
+      var path = subfolder+"sprites/"+sprData.source;
       if (!sprite){
-        sprite = new PIXI.Sprite(getTextureFrame(path,data.index, data.width || 32, data.height || 32));
+        sprite = new PIXI.Sprite(getTextureFrame(path,sprData.index, sprData.width || 32, sprData.height || 32));
       }
       //sprite.setTexture(getTextureFrame(path, data.index, data.width || 32, data.height || 32));
     }
@@ -79,9 +79,16 @@ Entity.prototype.step = function(delta){
     }
     if (data.animation == "jump"){
       var f = ((this.x % 32)/32)+((this.y % 32)/32);
-      sprite.y = -(Math.sin(f*Math.PI)*4);
+      sprite.y = -(Math.sin(f*Math.PI)*4) + data.y;
     }else{
       sprite.y = 0;
+    }
+    if (data.visible != undefined){
+      sprite.visible = data.visible;
+    }
+    if (data.scale){
+      sprite.scale.x = data.scale;
+      sprite.scale.y = data.scale;
     }
   }
 
