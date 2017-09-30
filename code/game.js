@@ -1,15 +1,17 @@
 //Game object, which handles everything!
 var World = require("./world.js");
 
-function Game(){
+function Game(maps, gamemode){
   this.players = [];
   this.worlds = [];
   //Load a map
-  world = new World(this);
-  world.load("maps/"+config.startWorld+".json");
-  this.worlds[0] = world;
+  for (var i = 0; i < maps.length; i++){
+    world = new World(this);
+    world.load("maps/"+maps[i]+".json");
+    this.worlds[i] = world;
+  }
 
-  var GM = require("./../gamemodes/gmSingularity.js");
+  var GM = require("./../gamemodes/"+gamemode+".js");
   this.gamemode = new GM(this);
 }
 

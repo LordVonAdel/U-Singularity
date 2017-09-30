@@ -59,7 +59,12 @@ loader.auto(function(){ //load all things from the modules directory
   res = loader.res;
   nextPlayerId = 0;
   nextEntId = 0;
-  games[0] = new Game();
+  if (!config.games || config.games.length == 0){console.error("No Games defined!")}
+
+  for(var i = 0; i < config.games.length; i++){
+    var cGame = config.games[i];
+    games[i] = new Game(cGame.maps, cGame.gamemode);
+  }
   require("./startup.js");
   
   gameloop.setGameLoop(update,1000/60);

@@ -41,19 +41,7 @@ function Player(socket) {
   for (var i = 0; i < this.hands; i++) {
     inv[i] = null;
   }
-  //giving the player the start items
-  /*
-  inv[0] = new loader.Item("metal");
-  inv[1] = new loader.Item("crowbar");
-  inv[2] = new loader.Item("glass");
-  inv[3] = new loader.Item("wall_frame");
-  inv[4] = new loader.Item("knife");
-  inv[5] = new loader.Item("armor_plating");
-  inv[6] = new loader.Item("destroyer");
-  inv[7] = new loader.Item("atmo_scanner");
-  */
-  inv[8] = null;
-  inv[9] = null;
+
   var that = this;
 
   console.log("Construct Player " + this.id);
@@ -100,8 +88,7 @@ function Player(socket) {
         }
       }
 
-      that.share();
-      that.shareSelf({hp: that.ent.sync.hp, drag: false});
+      that.shareSelf();
       if (img != undefined) {
         that.ent.changeSprite(0, {source: img});
       } else {
@@ -145,7 +132,7 @@ function Player(socket) {
       if (itm != null) {
         world.spawnItem(data.x, data.y, itm);
         that.inventory[that.inventoryActive] = null;
-        that.share();
+        that.shareSelf();
       }
     }
   });
@@ -266,22 +253,15 @@ Player.prototype.resetDrag = function () {
   this.shareSelf({ drag: false });
 }
 
-//send data from this player all over the place
-Player.prototype.share = function (data) {
-  if (data) {
-    var obj = Object.assign({ id: this.id }, data);
-  } else {
-    var obj = { id: this.id, health: this.health, speed: this.speed, nick: this.name, inventory: this.inventory, job: this.job, sex: this.sex, name: this.name, burning: this.burning }
-  }
-  if (this.bucket != null) {
-    this.bucket.broadcastArea('player_stats', obj, 3);
-  } else {
-    this.game.broadcast('player_stats', obj);
-  }
-}
-
 //sends data to the client about his player
 Player.prototype.shareSelf = function (data) {
+  if (!data){
+    data = {
+      hp: this.ent.sync.hp,
+      inventory: this.inventory,
+      drag: this.drag
+    }
+  }
   this.socket.emit('pSelf', data);
 }
 
@@ -293,8 +273,9 @@ Player.prototype.step = function (delta) {
     this.inMovement = false;
   }
   this.game.broadcast('player_move', { x: this.tileX, y: this.tileY, id: this.id, w_x: this.x, w_y: this.y, dir: this.direction });
-  if (this.burning) {
-    this.health -= config.damage.burn;
+  if (this.ent.getState("burning")){
+    this.ent.sync.hp -= delta;
+    this.shareSelf({"hp" : Math.ceil(this.ent.sync.hp)});
   }
 }
 
@@ -303,6 +284,7 @@ Player.prototype.give = function (itemData) {
   for (var val in this.inventory) {
     if (this.inventory[val] == null) {
       this.inventory[val] = itemData;
+      this.shareSelf();
       break;
     }
   }

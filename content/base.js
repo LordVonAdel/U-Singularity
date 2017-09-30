@@ -14,7 +14,7 @@ tiles: { //-------------------------Tiles-----------------------
 items: { //-------------------------Items-----------------------
   knife:             {"id":"knife"            ,"name":"Knife"            ,"onUseFloor":"test"       ,"image":"items/item_knife.png"            ,"actions":["cut"]},
   metal:             {"id":"metal"	          ,"name":"Metal Sheet"      ,"onUseFloor":"build_metal","image":"items/item_metal.png"},
-  crowbar:           {"id":"crowbar"          ,"name":"Crowbar"          ,"onUseFloor":"crowbar"    ,"image":"items/item_crowbar.png"},
+  crowbar:           {"id":"crowbar"          ,"name":"Crowbar"          ,"onUseFloor":"crowbar"    ,"image":"items/item_crowbar.png", "actions":["crowbar"]},
   glass:             {"id":"glass"            ,"name":"Glass"            ,"onUseFloor":"buildGlass" ,"image":"items/item_glass.png"},
   wall_frame:        {"id":"wall_frame"       ,"name":"Wall Frame"       ,"onUseFloor":"buildWall"  ,"image":"items/item_wall_frame.png"},
   armor_plating:     {"id":"armor_plating"    ,"name":"Armor Plating"    ,"onUseFloor":"buildArmor" ,"image":"items/item_armor_plating.png"},
@@ -27,7 +27,7 @@ commands: {  //-------------------------Commands-----------------------
   ping: {
     permission: "cmd.ping",
     fun: function(sender,args){
-      sender.msg("pong!")
+      sender.msg("pong!");
     }
   },
   noclip: {
@@ -189,10 +189,10 @@ objects: { //-----------------------Objects-----------------------------
   fire_ext_box: {"image":"objects/fire_extinguisher_box.png", "imageNumber":2, "sprites[0].index":0, "collision":false,
                 "sync":{item: null},
                 "onInit":function(){this.sync.item = new loader.Item("fire_ext")},
-                "onClick":function(user){if (this.sync.item != null && user.inventory[user.inventoryActive]==null){user.inventory[user.inventoryActive] = this.sync.item;this.sync.item = null; this.sprites[0].index = 1; this.share(); user.share();}},
+                "onClick":function(user){if (this.sync.item != null && user.inventory[user.inventoryActive]==null){user.inventory[user.inventoryActive] = this.sync.item;this.sync.item = null; this.sprites[0].index = 1; this.share(); user.shareSelf();}},
                 "onUpdate":function(){if(this.sync.item == null){this.sprites[0].index = 1}else{this.sprites[0].index = 0}; this.share()},
                 "actions":{
-                  "fire_ext_box":function(user,item){if (this.sync.item == null){this.sync.item = user.inventory[user.inventoryActive]; user.inventory[user.inventoryActive] = null; this.sprites[0].index = 0; this.share(); user.share()}}
+                  "fire_ext_box":function(user,item){if (this.sync.item == null){this.sync.item = user.inventory[user.inventoryActive]; user.inventory[user.inventoryActive] = null; this.sprites[0].index = 0; this.share(); user.shareSelf()}}
                   }
                 }
 }

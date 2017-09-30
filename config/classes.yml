@@ -17,3 +17,6 @@ engineer:
     - "crowbar"
     - "wall_frame"
     - "glass"
+medic:
+  name: "Medic"
+  #ToDo: Make Medic sprites

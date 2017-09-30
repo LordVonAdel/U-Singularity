@@ -4,10 +4,8 @@ servername: "Offical Test Server!"
 motd: "This is a test server!"
 #The Maximum number of players that can be on the server at one time
 maxPlayers: 20
-#The port the http server will use
+#The port the http and socket server will use
 port: 5000
-#The world to load on startup
-startWorld: "lab"
 #A bucket is like a chunk in minecraft
 bucket:
   width: 16
@@ -20,3 +18,13 @@ player:
   allowEmptyName: true
 #Use the atomspherics simulation system?
 enableAtmos: true
+
+#A server can host multiple round at the same time
+games:
+  - gamemode: "gmSingularity"
+    maps:
+    - "lab"
+#A second game would look like this:
+#  - gamemode: "gmSingularity"
+#    maps:
+#    - "lab"
