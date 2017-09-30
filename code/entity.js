@@ -36,7 +36,6 @@ function Entity(world, type, tx, ty){
     }
   }
   this.collision = this.ent.collision;
-  this.eventOnClick = this.ent.onClick;
   this.x = tx * 32;
   this.y = ty * 32;
   this.tx = tx;
@@ -85,9 +84,7 @@ Entity.prototype.setDragger = function(dragger){
 
 //called every step. Yes 60 times per second!
 Entity.prototype.step = function(delta){
-  if (this.ent.onStep != undefined){
-    this.ent.onStep(this);
-  }
+  this.fire("onStep", delta);
   if (this.x != this.tx*32 || this.y != this.ty*32){
     this.x = handy.transition(this.x,this.tx*32,this.speed*(delta*100),0);
     this.y = handy.transition(this.y,this.ty*32,this.speed*(delta*100),0);
@@ -104,9 +101,7 @@ Entity.prototype.animate = function(){
 
 //so you can interact with entitys. This happens if somebody dares to interact!
 Entity.prototype.use = function(user,item){
-  if (this.eventOnClick){
-    this.eventOnClick.call(this, user);
-  }
+  this.fire("onClick", user);
   var that = this;
   var itemType = res.items[item.type];
   if (itemType != undefined){
@@ -278,9 +273,9 @@ Entity.prototype.teleport = function(tileX, tileY){
 }
 
 //Fires an event
-Entity.prototype.fire = function(event){
+Entity.prototype.fire = function(event, a, b, c){
   if (this.ent[event] != undefined){
-    this.ent[event].call(this);
+    this.ent[event].call(this, a, b, c);
   }
 }
 
@@ -298,6 +293,7 @@ Entity.prototype.setState = function(state, value){
   this.share();
 }
 
+//Gets if a state is set
 Entity.prototype.getState = function(state){
   return this.states.includes(state);
 }
@@ -305,6 +301,11 @@ Entity.prototype.getState = function(state){
 //toggles the state of a state
 Entity.prototype.toggleState = function(state){
   this.setState(state, !this.getState(state));
+}
+
+//Reloads the entity
+Entity.prototype.reload = function(){
+  this.ent = res.objects[type];
 }
 
 module.exports = Entity;

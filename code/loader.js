@@ -19,7 +19,7 @@ var res = { //object with every dynamic loaded content, excepts maps and command
       "onClick":function(sender){
         if(sender.inventory[sender.inventoryActive] == null){
           sender.inventory[sender.inventoryActive] = this.sync.item;
-          sender.share();
+          sender.shareSelf();
           this.destroy();
         }
       },
@@ -37,6 +37,7 @@ var res = { //object with every dynamic loaded content, excepts maps and command
       "actions":{}
     },
     "player":{
+      "dragable": true,
       "collision":true,
       "sync":{client: null, hp: 100},
       "image":[
@@ -53,6 +54,12 @@ var res = { //object with every dynamic loaded content, excepts maps and command
           this.sync.hp -= 5;
           this.client.msg("Ouch!");
           this.client.shareSelf({hp: this.sync.hp});
+        }
+      },
+      "onStep": function(delta){
+        if (this.sync.hp <= 0){
+          this.changeSprite(0, {angle: 90, animation: "none"});
+          this.client.alive = false;
         }
       }
     }

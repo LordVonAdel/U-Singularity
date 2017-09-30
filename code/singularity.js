@@ -19,26 +19,30 @@ var http = require("http").createServer(function( req, res){
   if (url == "/"){url="/game.html"}
   //The api
   if (url == "/api"){
+    if (config.enableAPI){
+      var gameList = [];
+      var playersOnline = 0;
+      for (var i = 0; i < games.length; i++){
+        var game = games[i];
+        playersOnline += game.players.length;
+        gameList.push(Object.assign({
+          playersOnline: game.players.length,
+          gamemode: game.gamemode.name,
+        }, game.gamemode.getAPIData()));
+      }
 
-    var gameList = [];
-    var playersOnline = 0;
-    for (var i = 0; i < games.length; i++){
-      var game = games[i];
-      playersOnline += game.players.length;
-      gameList.push(Object.assign({
-        playersOnline: game.players.length,
-        gamemode: game.gamemode.name,
-      }, game.gamemode.getAPIData()));
+      res.writeHead(500);
+      return res.end(JSON.stringify({
+        serverPort: config.port,
+        serverName: config.servername,
+        motd: config.motd,
+        playersOnline: playersOnline,
+        maxPlayers: config.maxPlayers,
+        games: gameList
+      }));
+    }else{
+      return res.end("API is disabled!");
     }
-
-    res.writeHead(500);
-    return res.end(JSON.stringify({
-      serverPort: config.port,
-      serverName: config.servername,
-      motd: config.motd,
-      playersOnline: playersOnline,
-      games: gameList
-    }));
   }
   var filename = __dirname+"/../client"+url;
   //console.log(filename)
@@ -80,11 +84,6 @@ var update = function(delta) {
     game.step(delta);
   });
   if (delta >= (1000/60)){
-    console.log("The server is overloaded! Delta: " + delta);
+    console.log("The server is overloaded || The system change! Delta: " + delta);
   }
 }
-setInterval(function(){
-  playerlist.forEach(function(value){
-    value.share();
-  });
-},1000)

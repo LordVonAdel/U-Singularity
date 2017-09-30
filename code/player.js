@@ -32,6 +32,7 @@ function Player(socket) {
   this.drag = null;
   this.pushCooldown = 0;
   this.bucket = null;
+  this.alive = true;
 
   this.ent = null;
   this.world = null;
@@ -47,7 +48,7 @@ function Player(socket) {
   console.log("Construct Player " + this.id);
 
   socket.on('move', function (data) {
-    if (that.game != null && that.config) {
+    if (that.game != null && that.config && that.alive) {
       //that.move(data.dir);
       if (!that.ent.isMoving) {
         that.ent.moveDir(data.dir, that.speed);
@@ -105,7 +106,7 @@ function Player(socket) {
   });
 
   socket.on('useOnFloor', function (data) {
-    if (that.config) {
+    if (that.config && that.alive) {
       var xx = data.x;
       var yy = data.y;
       if (that.inventory[that.inventoryActive] != null) {
@@ -127,18 +128,20 @@ function Player(socket) {
   });
 
   socket.on('drop', function (data) {
-    var itm = that.inventory[that.inventoryActive];
-    if (!that.world.collisionCheck(data.x, data.y)) {
-      if (itm != null) {
-        world.spawnItem(data.x, data.y, itm);
-        that.inventory[that.inventoryActive] = null;
-        that.shareSelf();
+    if (that.alive){
+      var itm = that.inventory[that.inventoryActive];
+      if (!that.world.collisionCheck(data.x, data.y)) {
+        if (itm != null) {
+          world.spawnItem(data.x, data.y, itm);
+          that.inventory[that.inventoryActive] = null;
+          that.shareSelf();
+        }
       }
     }
   });
 
   socket.on('ent_click', function (data) {
-    if (that.game != null) {
+    if (that.game != null && that.alive) {
       var itm = that.inventory[that.inventoryActive];
       if (itm == null) { itm = { type: "hand" } }
       var ent = that.world.ents[data.id];
@@ -153,7 +156,7 @@ function Player(socket) {
   });
 
   socket.on('ent_drag', function (data) {
-    if (that.game != null) {
+    if (that.game != null && that.alive) {
       var ent = that.world.getEntById(data.id);//that.world.ents[data.id];
       if (ent != null) {
         if (ent == that.ent.drag) {
@@ -257,7 +260,7 @@ Player.prototype.resetDrag = function () {
 Player.prototype.shareSelf = function (data) {
   if (!data){
     data = {
-      hp: this.ent.sync.hp,
+      hp: Math.floor(this.ent.sync.hp),
       inventory: this.inventory,
       drag: this.drag
     }

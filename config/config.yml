@@ -1,15 +1,23 @@
 #Display name
 servername: "Offical Test Server!"
+
 #Message of the day
 motd: "This is a test server!"
+
 #The Maximum number of players that can be on the server at one time
 maxPlayers: 20
+
 #The port the http and socket server will use
 port: 5000
+
 #A bucket is like a chunk in minecraft
 bucket:
   width: 16
   height: 16
+
+#Use the http API?
+enableAPI: true
+
 #Some things with the player
 player:
   #The speed in tiles per second the player can walk
@@ -19,7 +27,7 @@ player:
 #Use the atomspherics simulation system?
 enableAtmos: true
 
-#A server can host multiple round at the same time
+#A server can host multiple rounds at the same time
 games:
   - gamemode: "gmSingularity"
     maps:

@@ -164,11 +164,13 @@ actions: { //----------------------------Actions-----------------------------
   scanAtmo: function(world, tileX,tileY,user){
     var str = "---Atmosphere---"
     var tile = world.gridAtmos.cellGet(tileX,tileY);
-    for(k in tile.content){
-      str+="<br>|"+k+": "+tile.content[k];
+    if (tile){
+      for(k in tile.content){
+        str+="<br>|"+k+": "+tile.content[k];
+      }
+      str+="<br>Temperature: "+tile.temperature+"K";
+      user.msg(str);
     }
-    str+="<br>Temperature: "+tile.temperature+"K";
-    user.msg(str);
   }
 },
 objects: { //-----------------------Objects-----------------------------

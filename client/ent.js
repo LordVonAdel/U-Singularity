@@ -72,6 +72,11 @@ Entity.prototype.step = function(delta){
     var sprite = this.sprites[i];
     var path = subfolder+"sprites/"+data.source;
     sprite.setTexture(getTextureFrame(path, data.index, data.width || 32, data.height || 32));
+    if (data.angle){
+      sprite.rotation = data.angle * Math.PI / 180;
+      sprite.x = 32;
+      sprite.y = 16;
+    }
     if (data.animation == "jump"){
       var f = ((this.x % 32)/32)+((this.y % 32)/32);
       sprite.y = -(Math.sin(f*Math.PI)*4);

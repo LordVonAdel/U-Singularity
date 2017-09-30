@@ -59,6 +59,7 @@ Game.prototype.changeWorld = function(player, index){
   player.socket.emit('cam', player.ent.id);
 }
 
+//shows a html popup at every player in the game
 Game.prototype.showGlobalPopup = function(id, str, data){
   for (var k in data){
     str = str.replace("{"+k+"}", data[k]);
@@ -69,6 +70,7 @@ Game.prototype.showGlobalPopup = function(id, str, data){
   }
 }
 
+//loads a file and shows it as popup at every player in the game
 Game.prototype.showGlobalPopupFromFile = function(id, filename, data){
   var game = this;
   fs.readFile(filename, "utf-8", function (err, str) {
@@ -77,10 +79,17 @@ Game.prototype.showGlobalPopupFromFile = function(id, filename, data){
   });
 }
 
+//Sends a chat message to every player in the game
 Game.prototype.sendChatMessage = function(message){
   for (var i = 0; i < this.players.length; i++){
     this.players[i].msg(message);
   }
+}
+
+//Restarts the game
+//ToDo: Write function
+Game.prototype.restart = function(){
+
 }
 
 module.exports = Game;
