@@ -22,7 +22,7 @@ function Player(socket) {
   this.config = false;
   this.inventory = {};
   this.direction = 0;
-  this.gender = "m";
+  this.sex = "m";
   this.job = "phy";
   this.burning = false;
   this.hands = 9;
@@ -42,6 +42,7 @@ function Player(socket) {
     inv[i] = null;
   }
   //giving the player the start items
+  /*
   inv[0] = new loader.Item("metal");
   inv[1] = new loader.Item("crowbar");
   inv[2] = new loader.Item("glass");
@@ -50,6 +51,7 @@ function Player(socket) {
   inv[5] = new loader.Item("armor_plating");
   inv[6] = new loader.Item("destroyer");
   inv[7] = new loader.Item("atmo_scanner");
+  */
   inv[8] = null;
   inv[9] = null;
   var that = this;
@@ -83,17 +85,29 @@ function Player(socket) {
     if (!that.config) {
       that.name = that.stringSave(data.name);
       if (that.name == "" && !config.player.allowEmptyName){that.popup("config","./html/login.html", {error: "You need a name to play this great game!"}); return false;}
-      that.config = true;
-      that.gender = data.gender;
+      that.sex = data.sex;
       that.job = data.job;
+      var cls = loader.res.classes[that.job];
+      if (!cls){
+        console.error("Unkown job: "+that.job);
+        return false;
+      }
+      var img = that.sex == "m" ? cls["sprite-male"] : cls["sprite-female"];
+
+      if (cls.inventory){
+        for (var i = 0; i < Math.min(that.hands, cls.inventory.length); i++){
+          that.inventory[i] = new loader.Item(cls.inventory[i]);
+        }
+      }
+
       that.share();
       that.shareSelf({hp: that.ent.sync.hp, drag: false});
-      var img = jobSprites[data.job + "_" + data.gender];
       if (img != undefined) {
         that.ent.changeSprite(0, {source: img});
       } else {
         //Config was not correct!
       }
+      that.config = true;
     }
   });
 
@@ -257,7 +271,7 @@ Player.prototype.share = function (data) {
   if (data) {
     var obj = Object.assign({ id: this.id }, data);
   } else {
-    var obj = { id: this.id, health: this.health, speed: this.speed, nick: this.name, inventory: this.inventory, job: this.job, gender: this.gender, name: this.name, burning: this.burning }
+    var obj = { id: this.id, health: this.health, speed: this.speed, nick: this.name, inventory: this.inventory, job: this.job, sex: this.sex, name: this.name, burning: this.burning }
   }
   if (this.bucket != null) {
     this.bucket.broadcastArea('player_stats', obj, 3);

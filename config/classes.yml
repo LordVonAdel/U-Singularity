@@ -1,0 +1,19 @@
+chemist:
+  name: "Chemist"
+  sprite-male: "chars/char_chemist_m.png"
+  sprite-female: "chars/char_chemist_f.png"
+  inventory: 
+    - "atmo_scanner"
+physicist:
+  name: "Physicist"
+  sprite-male: "chars/char_physicist_m.png"
+  sprite-female: "chars/char_physicist_f.png"
+engineer:
+  name: "Engineer"
+  sprite-male: "chars/char_engineer_m.png"
+  sprite-female: "chars/char_engineer_f.png"
+  inventory:
+    - "metal"
+    - "crowbar"
+    - "wall_frame"
+    - "glass"

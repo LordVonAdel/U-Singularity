@@ -1,10 +1,11 @@
 {
-	"name":"singularity_server",
-	"version" : "0.0.1",
-	"main" : "server.js",
-	"dependencies" : {
-		"socket.io" : "*",
-		"node-gameloop" :"*",
-		"url":"*"
+	"name": "singularity_server",
+	"version": "0.0.1",
+	"main": "server.js",
+	"dependencies": {
+		"js-yaml": "^3.10.0",
+		"node-gameloop": "*",
+		"socket.io": "*",
+		"url": "*"
 	}
 }

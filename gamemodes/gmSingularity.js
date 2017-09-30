@@ -5,6 +5,9 @@ var gm  = function(game){
   this.stage = "lobby";
   this.roundStartTime = null;
   this.countdown = null;
+  this.classes = [
+    "chemist", "physicist", "engineer"
+  ]
   this.second = 0; //Used to send things only every second and not every tick!
 }
 

@@ -1,5 +1,6 @@
 Grid = require('./grid.js');
 Entity = require('./entity.js');
+fs = require('fs');
 
 //The constructor for a world instance
 function World(game){

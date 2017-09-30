@@ -1,12 +1,14 @@
 //require("./static_file_server.js")
 
-fs = require("fs");
+var fs = require("fs");
 loader = require("./loader.js");
-player = require("./player.js");
+var player = require("./player.js");
 var gameloop = require("node-gameloop");
 var world = require("./world.js");
 var url = require('url');
-config = loader.config();
+config = null;
+loader.loadConfig();
+loader.loadClasses();
 mixtures = require("./mixtures.js");
 atmos = require("./atmos.js");
 buckets = require("./bucket.js");
@@ -32,6 +34,8 @@ var http = require("http").createServer(function( req, res){
     res.writeHead(500);
     return res.end(JSON.stringify({
       serverPort: config.port,
+      serverName: config.serverName,
+      motd: config.motd,
       playersOnline: playersOnline,
       games: gameList
     }));

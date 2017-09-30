@@ -1,3 +1,4 @@
+player = require('./player.js');
 
 io.on('connection', function(socket){
   var ip = socket.request.connection.remoteAddress;

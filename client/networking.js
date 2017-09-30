@@ -23,7 +23,7 @@ function initNetworking(){
       obj.speed = data.speed;
       obj.health = data.health;
       obj.name = data.name;
-      obj.gender = data.gender;
+      obj.sex = data.sex;
       obj.job = data.job;
       obj.burning = data.burning;
     }

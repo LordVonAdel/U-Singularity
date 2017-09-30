@@ -1,5 +1,6 @@
 var fs = require("fs");
 var path = require("path");
+var yaml = require("js-yaml");
 
 var commands = {}; //object with a list of commands
 //default loaded things, which make no sense to move in external files
@@ -55,6 +56,9 @@ var res = { //object with every dynamic loaded content, excepts maps and command
         }
       }
     }
+  },
+  classes:{
+
   }
 }
 
@@ -127,9 +131,21 @@ function auto(callback){
   });
 }
 
-function config(){
-  config = JSON.parse(fs.readFileSync("config.json"));
-  return config;
+function loadClasses(){
+  try {
+    var doc = yaml.safeLoad(fs.readFileSync('./config/classes.yml', 'utf8'));
+    res.classes = doc;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+function loadConfig(){
+  try{
+    config = JSON.parse(fs.readFileSync("config.json"));
+  } catch(e) {
+    console.error("Can't read config.json", e);
+  }
 }
 
 function Tile(name, collision, image){ 
@@ -156,4 +172,5 @@ module.exports.load = load;
 module.exports.res = res;
 module.exports.commands = commands;
 module.exports.Item = Item;
-module.exports.config = config;
+module.exports.loadConfig = loadConfig;
+module.exports.loadClasses = loadClasses;

@@ -94,8 +94,9 @@ commands: {  //-------------------------Commands-----------------------
     permission: "admin.reload",
     fun: function(sender,args){
       loader.auto();
-      loader.config();
-      sender.msg("Reload files")
+      loader.loadConfig();
+      loader.loadClasses();
+      sender.msg("Reload complete!")
     }
   },
   give: {
