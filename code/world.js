@@ -24,6 +24,7 @@ function World(game){
   this.game = game;
 
   //atmospherics
+
   if (config.enableAtmos){
     this.gridAtmos = new Grid(100,100);
     this.gridAtmos.forEach(function(tileX,tileY){

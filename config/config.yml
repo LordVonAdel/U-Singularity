@@ -1,0 +1,22 @@
+#Display name
+servername: "Offical Test Server!"
+#Message of the day
+motd: "This is a test server!"
+#The Maximum number of players that can be on the server at one time
+maxPlayers: 20
+#The port the http server will use
+port: 5000
+#The world to load on startup
+startWorld: "lab"
+#A bucket is like a chunk in minecraft
+bucket:
+  width: 16
+  height: 16
+#Some things with the player
+player:
+  #The speed in tiles per second the player can walk
+  walkSpeed: 1.5
+  #Is the player allowed to have a 0 character name?
+  allowEmptyName: true
+#Use the atomspherics simulation system?
+enableAtmos: true

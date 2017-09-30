@@ -34,7 +34,7 @@ var http = require("http").createServer(function( req, res){
     res.writeHead(500);
     return res.end(JSON.stringify({
       serverPort: config.port,
-      serverName: config.serverName,
+      serverName: config.servername,
       motd: config.motd,
       playersOnline: playersOnline,
       games: gameList

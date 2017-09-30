@@ -141,10 +141,11 @@ function loadClasses(){
 }
 
 function loadConfig(){
-  try{
-    config = JSON.parse(fs.readFileSync("config.json"));
-  } catch(e) {
-    console.error("Can't read config.json", e);
+  try {
+    var doc = yaml.safeLoad(fs.readFileSync('./config/config.yml', 'utf8'));
+    config = doc;
+  } catch (e) {
+    console.log(e);
   }
 }
 
