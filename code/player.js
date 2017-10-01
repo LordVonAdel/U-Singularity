@@ -1,10 +1,3 @@
-const jobSprites = {
-  "phy_m": "chars/char_physicist_m.png",
-  "phy_f": "chars/char_physicist_f.png",
-  "che_m": "chars/char_chemist_m.png",
-  "che_f": "chars/char_chemist_f.png"
-}
-
 Entity = require('./entity.js').Entity;
 handy = require('./handy.js');
 
@@ -249,8 +242,6 @@ Player.prototype.disconnect = function () {
 //Teleports the player to a specific position
 Player.prototype.teleport = function (tileX, tileY) {
   this.ent.teleport(tileX, tileY);
-  this.tileX = tileX;
-  this.tileY = tileY;
   this.updateBucket();
 }
 

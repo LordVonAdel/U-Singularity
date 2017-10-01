@@ -27,6 +27,12 @@ module.exports = {
         sender.msg(str)
       }
     },
+    create: {
+      argNum: 1,
+      fun: function(sender, args){
+        sender.world.spawnEntity(args[1],sender.ent.tx,sender.ent.ty);
+      }
+    },
     bucket: {
       fun: function(sender, args){
         var playernum = 0;

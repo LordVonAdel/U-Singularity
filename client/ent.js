@@ -6,6 +6,7 @@ function Entity(id,x,y,spriteData){
   this.id = id;
   this.layer = 10;
   this.spriteData = spriteData;
+  this.lightData = [];
   this.sprites = [];
   this.speed = 3.2;
   this.states = [];

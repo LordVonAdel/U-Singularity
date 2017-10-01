@@ -68,10 +68,18 @@ var res = { //object with every dynamic loaded content, excepts maps and command
           this.client.shareSelf({hp: this.sync.hp});
         }
       },
+      "onInit": function(){
+        this.setLight(0, {color: "#ffffff", radius: 128, intensity: 1});
+      },
       "onStep": function(delta){
         if (this.sync.hp <= 0){
           this.changeSprite(0, {angle: 90, animation: "none"});
           this.client.alive = false;
+        }
+      },
+      "onUpdate": function(){
+        if (this.client == undefined){
+          this.destroy();
         }
       }
     }

@@ -21,7 +21,6 @@ module.exports = {
     create_door: {
       fun: function(sender,args){
         sender.world.spawnEntity("door_default",sender.ent.tx,sender.ent.ty);
-      
       }
     },
     create_detail: {
@@ -31,16 +30,6 @@ module.exports = {
           var ent = sender.world.spawnEntity("detail",sender.ent.tx,sender.ent.ty);
           ent.image = args[1];
         }
-      }
-    },
-    create_fire_ext: {
-      fun: function(sender,args){
-        sender.world.spawnEntity("fire_ext_box",sender.ent.tileX,sender.ent.ty);
-      }
-    },
-    create_argon_tank: {
-      fun: function(sender,args){
-        sender.world.spawnEntity("argon_tank",sender.ent.tx,sender.ent.ty);
       }
     }
   },

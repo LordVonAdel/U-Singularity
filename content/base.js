@@ -70,9 +70,9 @@ commands: {  //-------------------------Commands-----------------------
   spawn_set: {
     permission: "world.edit.spawn",
     fun: function(sender,args){
-      wrd.spawnX = sender.tileX;
-      wrd.spawnY = sender.tileY;
-      sender.msg("Spawnpoint set to "+sender.tileX+", "+sender.tileY+" !");
+      sender.world.spawnX = sender.ent.tx;
+      sender.world.spawnY = sender.ent.ty;
+      sender.msg("Spawnpoint set to "+sender.ent.tx+", "+sender.ent.ty+" !");
     }
   },
   spawn: {
@@ -86,7 +86,7 @@ commands: {  //-------------------------Commands-----------------------
     argNum: 2,
     fun: function(sender,args){
       if (args.length > 2){
-        sender.teleport(args[1],args[2]);
+        sender.teleport(+args[1], +args[2]);
       }
     }
   },
@@ -196,6 +196,42 @@ objects: { //-----------------------Objects-----------------------------
                 "actions":{
                   "fire_ext_box":function(user,item){if (this.sync.item == null){this.sync.item = user.inventory[user.inventoryActive]; user.inventory[user.inventoryActive] = null; this.sprites[0].index = 0; this.share(); user.shareSelf()}}
                   }
-                }
+                },
+  lamp_standing: {
+    image: [{number: 1, source: "objects/lamp_standing.png", width: 32, height: 32}],
+    sync: {isOn: true},
+    dragable: true,
+    onInit: function(){ this.update(); },
+    collision: true,
+    onUpdate: function(){
+      if (this.sync.isOn){
+        this.setLight(0, {radius: 256, color: "#ffffff"});
+      }else{
+        this.setLight(0, null);
+      }
+    },
+    actions:{ 
+      hand: function(){
+        this.sync.isOn = !this.sync.isOn;
+        this.update();
+        console.log("Light: "+this.sync.isOn);
+      }
+    }
+  },
+  wall_lamp_warning: {
+    image: [{number: 8, source: "objects/wall_lamp_warning", width:32, height: 32}],
+    collision: false,
+    sync: {isOn: false},
+    onInit: function(){
+      this.update();
+    },
+    onUpdate: function(){
+      if (this.sync.isOn){
+        this.setLight(0, {radius: 128, color: "#ff0000"});
+      }else{
+        this.setLight(0, null);
+      }
+    }
+  }
 }
 }

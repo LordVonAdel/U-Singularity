@@ -19,7 +19,8 @@ function initRenderer(){
   grFOV = new PIXI.Graphics();
 
   //Light setup
-  grLight = new PIXI.Graphics();
+  sprLight = new PIXI.Sprite(PIXI.Texture.fromCanvas(document.getElementById("canvas-light")));
+  sprLight.blendMode = PIXI.BLEND_MODES.MULTIPLY;
 
   stage.addChild(stageWorld);
   stage.addChild(stageUI);
@@ -28,7 +29,7 @@ function initRenderer(){
   stageWorld.addChild(stageLight);
   stageWorld.addChild(stageFOV);
   stageFOV.addChild(grFOV);
-  stageLight.addChild(grLight);
+  stageLight.addChild(sprLight);
 
   renderer.render(stage);
 
@@ -39,11 +40,18 @@ function initRenderer(){
 }
 
 function renderLoop(){
+  lc.canvas.width = window.innerWidth;
+  lc.canvas.height = window.innerHeight;
+  lc.render();
+  sprLight.x = view.x;
+  sprLight.y = view.y;
+  sprLight.scale.x = sprLight.scale.y = 1/view.zoom;
+  sprLight.texture.update();
+
   renderer.resize(window.innerWidth, window.innerHeight);
   view.setZoom(2);
   world.updateView(view);
   player.updateFOV();
-  world.updateLight(view);
   renderer.render(stage);
 }
 

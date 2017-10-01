@@ -7,6 +7,7 @@
     <script src="url_par.js"></script>
     <script src="widgets.js"></script>
     <script src="js/view.js"></script>
+    <script src="js/lights.js"></script>
     <script src="misc.js"></script>
     <script src="draw.js"></script>
     <script src="popup.js"></script>
@@ -24,8 +25,7 @@
     <script src="mainloop.js"></script>
   </head>
   <body style="margin:0px; padding: 0px;" oncontextmenu="return false;">
-    <canvas id="canvas" style="margin:0px; display: none">
-    </canvas>
+    <canvas id="canvas-light" style="position: absolute; visibility: hidden"></canvas>
     
     <div style="position:fixed; top:0px;left:0px; visibility:hidden" id="info_panel">
       Infos:<br>

@@ -64,6 +64,12 @@ World.prototype.regionGet = function(x,y,width,height){
   this.grid.saveRegion(x,y,width,height);
 }
 
+//sets the spawnpoint of this wolrld
+World.prototype.setSpawn = function(x, y){
+  this.spawnX = +x;
+  this.spawnY = +y;
+}
+
 //saves the world to a file
 World.prototype.save = function(filename){
   var obj = {};
@@ -74,6 +80,8 @@ World.prototype.save = function(filename){
   obj.worldWidth = this.width;
   obj.worldHeight = this.height;
   obj.nextEntId = nextEntId;
+  obj.spawnX = this.spawnX;
+  obj.spawnY = this.spawnY;
   var ents = {}
   for (var key in this.ents){
     ents[key] = {
@@ -87,15 +95,17 @@ World.prototype.save = function(filename){
   }
   obj.ents = ents;
   str = JSON.stringify(obj);
+  var that = this;
   fs.writeFile(filename,str,"utf8",function(err){
-  if (err){
-    ret = false;
-    this.broadcast('chat',{msg: "Failed to save world!"});
-  }else{
-    ret = true;
-    this.broadcast('chat',{msg: "World Saved in "+filename});
-  }
+    if (err){
+      ret = false;
+      that.game.sendChatMessage("Failed to save world!");
+    }else{
+      ret = true;
+      that.game.sendChatMessage("World Saved in "+filename);
+    }
   });
+  return ret;
 }
 
 //clears the world
@@ -134,8 +144,8 @@ World.prototype.load = function(filename){
       var obj = JSON.parse(data);
       that.resize(obj.worldWidth, obj.worldHeight);
       that.grid.load(obj.grid);
-      that.spawnX = obj.spawnX;
-      that.spawnY = obj.spawnY;
+      that.spawnX = +obj.spawnX || 0;
+      that.spawnY = +obj.spawnY || 0;
       that.nextEntId = obj.nextEntId || 100;
       var ents = obj.ents;
       for (var k in ents) {
@@ -232,6 +242,8 @@ World.prototype.getEntById = function(entId){
 }
 
 World.prototype.spawnEntity = function(type, x, y){
+  var x = x || 0;
+  var y = y || 0;
   var entity = new Entity(this, type, x, y);
   entity.spawn();
   this.nextEntId ++;

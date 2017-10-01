@@ -34,6 +34,8 @@ $(document).ready(function(){
   view = new View(320,320);
   view.setZoom(2);
 
+  lc = new LightController(document.getElementById("canvas-light"));
+
   uiZoom = 2;
 
   chat_is_open = false;
@@ -44,11 +46,6 @@ $(document).ready(function(){
   //$("#chat_msg").mCustomScrollbar();
 
   $('#chat_input').hide();
-  var canvas = document.getElementById("canvas");
-  var ctx = canvas.getContext('2d');
-  ctx.canvas.width  = window.innerWidth;
-  ctx.canvas.height = window.innerHeight;
-  //ctx.scale(view_zoom, view_zoom);
 
   mouseX_ui = 0;
   mouseY_ui = 0;

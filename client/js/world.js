@@ -26,20 +26,6 @@ function World() {
   }
 }
 
-World.prototype.updateLight = function(view){
-  grLight.visible = useLight;
-  grLight.clear();
-  grLight.beginFill(0x000000, 0.9);
-  grLight.drawRect(view.x, view.y, view.width, view.height);
-  grLight.endFill();
-  for (var k in ents){
-    var ent = ents[k];
-    grLight.beginFill(0xffff00, 0.9);
-    grLight.drawCircle(ent.x+16, ent.y+16, 32);
-    grLight.endFill();
-  }
-}
-
 World.prototype.updateView = function(view){
   for (var i=0; i<(Math.ceil(view.width/32)+1)*(Math.ceil(view.height/32)+1); i++){
     var cx = Math.floor(view.x / 32)+(i % (Math.ceil(view.width/32)+1)) //cellXvie

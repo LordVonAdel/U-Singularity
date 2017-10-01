@@ -4,6 +4,7 @@ handy = require('./handy.js');
 function Entity(world, type, tx, ty){
   this.id = world.nextEntId;
   this.ent = res.objects[type];
+
   if (this.ent == undefined){
     console.log("Unknown ent-type: "+type);
     return null;
@@ -52,6 +53,8 @@ function Entity(world, type, tx, ty){
   this.isMoving = false;
   this.client = null;
   this.noclip = false;
+
+  this.lights = [];
 
   this.states = [];
 
@@ -135,6 +138,19 @@ Entity.prototype.changeImageIndex = function(sprite, index){
     this.sprites[sprite].index = index;
     this.share({spriteData: this.sprites});
   }
+}
+
+//Set a light
+Entity.prototype.setLight = function(index, data){
+  if (this.lights[index]){
+    Object.assign(this.lights[index], data);
+    if (data == null){
+      this.lights[index] = null;
+    }
+  }else{
+    this.lights[index] = data;
+  }
+  this.share({lightData: this.lights});
 }
 
 //tell everybody near you how cool you are
@@ -231,6 +247,7 @@ Entity.prototype.getClientData = function(){
       tx:this.tx, 
       ty:this.ty, 
       spriteData: this.sprites,
+      lightData: this.lights,
       layer: this.layer,
       tile: this.ent.tile != {} ? this.ent.tile : undefined,
       states: this.states
