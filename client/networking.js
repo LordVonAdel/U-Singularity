@@ -77,8 +77,10 @@ function initNetworking(){
   socket.on('ent_data',function(data){
     var ent = ents[data.id];
     if (ent == undefined){
+      socket.emit('ent_request',data.id);
+      
       if (data.tx == undefined || data.spriteData == undefined){
-        socket.emit('ent_request',data.id);
+        
       }else{
         ents[data.id] = new Entity(data.id,data.tx*32,data.ty*32,data.spriteData);
         ent = ents[data.id];

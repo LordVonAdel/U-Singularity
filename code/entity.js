@@ -1,12 +1,13 @@
 //Entity constuctor
 handy = require('./handy.js');
 
-function Entity(world, type, tx, ty){
+function Entity(world, type, tx, ty, extraData){
   this.id = world.nextEntId;
   this.ent = res.objects[type];
 
   if (this.ent == undefined){
     console.log("Unknown ent-type: "+type);
+    this.error = "Entity type does not exists!";
     return null;
   }
 
@@ -58,7 +59,23 @@ function Entity(world, type, tx, ty){
 
   this.states = [];
 
+  if (this.ent.wallMounted){
+    this.orientation = 0;
+    var up = this.world.cellGetTile(this.tx, this.ty - 1);
+    var right = this.world.cellGetTile(this.tx + 1, this.ty);
+    var down = this.world.cellGetTile(this.tx, this.ty + 1);
+    if (down && down.collision){
+      this.orientation = 1;
+    }else if (right && right.collision){
+      this.orientation = 2;
+    }else if (up && up.collision){
+      this.orientation = 3;
+    }
+    this.changeImageIndex(0, this.orientation);
+  }
+
   Object.assign(this.sync, this.ent.sync);
+  Object.assign(this, extraData);
   this.fire("onInit");
 
   this.world.ents[this.world.nextEntId] = this;

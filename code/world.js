@@ -59,6 +59,11 @@ World.prototype.cellGet = function(tileX,tileY){
   return this.grid.cellGet(tileX,tileY);
 }
 
+//gets the tile details of a cell in the world
+World.prototype.cellGetTile = function(tileX,tileY){
+  return loader.res.tiles[this.grid.cellGet(tileX,tileY)];
+}
+
 //gets a region of the world as a string
 World.prototype.regionGet = function(x,y,width,height){
   this.grid.saveRegion(x,y,width,height);
@@ -241,12 +246,27 @@ World.prototype.getEntById = function(entId){
   }
 }
 
+//gets a list of entites from this world based on the type
+World.prototype.getEntsByType = function(type){
+  var list = [];
+  for (k in this.ents){
+    var ent = this.ents[k];
+    if (ent.type == type){
+      list.push(ent);
+    }
+  }
+  return list;
+}
+
+//Spawn an entity somewhere in the world
 World.prototype.spawnEntity = function(type, x, y){
   var x = x || 0;
   var y = y || 0;
   var entity = new Entity(this, type, x, y);
-  entity.spawn();
-  this.nextEntId ++;
+  if (!entity.error){
+    entity.spawn();
+    this.nextEntId ++;
+  }
   return entity;
 }
 

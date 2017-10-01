@@ -31,6 +31,11 @@ gm.prototype.step = function(delta){
       this.game.showGlobalPopup("countdown", "");
       this.game.sendChatMessage("Experiment starts!");
       this.game.showGlobalPopupFromFile("info", "./html/info.html", {info: "Wait for the elevator!"});
+      var lamps = this.game.worlds[0].getEntsByType("wall_lamp_warning");
+      lamps.forEach(function(lamp){
+        lamp.sync.isOn = true;
+        lamp.update();
+      });
     }else{
       if (this.second >= 1){
         this.game.showGlobalPopupFromFile("countdown", "./html/countdown.html", {time: Math.floor(this.countdown)});

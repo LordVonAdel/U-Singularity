@@ -45,6 +45,7 @@ function Player(socket) {
       //that.move(data.dir);
       if (!that.ent.isMoving) {
         that.ent.moveDir(data.dir, that.speed);
+        that.direction = data.dir;
         that.ent.changeImageIndex(0, data.dir);
         that.updateBucket();
       }
