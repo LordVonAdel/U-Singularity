@@ -213,7 +213,7 @@ module.exports = {
       collision: true,
       onUpdate: function(){
         if (this.sync.isOn){
-          this.setLight(0, {radius: 512, color: 0xffffff});
+          this.setLight(0, {radius: 512, color: 0xfffee8});
         }else{
           this.setLight(0, null);
         }
@@ -223,6 +223,16 @@ module.exports = {
           this.sync.isOn = !this.sync.isOn;
           this.update();
         }
+      }
+    },
+    wall_lamp: {
+      wallMounted: true,
+      image: [{number: 8, source: "objects/wall_lamp.png", width:32, height: 32}],
+      onInit: function(){
+        this.update();
+      },
+      onUpdate: function(){
+        this.setLight(0, {radius: 256, color: 0xfffefe, intensity: 0.9});
       }
     },
     wall_lamp_warning: {
