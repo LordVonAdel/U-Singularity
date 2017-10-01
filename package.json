@@ -5,7 +5,6 @@
 	"dependencies": {
 		"js-yaml": "^3.10.0",
 		"node-gameloop": "*",
-		"socket.io": "*",
-		"url": "*"
+		"socket.io": "*"
 	}
 }

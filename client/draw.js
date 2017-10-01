@@ -4,7 +4,9 @@ function initRenderer(){
   PIXI.utils.sayHello(type);
 
   renderer = PIXI.autoDetectRenderer(256, 256);
-  //document.body.appendChild(renderer.view);
+  rendererLight = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight);
+  rendererLight.autoResize = true;
+
   document.body.insertBefore(renderer.view,document.body.firstChild);
 
   stage = new PIXI.Container();
@@ -19,8 +21,10 @@ function initRenderer(){
   grFOV = new PIXI.Graphics();
 
   //Light setup
-  sprLight = new PIXI.Sprite(PIXI.Texture.fromCanvas(document.getElementById("canvas-light")));
+  sprLight = new PIXI.Sprite(PIXI.Texture.fromCanvas(rendererLight.view));
   sprLight.blendMode = PIXI.BLEND_MODES.MULTIPLY;
+
+  lc = new LightController(rendererLight);
 
   stage.addChild(stageWorld);
   stage.addChild(stageUI);
@@ -37,16 +41,19 @@ function initRenderer(){
   renderer.view.style.display = "block";
   renderer.autoResize = true;
   renderer.resize(window.innerWidth, window.innerHeight);
+  //rendererLight.resize(512, 512);
 }
 
 function renderLoop(){
-  lc.canvas.width = window.innerWidth;
-  lc.canvas.height = window.innerHeight;
-  lc.render();
-  sprLight.x = view.x;
-  sprLight.y = view.y;
-  sprLight.scale.x = sprLight.scale.y = 1/view.zoom;
-  sprLight.texture.update();
+  if (useLight){
+    //lc.renderer.resize(window.innerWidth, window.innerWidth);
+    lc.render();
+    sprLight.x = view.x;
+    sprLight.y = view.y;
+    sprLight.scale.x = sprLight.scale.y = 1/view.zoom;
+    sprLight.texture.update();
+  }
+  stageLight.visible = useLight;
 
   renderer.resize(window.innerWidth, window.innerHeight);
   view.setZoom(2);

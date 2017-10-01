@@ -5,7 +5,6 @@ loader = require("./loader.js");
 var player = require("./player.js");
 var gameloop = require("node-gameloop");
 var world = require("./world.js");
-var url = require('url');
 config = null;
 loader.loadConfig();
 loader.loadClasses();
@@ -15,7 +14,7 @@ buckets = require("./bucket.js");
 var Game = require("./game.js");
 
 var http = require("http").createServer(function( req, res){
-  url = req.url;///url.parse(req.url);
+  url = req.url;
   if (url == "/"){url="/game.html"}
   //The api
   if (url == "/api"){

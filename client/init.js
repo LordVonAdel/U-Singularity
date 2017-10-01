@@ -19,7 +19,7 @@ config = {
 };
 
 useFOV = false;
-useLight = false;
+useLight = true;
 
 server_ip = getParam('ip');
 
@@ -33,8 +33,6 @@ $(document).ready(function(){
 
   view = new View(320,320);
   view.setZoom(2);
-
-  lc = new LightController(document.getElementById("canvas-light"));
 
   uiZoom = 2;
 

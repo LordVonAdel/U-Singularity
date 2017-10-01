@@ -69,7 +69,7 @@ var res = { //object with every dynamic loaded content, excepts maps and command
         }
       },
       "onInit": function(){
-        this.setLight(0, {color: "#ffffff", radius: 128, intensity: 1});
+        this.setLight(0, {color: 0xffffff, radius: 128, intensity: 1});
       },
       "onStep": function(delta){
         if (this.sync.hp <= 0){

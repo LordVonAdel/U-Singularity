@@ -8,6 +8,7 @@ function Entity(id,x,y,spriteData){
   this.spriteData = spriteData;
   this.lightData = [];
   this.sprites = [];
+  this.lights = [];
   this.speed = 3.2;
   this.states = [];
 
@@ -53,6 +54,11 @@ Entity.prototype.update = function(data){
         sprite = new PIXI.Sprite(getTextureFrame(path,sprData.index, sprData.width || 32, sprData.height || 32));
       }
       //sprite.setTexture(getTextureFrame(path, data.index, data.width || 32, data.height || 32));
+    }
+  }
+  if (data.lightData != undefined){
+    for (var i=0; i<this.lightData.length; i++){
+      var data = this.lightData[i];
     }
   }
   if (this.tile){
@@ -133,6 +139,9 @@ Entity.prototype.step = function(delta){
 Entity.prototype.destroy = function(){
   for (var i = 0; i < this.sprites.lenght; i++){
     this.sprites[i].destroy();
+  }
+  for (var i = 0; i < this.lights.length; i++){
+    this.lights[i].destroy();
   }
   this.container.destroy();
   if (this.tile){

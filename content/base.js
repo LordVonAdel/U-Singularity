@@ -213,7 +213,7 @@ module.exports = {
       collision: true,
       onUpdate: function(){
         if (this.sync.isOn){
-          this.setLight(0, {radius: 256, color: "#ffffff"});
+          this.setLight(0, {radius: 512, color: 0xffffff});
         }else{
           this.setLight(0, null);
         }
@@ -235,7 +235,7 @@ module.exports = {
       },
       onUpdate: function(){
         if (this.sync.isOn){
-          this.setLight(0, {radius: 128, color: "#ff0000"});
+          this.setLight(0, {radius: 128, color: 0xff0000, pattern: "X-", intensity: 0.6});
         }else{
           this.setLight(0, null);
         }

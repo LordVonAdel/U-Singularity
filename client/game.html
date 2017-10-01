@@ -3,6 +3,7 @@
     <link rel="stylesheet" href="css/style.css">
     <title>Singularity Client</title>
     <script src="lib/jquery.js"></script>
+    <script src="lib/le.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.5.1/pixi.min.js"></script>
     <script src="url_par.js"></script>
     <script src="widgets.js"></script>
@@ -27,7 +28,7 @@
   <body style="margin:0px; padding: 0px;" oncontextmenu="return false;">
     <canvas id="canvas-light" style="position: absolute; visibility: hidden"></canvas>
     
-    <div style="position:fixed; top:0px;left:0px; visibility:hidden" id="info_panel">
+    <div style="position:fixed; top:0px;left:0px; visibility:shown; color: white" id="info_panel">
       Infos:<br>
       FPS: <span id="fps"></span><br>
       Mouse Position(UI): <span id="mouse_position_ui"></span><br>
