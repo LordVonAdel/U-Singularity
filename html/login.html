@@ -31,7 +31,7 @@
    var sex = $('input[name=sex]:checked').val();
    var job = $('input[name=job]:checked').val();
    socket.emit('config',{'name': name, 'sex': sex, 'job': job});
-   content_remove("config");
+   contentRemove("config");
   }
   //widget_radio($("#radio_job"),["che","phy"]);
   //widget_radio($("#radio_sex"),["m","f"]);

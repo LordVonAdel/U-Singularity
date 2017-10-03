@@ -41,9 +41,6 @@ function gameLoop(){
     adminLoop()
   }
 
-  //gamemode
-  gamemodeLoop();
-
   //fps calculation
   var fps = Math.floor(1000/(delta));
   document.getElementById("fps").innerHTML = fps;

@@ -50,7 +50,7 @@ function initNetworking(){
   });
 
   socket.on('server_content',function(data){
-    content_set(data.id,data.html);
+    contentSet(data.id,data.html);
     //$("#server_content").html(data.html);
     //$("#server_content").css("display","intial");
   });

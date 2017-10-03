@@ -1,9 +1,9 @@
-function content_set(id, html){
+function contentSet(id, html){
   $("#"+id).remove();
   if (html != null){
     $("#server_content").append(html);
   }
 }
-function content_remove(id){
+function contentRemove(id){
   $("#"+id).remove();
 }
