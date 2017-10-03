@@ -38,7 +38,7 @@ var res = { //object with every dynamic loaded content, excepts maps and command
       "actions":{}
     },
     "player":{
-      "dragable": true,
+      "draggable": true,
       "collision":true,
       "sync":{client: null, hp: 100},
       "image":[
@@ -106,7 +106,15 @@ function load(filename,callback){
     objects: 0
   };
   if (ext == ".js"){
-    var exp = require("../content/"+filename);
+
+    //Dangerous!!!
+    try {
+      delete require.cache[require.resolve("../content/"+filename)];
+      var exp = require("../content/"+filename);
+    }catch(e){
+      console.error("Content file has errors or don't exists: "+filename+"\n", e);
+      return false;
+    }
     if (exp.tiles != undefined){
       Object.assign(res.tiles,exp.tiles);
       num.tiles = Object.keys(exp.tiles).length;

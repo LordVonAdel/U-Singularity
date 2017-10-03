@@ -93,9 +93,19 @@ module.exports = {
     reload: {
       permission: "admin.reload",
       fun: function(sender,args){
-        loader.auto();
         loader.loadConfig();
         loader.loadClasses();
+
+        loader.auto();
+        
+        games.forEach((game) => {
+          game.worlds.forEach((world => {
+            for (k in world.ents){
+              world.ents[k].reload();
+            }
+          }));
+        })
+
         sender.msg("Reload complete!")
       }
     },
@@ -208,7 +218,7 @@ module.exports = {
     lamp_standing: {
       image: [{number: 1, source: "objects/lamp_standing.png", width: 32, height: 32}],
       sync: {isOn: true},
-      dragable: true,
+      draggable: true,
       onInit: function(){ this.update(); },
       collision: true,
       onUpdate: function(){

@@ -1,5 +1,7 @@
 //Game object, which handles everything!
 var World = require("./world.js");
+var Entity = require("./entity.js");
+var fs = require("fs");
 
 function Game(maps, gamemode){
   this.players = [];

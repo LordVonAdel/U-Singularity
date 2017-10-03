@@ -125,19 +125,18 @@ Entity.prototype.animate = function(){
 //so you can interact with entitys. This happens if somebody dares to interact!
 Entity.prototype.use = function(user,item){
   this.fire("onClick", user);
-  var that = this;
   var itemType = res.items[item.type];
   if (itemType != undefined){
     if (itemType.actions != undefined && this.ent != undefined){
       itemType.actions.forEach(function(value){
-        if (that.ent.actions != undefined)
-          if (that.ent.actions[value] != undefined){
-            that.ent.actions[value].call(that, user, item)
+        if (this.ent.actions != undefined)
+          if (this.ent.actions[value] != undefined){
+            this.ent.actions[value].call(this, user, item)
           }
         if (value == "destroy"){
-          that.destroy();
+          this.destroy();
         }
-      });
+      }, this);
     }
   }
 }
@@ -216,7 +215,7 @@ Entity.prototype.moveDir = function(direction,speed){
   var c = this.world.collisionsGet(x, y);
   for (var i=0; i<c.length; i++){
     var ent = c[i];
-    if (ent.ent.dragable){
+    if (ent.ent.draggable){
       ent.moveDir(direction, speed);
       ent.clearDragger();
     }
@@ -341,7 +340,8 @@ Entity.prototype.toggleState = function(state){
 
 //Reloads the entity
 Entity.prototype.reload = function(){
-  this.ent = res.objects[type];
+  this.ent = res.objects[this.type];
+  this.update();
 }
 
 module.exports = Entity;

@@ -78,4 +78,4 @@ Bucket.prototype.getClients = function(){
 }
 
 //and make it so requires can be used to get the bucket. Basic node.js stuff
-module.exports.Bucket = Bucket;
+module.exports = Bucket;

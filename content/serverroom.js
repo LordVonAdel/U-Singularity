@@ -18,11 +18,6 @@ module.exports = {
     }
   },
   commands: {
-    create_door: {
-      fun: function(sender,args){
-        sender.world.spawnEntity("door_default",sender.ent.tx,sender.ent.ty);
-      }
-    },
     create_detail: {
       argNum: 1,
       fun: function(sender,args){
@@ -40,7 +35,7 @@ module.exports = {
       "imageIndex":0,
       "sync": {open: 0, fuel: 100},
       "collision":true,
-      "dragable":true,
+      "draggable":true,
       "onInit":function(){this.sync.fuel = 100, this.sync.open=0},
       "onStep":function(){if(this.sync.fuel > 0 && this.sync.open == 1){this.sync.fuel -= 1; /*atmos.addGas(ent.tx,ent.ty,{ar:1});*/ if(this.sync.fuel <= 0){this.imageIndex=0; this.update(); this.share();}}},
       "actions":{

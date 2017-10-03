@@ -110,4 +110,8 @@ function initNetworking(){
   socket.on('clear',function(data){
     ents = {};
   });
+
+  socket.on('pong', function(latency){
+    $('#latency').html(latency);
+  });
 }

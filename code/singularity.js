@@ -8,9 +8,6 @@ var world = require("./world.js");
 config = null;
 loader.loadConfig();
 loader.loadClasses();
-mixtures = require("./mixtures.js");
-atmos = require("./atmos.js");
-buckets = require("./bucket.js");
 var Game = require("./game.js");
 
 var http = require("http").createServer(function( req, res){

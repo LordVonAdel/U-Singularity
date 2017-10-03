@@ -1,10 +1,11 @@
-Grid = require('./grid.js');
-Entity = require('./entity.js');
-fs = require('fs');
+var Grid = require('./grid.js');
+var Entity = require('./entity.js');
+var fs = require('fs');
+var mixtures = require('./mixtures.js');
+var Bucket = require('./bucket.js');
 
 //The constructor for a world instance
 function World(game){
-  that = this;
   this.width = 100;
   this.height = 100;
   this.ents = {};
@@ -19,8 +20,8 @@ function World(game){
   this.spawnY = 0;
   this.buckets = new Grid(this.width/config.bucket.width,this.height/config.bucket.height);
   this.buckets.forEach(function(tileX,tileY){
-    return new buckets.Bucket(tileX,tileY,that);
-  });
+    return new Bucket(tileX,tileY,this);
+  }, this);
   this.game = game;
 
   //atmospherics
@@ -28,8 +29,8 @@ function World(game){
   if (config.enableAtmos){
     this.gridAtmos = new Grid(100,100);
     this.gridAtmos.forEach(function(tileX,tileY){
-      that.gridAtmos.cellSet(tileX,tileY,mixtures.air());
-    })
+      this.gridAtmos.cellSet(tileX,tileY,mixtures.air());
+    }, this);
   }
   console.log("[World]Initalized World");
   console.log("[World]Using "+this.buckets.width+"x"+this.buckets.height+" ("+this.buckets.width*this.buckets.height+") buckets");
@@ -43,8 +44,8 @@ World.prototype.resize = function(width, height){
   this.gridEntities.resize(width,height);
   this.buckets.resize(Math.floor(width/config.bucket.width), Math.floor(height/config.bucket.height))
   this.buckets.forEach(function(tileX,tileY){
-    that.buckets.cellSet(tileX,tileY,new buckets.Bucket(tileX,tileY,that));
-  });
+    this.buckets.cellSet(tileX,tileY,new Bucket(tileX,tileY,this));
+  }, this);
 }
 
 //sets the content of a cell in the world
@@ -117,11 +118,11 @@ World.prototype.save = function(filename){
 World.prototype.clear = function(){
   this.broadcast('clear',{});
   this.gridEntities.forEach(function(tileX,tileY){
-    that.gridEntities.cellSet(tileX,tileY,[]);
-  });
+    this.gridEntities.cellSet(tileX,tileY,[]);
+  }, this);
   this.grid.forEach(function(tileX,tileY){
-    that.grid.cellSet(tileX,tileY,0);
-  });
+    this.grid.cellSet(tileX,tileY,0);
+  }, this);
   this.spawnX = 0;
   this.spawnY = 0;
   this.resize(100,100);
@@ -135,7 +136,7 @@ World.prototype.clear = function(){
   });
   */
   this.ents = {};
-  this.broadcast('world',{w:that.width,h:that.height,str:that.grid.save()});
+  this.broadcast('world',{w:this.width,h:this.height,str:this.grid.save()});
 }
 
 //loads the world from a file

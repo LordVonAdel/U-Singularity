@@ -1,5 +1,6 @@
-Entity = require('./entity.js').Entity;
-handy = require('./handy.js');
+var Entity = require('./entity.js').Entity;
+var handy = require('./handy.js');
+var fs = require('fs');
 
 function Player(socket) {
   this.socket = socket;
@@ -160,7 +161,7 @@ function Player(socket) {
         if (ent == that.ent.drag) {
           ent.clearDragger();
         } else {
-          if (ent.ent.dragable) {
+          if (ent.ent.draggable) {
             if (Math.hypot(ent.x - that.ent.x, ent.y - that.ent.y) < (that.handRange + 1) * 32) {
               that.ent.drag = ent;
               ent.setDragger(that.ent);

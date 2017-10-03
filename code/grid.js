@@ -111,12 +111,16 @@ Grid.prototype.loadRegion = function(str,x,y,width){
 }
 
 //does something for each cell.
-Grid.prototype.forEach = function(callback){
+Grid.prototype.forEach = function(callback, thisArg){
   var i,j;
   for(i=0; i<this.width; i++){
     //grid[i] = [];
     for(j=0; j<this.height; j++){
-      var a = callback(i, j, this.cellGet(i, j));
+      if (thisArg){
+        var a = callback.call(thisArg, i, j, this.cellGet(i, j));
+      }else{
+        var a = callback(i, j, this.cellGet(i, j));
+      }
       if (a){
         this.cellSet(i, j);
       }
