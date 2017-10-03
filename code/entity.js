@@ -70,6 +70,7 @@ function Entity(world, type, tx, ty, extraData){
       this.orientation = 2;
     }else if (up && up.collision){
       this.orientation = 3;
+      this.sprites[0].y -= 26;
     }
     this.changeImageIndex(0, this.orientation);
   }
@@ -259,17 +260,15 @@ Entity.prototype.move = function(x,y){
 
 //reveal everything about you, the clients should know
 Entity.prototype.getClientData = function(){
-  if (this.ent.tile != {}){
-    return {
-      id: this.id, 
-      tx:this.tx, 
-      ty:this.ty, 
-      spriteData: this.sprites,
-      lightData: this.lights,
-      layer: this.layer,
-      tile: this.ent.tile != {} ? this.ent.tile : undefined,
-      states: this.states
-    }
+  return {
+    id: this.id, 
+    tx:this.tx, 
+    ty:this.ty, 
+    spriteData: this.sprites,
+    lightData: this.lights,
+    layer: this.layer,
+    tile: this.ent.tile != {} ? this.ent.tile : undefined,
+    states: this.states
   }
 }
 

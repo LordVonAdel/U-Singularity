@@ -47,14 +47,21 @@ LightController.prototype.render = function(){
         spr.x = (ent.x - view.x + (data.x || 16)) * view.zoom;
         spr.y = (ent.y - view.y + (data.y || 16)) * view.zoom;
 
+        var len = data.patternTime || 1000;
+
         var intensity = data.intensity || 0.8;
-        var time = ((Date.now() % 1000)/1000)
+        var time = ((Date.now() % len)/len);
         var pattern = data.pattern || "X";
         var current = Math.floor(pattern.length * time);
         var char = pattern.charAt(current);
       
-        if (char == "X"){intensity = (data.intensity || 0.8);}
-        if (char == "-"){intensity = 0;}
+        var int = parseInt(char);
+        if (!isNaN(char)){
+          intensity = (int / 10) * (data.intensity || 0.8);
+        }else{
+          if (char == "X"){intensity = (data.intensity || 0.8);}
+          if (char == "-"){intensity = 0;}
+        }
 
         spr.alpha = intensity;
         spr.tint = data.color || 0xffffff;

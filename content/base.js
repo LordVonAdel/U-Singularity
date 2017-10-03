@@ -245,7 +245,7 @@ module.exports = {
       },
       onUpdate: function(){
         if (this.sync.isOn){
-          this.setLight(0, {radius: 128, color: 0xff0000, pattern: "X-", intensity: 0.6});
+          this.setLight(0, {radius: 128, color: 0xff0000, pattern: "0138XXXX0", patternTime: 2000, intensity: 0.6});
         }else{
           this.setLight(0, null);
         }

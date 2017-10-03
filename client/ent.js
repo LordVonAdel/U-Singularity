@@ -78,6 +78,8 @@ Entity.prototype.step = function(delta){
     var data = this.spriteData[i];
     var sprite = this.sprites[i];
     var path = subfolder+"sprites/"+data.source;
+    sprite.x = data.x || 0;
+    sprite.y = data.y || 0;
     sprite.setTexture(getTextureFrame(path, data.index, data.width || 32, data.height || 32));
     if (data.angle){
       sprite.rotation = data.angle * Math.PI / 180;
@@ -87,8 +89,6 @@ Entity.prototype.step = function(delta){
     if (data.animation == "jump"){
       var f = ((this.x % 32)/32)+((this.y % 32)/32);
       sprite.y = -(Math.sin(f*Math.PI)*4) + data.y;
-    }else{
-      sprite.y = 0;
     }
     if (data.visible != undefined){
       sprite.visible = data.visible;

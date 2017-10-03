@@ -58,7 +58,8 @@ gm.prototype.playerJoined = function(player){
 gm.prototype.getAPIData = function(){
   return {
     roundTime: this.roundStartTime != null ? (Date.now() - this.roundStartTime) : 0,
-    stage: this.stage
+    stage: this.stage,
+    category: "survival"
   }
 }
 
