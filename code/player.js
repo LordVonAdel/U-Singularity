@@ -272,7 +272,6 @@ Player.prototype.step = function (delta) {
   if (this.x == this.tileX * 32 && this.y == this.tileY * 32) {
     this.inMovement = false;
   }
-  this.game.broadcast('player_move', { x: this.tileX, y: this.tileY, id: this.id, w_x: this.x, w_y: this.y, dir: this.direction });
   if (this.ent.getState("burning")){
     this.ent.sync.hp -= delta;
     this.shareSelf({"hp" : Math.ceil(this.ent.sync.hp)});
