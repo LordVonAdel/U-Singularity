@@ -1,6 +1,6 @@
-var Entity = require('./entity.js').Entity;
 var handy = require('./handy.js');
 var fs = require('fs');
+var item = require('./item.js');
 
 function Player(socket) {
   this.socket = socket;
@@ -80,7 +80,7 @@ function Player(socket) {
 
       if (cls.inventory){
         for (var i = 0; i < Math.min(that.hands, cls.inventory.length); i++){
-          that.inventory[i] = new loader.Item(cls.inventory[i]);
+          that.inventory[i] = item.create(cls.inventory[i]);
         }
       }
 
@@ -116,8 +116,6 @@ function Player(socket) {
       }
       that.update();
     }
-    //console.log(that.name+" used "+res.items[that.inventory[that.inventoryActive].type].name+" on the floor at: "+xx+", "+yy);
-    //console.log("-> action: "+     res.items[that.inventory[that.inventoryActive].type].onUseFloor);
   });
 
   socket.on('disconnect', function (data) {
@@ -278,6 +276,7 @@ Player.prototype.step = function (delta) {
   }
 }
 
+//update refreshes values and stuff
 Player.prototype.update = function(){
   var hand = this.inventory[this.inventoryActive];
   if (hand != null){

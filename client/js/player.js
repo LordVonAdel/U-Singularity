@@ -119,13 +119,20 @@ Player.prototype.updateUI = function(){
     if (this.inventory[i] == null){
       sprite.setTexture(PIXI.Texture.EMPTY);
     }else{
-      var url = "sprites/"+res.items[this.inventory[i].type].sprite;
-      sprite.setTexture(getTexture(url));
+      var url = null;
+      var item = this.inventory[i];
+      var image = item.sprite[0];//"sprites/"+res.items[this.inventory[i].type].sprite;
+      if (typeof image == "string"){
+        url = image;
+      }else if(typeof image == "object"){
+        url = image.source;
+      }
+      sprite.setTexture(getTexture("sprites/"+url));
     }
   }
 
   if (this.inventory[this.inventoryActive] != null){
-    this.hudCurrentItemText.text = res.items[this.inventory[this.inventoryActive].type].name;
+    this.hudCurrentItemText.text = this.inventory[this.inventoryActive].name;//res.items[this.inventory[this.inventoryActive].type].name;
   }else{
     this.hudCurrentItemText.text = "";
   }

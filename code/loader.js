@@ -91,11 +91,33 @@ var res = { //object with every dynamic loaded content, excepts maps and command
 
 //this thing loads all content found in one file
 function load(filename,callback){
+
   function logLoad(num,key,filename){
     if (num[key] > 0){
       console.log("[Loader]Loaded "+num[key]+" "+key+" from "+filename)
     }
   }
+
+  function checkItem(item){
+
+    var img = [];
+    if (typeof item.image == "string"){
+      img = [{source: item.image}];
+    }else if(Array.isArray(item.image)){
+      for (var i = 0; i < item.image; i++){
+        var image = item.image[i];
+        if (typeof image == "string"){
+          img.push({source: image});
+        }else if (typeof image == "object"){
+          img.push(image);
+        }
+      }
+    }
+
+    item.image = img;
+    return item;
+  }
+
   var ext = path.extname(filename);
   var num = {
     tiles: 0,
@@ -120,6 +142,9 @@ function load(filename,callback){
       num.tiles = Object.keys(exp.tiles).length;
     }
     if (exp.items != undefined){
+      for (var k in exp.items){
+        exp.items[k] = checkItem(exp.items[k]);
+      }
       Object.assign(res.items,exp.items);
       num.items = Object.keys(exp.items).length;
     }
@@ -207,6 +232,6 @@ module.exports.auto = auto;
 module.exports.load = load;
 module.exports.res = res;
 module.exports.commands = commands;
-module.exports.Item = Item;
+//module.exports.Item = Item;
 module.exports.loadConfig = loadConfig;
 module.exports.loadClasses = loadClasses;

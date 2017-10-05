@@ -1,3 +1,5 @@
+var item = require('../code/item.js');
+
 module.exports = {
   tiles: { //-------------------------Tiles-----------------------
     0:  {"id":9, "name":"base.rock"         ,"collision":true , "image":"tiles/tile_rock.png", "transparent":false},
@@ -113,11 +115,11 @@ module.exports = {
       permission: "master.player.give",
       argNum: 1,
       fun: function(sender,args){
-        if (loader.res.items[args[1]]!=undefined){
-          var itm = new loader.Item(args[1]);
+        if (loader.res.items[args[1]] != undefined) {
+          var itm = item.create(args[1]);
           sender.give(itm);
         }else{
-          sender.msg(args[1]+" is no item!");
+          sender.msg(args[1] + " is no item!");
         }
       }
     },
@@ -208,9 +210,9 @@ module.exports = {
       imageNumber:2,
       collision:false,
         sync:{item: null},
-        onInit:function(){this.sync.item = new loader.Item("fire_ext")},
+        onInit:function(){this.sync.item = item.create("fire_ext")},
         onClick:function(user){if (this.sync.item != null && user.inventory[user.inventoryActive]==null){user.inventory[user.inventoryActive] = this.sync.item;this.sync.item = null; this.sprites[0].index = 1; this.share(); user.shareSelf();}},
-        onUpdate:function(){if(this.sync.item == null){this.sprites[0].index = 1}else{this.sprites[0].index = 0}; this.share()},
+        onUpdate:function(){if(this.sync.item == null){this.sprites[0].index = 1}else{this.sprites[0].index = 0; item.check(this.sync.item)}; this.share()},
         actions:{
           fire_ext_box:function(user,item){if (this.sync.item == null){this.sync.item = user.inventory[user.inventoryActive]; user.inventory[user.inventoryActive] = null; this.sprites[0].index = 0; this.share(); user.shareSelf()}}
         }
