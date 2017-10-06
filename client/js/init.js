@@ -1,9 +1,5 @@
 subfolder = ""
 
-isAdmin=false;
-
-draw_pipe = [];
-
 cam = null;
 camId = null;
 

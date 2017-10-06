@@ -1,15 +1,12 @@
 function Player() {
   var player = this;
   this.id = -1;
-  this.x = 32;
-  this.y = 32;
   this.tileX = 1;
   this.tileY = 1;
   this.speed = 3;
   this.hands = 9;         //the number of hands the player have
   this.inventoryActive = 0;
   this.drag = false;
-  this.pawn = null;
   this.hp = 0;
 
   this.hudInventorySlots = [];
@@ -46,7 +43,6 @@ function Player() {
 
 Player.prototype.step = function () {
   var speed = player.speed;
-  this.pawn = players[this.id];
   if (!chat_is_open) {
     if (keyboardCheck(input.UP)) {
       socket.emit('move', { dir: 1 })

@@ -36,11 +36,6 @@ function initNetworking(){
   socket.on('chat',function(data){
     //console.log('chat: '+data.msg);
     $("#chat_msg").append("<br>"+data.msg);
-    if (data.player != undefined){
-      if (players[data.player] != undefined){
-        players[data.player].say(data.raw);
-      }
-    }
     $("#chat_msg").scrollTop($("#chat_msg").prop("scrollHeight"));
   });
 

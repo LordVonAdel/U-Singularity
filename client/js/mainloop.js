@@ -3,15 +3,6 @@ function gameLoop(){
   var delta = Date.now() - lastTime;
   lastTime = Date.now();
 
-
-  if (player.id != -1){
-    var obj = players[player.id];
-    if (obj != undefined){
-      player.x = obj.x;
-      player.y = obj.y;
-    }
-  }
-
   if (cam != null){
     view.x = transition(view.x,cam.x+16-view.width/2,0.4,1);
     view.y = transition(view.y,cam.y-view.height/2,0.4,1);
@@ -35,11 +26,6 @@ function gameLoop(){
   //player
   player.step();
   player.updateUI();
-
-  //admin
-  if (isAdmin){
-    adminLoop()
-  }
 
   //fps calculation
   var fps = Math.floor(1000/(delta));

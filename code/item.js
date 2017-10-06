@@ -8,6 +8,7 @@ function createItem(type){
     exp.type = type;
     exp.name = itm.name;
     exp.sprite = itm.image;
+    exp.sync = Object.assign({}, itm.sync);
     return exp;
   }
   return null;
@@ -16,9 +17,10 @@ function createItem(type){
 function check(item){
   if (!item){return null;}
   if (item.type){
-    var itm = res.items[item.type];
-    item.name = item.name || itm.name;
-    item.image = item.image || itm.image;
+    var mother = res.items[item.type];
+    item.name = item.name || mother.name;
+    item.sprite = item.sprite || mother.image;
+    item.sync = item.sync || mother.sync;
     return item;
   }else{
     return null;
