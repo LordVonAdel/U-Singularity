@@ -42,8 +42,8 @@ function Entity(world, type, tx, ty, extraData){
   this.collision = this.ent.collision;
   this.x = tx * 32;
   this.y = ty * 32;
-  this.tx = tx;
-  this.ty = ty;
+  this.tx = +tx;
+  this.ty = +ty;
   this.speed = 1;
   this.bucket = null;
   this.sync = {};
@@ -123,8 +123,8 @@ Entity.prototype.animate = function(){
 }
 
 //so you can interact with entitys. This happens if somebody dares to interact!
-Entity.prototype.use = function(user,item){
-  this.fire("onClick", user);
+Entity.prototype.use = function(user, item){
+  this.fire("onClick", user, item);
   var itemType = res.items[item.type];
   if (itemType != undefined){
     if (itemType.actions != undefined && this.ent != undefined){

@@ -33,11 +33,26 @@ function transform(item, type){
   var itm = res.items[type];
   if (itm){
     item.type = type;
-    item.image = itm.name;
+    item.name = itm.name;
     item.sprite = itm.image;
+  }
+}
+
+//Combines to items if possible
+function combine(item1, item2){
+  var type1 = res.items[item1.type];
+  var type2 = res.items[item2.type];
+  if (type1 && type2 && type1.on && type2.actions){
+    for (var k in type1.on){
+      var fun = type1.on[k];
+      if (type2.actions.includes(k)){
+        fun.call(item1, item2);
+      }
+    }
   }
 }
 
 module.exports.create = createItem;
 module.exports.check = check;
 module.exports.transform = transform;
+module.exports.combine = combine;

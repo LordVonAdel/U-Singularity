@@ -1,6 +1,7 @@
 var fs = require("fs");
 var path = require("path");
 var yaml = require("js-yaml");
+var item = require("./item.js");
 
 var commands = {}; //object with a list of commands
 //default loaded things, which make no sense to move in external files
@@ -16,12 +17,15 @@ var res = { //object with every dynamic loaded content, excepts maps and command
     "item":{ //the item entity
       "sync":{item: null},
       "image":"items/item_crowbar.png",
-      "onClick":function(user){
-        if(user.inventory[user.inventoryActive] == null){
+      "onClick":function(user, _item){
+        if(_item.type == "hand"){
           user.inventory[user.inventoryActive] = this.sync.item;
           user.shareSelf();
           user.update();
           this.destroy();
+        }else{
+          item.combine(this.sync.item, _item);
+          this.update();
         }
       },
       "onUpdate":function(){
@@ -29,10 +33,10 @@ var res = { //object with every dynamic loaded content, excepts maps and command
           this.destroy();
           console.log("Destroyed Null Item");
         }else{
-          var itm = res.items[this.sync.item.type];
-          if (itm){
-            this.changeSprite(0, {source: itm.image});
+          for (var i = 0; i < this.sync.item.sprite.length; i++){
+            this.sprites[i] = Object.assign({}, this.sync.item.sprite[i]);
           }
+          this.share();
         }
       },
       "actions":{}
@@ -62,7 +66,7 @@ var res = { //object with every dynamic loaded content, excepts maps and command
         }
       ],
       "actions": {
-        "cut": function(){
+        "stab": function(){
           this.sync.hp -= 5;
           this.client.msg("Ouch!");
           this.client.shareSelf({hp: this.sync.hp});

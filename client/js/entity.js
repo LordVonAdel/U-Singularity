@@ -80,7 +80,7 @@ Entity.prototype.step = function(delta){
     var path = subfolder+"sprites/"+data.source;
     sprite.x = data.x || 0;
     sprite.y = data.y || 0;
-    sprite.setTexture(getTextureFrame(path, data.index, data.width || 32, data.height || 32));
+    sprite.setTexture(getTextureFrame(path, data.index || 0, data.width || 32, data.height || 32));
     if (data.angle){
       sprite.rotation = data.angle * Math.PI / 180;
       sprite.x = 32;
