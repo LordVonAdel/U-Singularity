@@ -23,6 +23,12 @@ var lastTime = Date.now();
 
 $(document).ready(function(){
 
+  
+  mouseX_ui = 0;
+  mouseY_ui = 0;
+  mouseX = 0;
+  mouseY = 0;
+
   initRenderer();
   player = new Player();
   //cam = player;
@@ -40,11 +46,6 @@ $(document).ready(function(){
   //$("#chat_msg").mCustomScrollbar();
 
   $('#chat_input').hide();
-
-  mouseX_ui = 0;
-  mouseY_ui = 0;
-  mouseX = 0;
-  mouseY = 0;
 
   document.getElementById("server_content").addEventListener('mousemove', function(evt) {
     mouseX_ui = evt.clientX;

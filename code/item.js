@@ -14,6 +14,7 @@ function createItem(type){
   return null;
 }
 
+//Checks if an item object have the needed keys and if not it applies them
 function check(item){
   if (!item){return null;}
   if (item.type){
@@ -27,5 +28,16 @@ function check(item){
   }
 }
 
+//Changes the type of an item
+function transform(item, type){
+  var itm = res.items[type];
+  if (itm){
+    item.type = type;
+    item.image = itm.name;
+    item.sprite = itm.image;
+  }
+}
+
 module.exports.create = createItem;
 module.exports.check = check;
+module.exports.transform = transform;

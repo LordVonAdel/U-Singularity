@@ -118,3 +118,10 @@ function mouseOver(x1,y1,x2,y2,id){
   }
   return (input.hlast == id)
 }
+
+function mouseOverUI(x1,y1,x2,y2,id){
+  if (mouseX_ui > x1 && mouseX_ui < x2 && mouseY_ui > y1 && mouseY_ui < y2){
+    input.hover = id;
+  }
+  return (input.hlast == id)
+}

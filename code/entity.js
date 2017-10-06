@@ -142,17 +142,17 @@ Entity.prototype.use = function(user,item){
 }
 
 //Change the sprite data
-Entity.prototype.changeSprite = function(index, sprite){
+Entity.prototype.changeSprite = function(index, data){
   var spr = this.sprites[index];
-  Object.assign(spr, sprite);
+  Object.assign(spr, data);
   this.share({spriteData: this.sprites});
 }
 
 //change the image index of a sprite with a specific index
-Entity.prototype.changeImageIndex = function(sprite, index){
-  var oldIndex = this.sprites[sprite].index;
-  if (oldIndex != index){
-    this.sprites[sprite].index = index;
+Entity.prototype.changeImageIndex = function(index, data){
+  var oldIndex = this.sprites[index].index;
+  if (oldIndex != data){
+    this.sprites[index].index = data;
     this.share({spriteData: this.sprites});
   }
 }

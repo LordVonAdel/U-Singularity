@@ -125,6 +125,12 @@ Player.prototype.updateUI = function(){
       }
       sprite.setTexture(getTexture("sprites/"+url));
     }
+
+    if (mouseOverUI(sprite.x, sprite.y, sprite.x + sprite.width, sprite.y + sprite.height, "INV"+i)){
+      if (mouseCheckPressed(0)){
+        socket.emit('inventory_combine',i);
+      }
+    }
   }
 
   if (this.inventory[this.inventoryActive] != null){

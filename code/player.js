@@ -178,6 +178,24 @@ function Player(socket) {
     }
   });
 
+  socket.on('inventory_combine', function(index){
+    console.log("Player combined with "+index);
+    var item2 = that.inventory[that.inventoryActive];
+    var item1 = that.inventory[index];
+    if (item1 == null || item2 == null){return};
+    var type1 = res.items[item1.type];
+    var type2 = res.items[item2.type];
+    if (type1 && type2 && type1.on && type2.actions){
+      for (var k in type1.on){
+        var fun = type1.on[k];
+        if (type2.actions.includes(k)){
+          fun.call(item1, item2);
+        }
+      }
+      that.shareSelf();
+    }
+  });
+
   //this.updateBucket();
 
   if (this.bucket != null) {

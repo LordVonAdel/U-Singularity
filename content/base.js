@@ -14,7 +14,7 @@ module.exports = {
     9:  {"id":0, "name":"base.grass"        ,"collision":false, "image":"tiles/tile_grass.png"}
   },
   items: { //-------------------------Items-----------------------
-    knife:             {"id":"knife"            ,"name":"Knife"            ,"onUseFloor":"test"       ,"image":"items/item_knife.png"            ,"actions":["cut"]},
+    knife:             {"id":"knife"            ,"name":"Knife"            ,"onUseFloor":"test"       ,"image":"items/item_knife.png"            ,"actions":["cut", "carve"]},
     metal:             {"id":"metal"	          ,"name":"Metal Sheet"      ,"onUseFloor":"build_metal","image":"items/item_metal.png"},
     crowbar:           {"id":"crowbar"          ,"name":"Crowbar"          ,"onUseFloor":"crowbar"    ,"image":"items/item_crowbar.png", "actions":["crowbar"]},
     glass:             {"id":"glass"            ,"name":"Glass"            ,"onUseFloor":"buildGlass" ,"image":"items/item_glass.png"},
@@ -23,7 +23,9 @@ module.exports = {
     destroyer:         {"id":"destroyer"        ,"name":"Destroyer"                                   ,"image":"items/item_destroyer.png"        ,"actions":["destroy"]},
     fire_ext:          {"id":"fire_ext"         ,"name":"Fire Extinguisher","onUseFloor":"extinguish" ,"image":"items/item_fire_extinguisher.png","actions":["fire_ext_box"]},
     atmo_scanner:      {"id":"atmo_scanner"     ,"name":"Atmo scanner"     ,"onUseFloor":"scanAtmo"   ,"image":"items/item_atmo_scanner.png"},
-    world_edit:        {"id":"world_edit"       ,"name":"World Edit"       ,"onUseFloor":"worldEdit"  ,"image":"items/item_world_edit.png","sync":{"mode":0}}
+    world_edit:        {"id":"world_edit"       ,"name":"World Edit"       ,"onUseFloor":"worldEdit"  ,"image":"items/item_world_edit.png","sync":{"mode":0}},
+    stick:             {"id":"stick"            ,"name":"Stick"                                       ,"image":"items/item_stick.png", on: {carve: function(){item.transform(this, "stick_sharp")}}},
+    stick_sharp:       {"id":"stick_sharp"      ,"name":"Sharp Stick"                                 ,"image":"items/item_stick_sharp.png"}
   },
   commands: {  //-------------------------Commands-----------------------
     ping: {
