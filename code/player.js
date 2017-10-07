@@ -289,7 +289,9 @@ Player.prototype.step = function (delta) {
 Player.prototype.update = function(){
   var hand = this.inventory[this.inventoryActive];
   if (hand != null){
-    this.ent.changeSprite(1, {source: loader.res.items[hand.type].image, visible: true});
+    if (hand.sprite.length > 0){
+      this.ent.changeSprite(1, {source: hand.sprite[0].source, visible: true});
+    }
   }else{
     this.ent.changeSprite(1, {visible: false});
   }
