@@ -1,4 +1,4 @@
 @echo off
 title Singularity Gameserver
-node singularity.js
+node app.js
 pause

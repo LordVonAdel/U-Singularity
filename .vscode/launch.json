@@ -8,7 +8,7 @@
       "type": "node",
       "request": "launch",
       "name": "Programm starten",
-      "program": "${workspaceRoot}\\singularity.js",
+      "program": "${workspaceRoot}\\app.js",
       "cwd": "${workspaceRoot}"
     },
     {
