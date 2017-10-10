@@ -109,8 +109,8 @@ Entity.prototype.setDragger = function(dragger){
 Entity.prototype.step = function(delta){
   this.fire("onStep", delta);
   if (this.x != this.tx*32 || this.y != this.ty*32){
-    this.x = handy.transition(this.x,this.tx*32,this.speed*(delta*100),0);
-    this.y = handy.transition(this.y,this.ty*32,this.speed*(delta*100),0);
+    this.x = handy.transition(this.x,this.tx*32,this.speed*(delta/10),0);
+    this.y = handy.transition(this.y,this.ty*32,this.speed*(delta/10),0);
     if (Math.abs(this.x - this.tx*32)+Math.abs(this.y - this.ty*32) < this.speed){
       this.isMoving = false;
     }

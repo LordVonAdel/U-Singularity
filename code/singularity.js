@@ -3,7 +3,6 @@
 var fs = require("fs");
 loader = require("./loader.js");
 var player = require("./player.js");
-var gameloop = require("node-gameloop");
 var world = require("./world.js");
 config = null;
 loader.loadConfig();
@@ -67,7 +66,7 @@ loader.auto(function(){ //load all things from the modules directory
   }
   require("./startup.js");
   
-  gameloop.setGameLoop(update,1000/60);
+  update();
 });
 
 
@@ -75,11 +74,15 @@ playerlist = [];
 games = [];
 
 frameCount = 0;
-var update = function(delta) {
+lasttime = Date.now();
+var update = function() {
+  delta = Date.now() - lasttime;
+  lasttime = Date.now();
   games.forEach(function(game){
     game.step(delta);
   });
-  if (delta >= (1000/60)){
-    console.log("The server is overloaded || The system change! Delta: " + delta);
+  if (delta > (1000/45)){
+    console.log("The server is overloaded or the system time changes! Delta: " + delta);
   }
+  setTimeout(update, 1000/config.tickRate);
 }
