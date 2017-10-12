@@ -194,9 +194,9 @@ module.exports = {
       sync:{open: 0, frame: 0},
       onInit:function(){this.sync.open = 0; this.sync.frame = 0;},
       onClick:function(user){this.sync.open = 1-this.sync.open; this.share(); this.update(); this.animation = true;},
-      onAnimation:function(){this.sync.frame = handy.transition(this.sync.frame,this.sync.open,1/30,0);this.sprites[0].index = Math.floor(this.sync.frame*(this.imageNumber-1)); this.collision = (Math.floor(this.sync.frame)==0);this.update(); this.share(); if(this.sync.frame == this.sync.open){this.animation = false}},
+      onAnimation:function(delta){this.sync.frame = handy.transition(this.sync.frame, this.sync.open, delta/100, 0); this.sprites[0].index = Math.floor(this.sync.frame*(this.sprites[0].number-1)); this.collision = (Math.floor(this.sync.frame)==0);this.update(); this.share(); if(this.sync.frame == this.sync.open){this.animation = false}},
       onPush:function(pusher){this.sync.open = 1; this.animation = true},
-      onUpdate:function(){this.changeImageIndex(0, Math.floor(this.sync.frame*(this.sprites[0].number-1))); this.collision = (Math.floor(this.sync.frame)==0);},
+      onUpdate:function(){this.changeImageIndex(0, Math.floor(this.sync.frame*(this.sprites[0].number-1)));this.collision = (Math.floor(this.sync.frame)==0);},
       actions:{},
       tile:{"connectionGroup":"walls"},
       layer:30

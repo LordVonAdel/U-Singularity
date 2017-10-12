@@ -118,8 +118,8 @@ Entity.prototype.step = function(delta){
 }
 
 //uhm... there is an animation system in here?
-Entity.prototype.animate = function(){
-  this.fire("onAnimation");
+Entity.prototype.animate = function(delta){
+  this.fire("onAnimation", delta);
 }
 
 //so you can interact with entitys. This happens if somebody dares to interact!
