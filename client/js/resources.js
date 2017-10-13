@@ -1,6 +1,5 @@
 res = {
-  tiles: {},
-  items: {}
+  tiles: {}
 };
 
 function Tile(sprite) {
@@ -23,11 +22,5 @@ function load(object) {
 
       res.tiles[k] = obj;
     }
-  }
-  if (object.items != undefined) {
-    $.each(object.items, function (key, value) {
-      var spr = value.image;//Sprite(subfolder + "sprites/" + value.image);
-      res.items[key] = new Item(spr, value.name);
-    });
   }
 }

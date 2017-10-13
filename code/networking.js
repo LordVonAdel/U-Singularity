@@ -4,7 +4,7 @@ io.on('connection', function(socket){
   var ip = socket.request.connection.remoteAddress;
   var isPlayerNew = true;
 
-  socket.emit('resource',loader.res);
+  socket.emit('resource',{tiles: loader.res.tiles});
 
   playerlist.forEach(function(obj){
     if (obj.ip == ip){

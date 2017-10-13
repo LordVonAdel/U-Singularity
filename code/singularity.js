@@ -76,6 +76,7 @@ games = [];
 frameCount = 0;
 lasttime = Date.now();
 var update = function() {
+  setTimeout(update, 1000/config.tickRate);
   delta = Date.now() - lasttime;
   lasttime = Date.now();
   games.forEach(function(game){
@@ -83,7 +84,6 @@ var update = function() {
   });
   
   if (delta > (1000/config.tickRate) * 1.5){ //50% tolerance
-    console.log("The server is overloaded or the system time changes! Delta: " + delta);
+    console.log("The server is overloaded or the system time changed! Delta: " + delta);
   }
-  setTimeout(update, 1000/config.tickRate);
 }
