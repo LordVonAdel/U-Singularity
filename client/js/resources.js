@@ -5,10 +5,6 @@ res = {
 function Tile(sprite) {
   this.sprite = sprite;
 }
-function Item(sprite, name) {
-  this.sprite = sprite;
-  this.name = name;
-}
 
 function load(object) {
   console.log("Got asset information from server!");

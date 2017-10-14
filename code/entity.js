@@ -80,6 +80,9 @@ function Entity(world, type, tx, ty, extraData){
   this.fire("onInit");
 
   this.world.ents[this.world.nextEntId] = this;
+  if (this.ent.onStep || this.ent.onAnimation){
+    this.world.entsStep.push(this);
+  }
   this.world.nextEntId ++;
 
   this.world.gridEntAdd(this.tx, this.ty, this);
@@ -195,6 +198,12 @@ Entity.prototype.destroy = function(){
   this.clearDragger();
   this.world.gridEntFree(this.tx,this.ty,this); //say the world you are not any more blocking your position
   delete this.world.ents[this.id]; //let the world forgot about you
+  if (this.ent.onStep || this.ent.onAnimation){
+    var index = this.world.entsStep.indexOf(this);
+    if (index){
+      this.world.entsStep.splice(index, 1);
+    }
+  }
   this.world.broadcast('ent_destroy',{id: this.id}); //let anybody know you are no longer existing
   if (this.bucket != null){
     this.bucket.removeObject(this); //free you from the bucket

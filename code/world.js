@@ -9,6 +9,7 @@ function World(game){
   this.width = 100;
   this.height = 100;
   this.ents = {};
+  this.entsStep = []; //A list with all entites having a step event
   this.grid = new Grid(this.width, this.height);
   this.gridEntities = new Grid(this.width, this.height);
   this.nextEntId = 0;
@@ -218,12 +219,12 @@ World.prototype.dist = function(x1,y1,x2,y2){
 
 //executes a step / tick in the world
 World.prototype.step = function(delta){
-  for (k in this.ents){
-    var ent = this.ents[k];
+  for (var i = 0; i < this.entsStep.length; i++){
+    var ent = this.entsStep[i];
+    ent.step(delta);
     if (ent.animation){
       ent.animate(delta);
     }
-    ent.step(delta);
   }
 }
 
