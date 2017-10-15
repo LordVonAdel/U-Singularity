@@ -20,7 +20,6 @@ module.exports = {
     glass:             {"id":"glass"            ,"name":"Glass"            ,"onUseFloor":"buildGlass" ,"image":"items/item_glass.png"},
     wall_frame:        {"id":"wall_frame"       ,"name":"Wall Frame"       ,"onUseFloor":"buildWall"  ,"image":"items/item_wall_frame.png"},
     armor_plating:     {"id":"armor_plating"    ,"name":"Armor Plating"    ,"onUseFloor":"buildArmor" ,"image":"items/item_armor_plating.png"},
-    destroyer:         {"id":"destroyer"        ,"name":"Destroyer"                                   ,"image":"items/item_destroyer.png"        ,"actions":["destroy"]},
     fire_ext:          {"id":"fire_ext"         ,"name":"Fire Extinguisher","onUseFloor":"extinguish" ,"image":"items/item_fire_extinguisher.png","actions":["fire_ext_box"]},
     atmo_scanner:      {"id":"atmo_scanner"     ,"name":"Atmo scanner"     ,"onUseFloor":"scanAtmo"   ,"image":"items/item_atmo_scanner.png"},
     world_edit:        {"id":"world_edit"       ,"name":"World Edit"       ,"onUseFloor":"worldEdit"  ,"image":"items/item_world_edit.png","sync":{"mode":0}},
@@ -111,18 +110,6 @@ module.exports = {
         })
 
         sender.msg("Reload complete!")
-      }
-    },
-    give: {
-      permission: "master.player.give",
-      argNum: 1,
-      fun: function(sender,args){
-        if (loader.res.items[args[1]] != undefined) {
-          var itm = item.create(args[1]);
-          sender.give(itm);
-        }else{
-          sender.msg(args[1] + " is no item!");
-        }
       }
     },
     start: {
