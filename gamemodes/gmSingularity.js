@@ -22,9 +22,9 @@ gm.prototype.start = function(){
 
 //Will be called every step (60 times per second)
 gm.prototype.step = function(delta){
-  this.second += delta;
+  this.second += delta/1000;
   if (this.stage == "countdown"){
-    this.countdown -= delta;
+    this.countdown -= delta/1000;
     if (this.countdown <= 0){
       this.stage = "ingame";
       this.roundStartTime = Date.now();
