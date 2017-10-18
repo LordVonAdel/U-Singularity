@@ -30,6 +30,27 @@ module.exports = {
         }
         sender.msg(msg);
       }
+    },
+    reload: {
+      permission: "admin.reload",
+      fun: function(sender,args){
+        loader.loadConfig();
+        loader.loadClasses();
+
+        loader.auto();
+        
+        games.forEach((game, i) => {
+          var a = config;
+          game.config = config.games[i];
+          game.worlds.forEach((world => {
+            for (k in world.ents){
+              world.ents[k].reload();
+            }
+          }));
+        })
+
+        sender.msg("Reload complete!")
+      }
     }
   }
 }

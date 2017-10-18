@@ -3,9 +3,10 @@ var World = require("./world.js");
 var Entity = require("./entity.js");
 var fs = require("fs");
 
-function Game(maps, gamemode){
+function Game(maps, gamemode, gameConfig){
   this.players = [];
   this.worlds = [];
+  this.config = gameConfig;
   //Load a map
   for (var i = 0; i < maps.length; i++){
     world = new World(this);
@@ -26,11 +27,17 @@ Game.prototype.broadcast = function(event, data){
 
 //Add a player to the game
 Game.prototype.addPlayer = function(player){
+  if (this.config.playerLimit <= this.players.length){
+    player.socket.emit("msg", "This server is already full!");
+    console.log("[Game]Player can't connect because the lobby is full!");
+    return false;
+  }
   player.game = this;
   this.players.push(player);
   player.ent = new Entity(this.worlds[0], "player", this.spawnX, this.spawnY);
   this.changeWorld(player, 0);
   this.gamemode.playerJoined(player);
+  return true;
 }
 
 //Step / Tick in the game

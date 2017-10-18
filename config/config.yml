@@ -4,9 +4,6 @@ servername: "Offical Test Server!"
 #Message of the day
 motd: "This is a test server!"
 
-#The Maximum number of players that can be on the server at one time
-maxPlayers: 20
-
 #The port the http and socket server will use
 port: 5000
 
@@ -35,6 +32,7 @@ games:
   - gamemode: "gmSingularity"
     maps:
     - "lab"
+    playerLimit: 20
 #A second game would look like this:
 #  - gamemode: "gmSingularity"
 #    maps:

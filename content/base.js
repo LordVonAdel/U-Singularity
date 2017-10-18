@@ -93,25 +93,6 @@ module.exports = {
         }
       }
     },
-    reload: {
-      permission: "admin.reload",
-      fun: function(sender,args){
-        loader.loadConfig();
-        loader.loadClasses();
-
-        loader.auto();
-        
-        games.forEach((game) => {
-          game.worlds.forEach((world => {
-            for (k in world.ents){
-              world.ents[k].reload();
-            }
-          }));
-        })
-
-        sender.msg("Reload complete!")
-      }
-    },
     start: {
       permission: "master.start",
       fun: function(sender, args){

@@ -39,8 +39,6 @@ function Player(socket) {
 
   var that = this;
 
-  console.log("Construct Player " + this.id);
-
   socket.on('move', function (data) {
     if (that.game != null && that.config && that.alive) {
       //that.move(data.dir);
@@ -96,9 +94,11 @@ function Player(socket) {
   });
 
   socket.on('inv_active', function (data) {
-    if (data.slot < that.hands) {
-      that.inventoryActive = data.slot;
-      that.update();
+    if (that.game){
+      if (data.slot < that.hands) {
+        that.inventoryActive = data.slot;
+        that.update();
+      }
     }
   });
 
@@ -241,9 +241,11 @@ Player.prototype.msg = function (msg) {
 
 //When the player disconnects
 Player.prototype.disconnect = function () {
-  this.ent.destroy();
-  this.game.broadcast('disc', { id: this.id });
-  this.game.players.splice(this.game.players.indexOf(this), 1);
+  if (this.game){
+    this.ent.destroy();
+    this.game.broadcast('disc', { id: this.id });
+    this.game.players.splice(this.game.players.indexOf(this), 1);
+  }
   var i = playerlist.indexOf(this);
   playerlist.splice(i, 1);
 }

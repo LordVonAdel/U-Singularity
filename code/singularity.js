@@ -23,6 +23,7 @@ var http = require("http").createServer(function( req, res){
         gameList.push(Object.assign({
           playersOnline: game.players.length,
           gamemode: game.gamemode.name,
+          playerLimit: game.config.playerLimit
         }, game.gamemode.getAPIData()));
       }
 
@@ -32,7 +33,6 @@ var http = require("http").createServer(function( req, res){
         serverName: config.servername,
         motd: config.motd,
         playersOnline: playersOnline,
-        maxPlayers: config.maxPlayers,
         games: gameList
       }));
     }else{
@@ -62,7 +62,7 @@ loader.auto(function(){ //load all things from the modules directory
 
   for(var i = 0; i < config.games.length; i++){
     var cGame = config.games[i];
-    games[i] = new Game(cGame.maps, cGame.gamemode);
+    games[i] = new Game(cGame.maps, cGame.gamemode, cGame);
   }
   require("./startup.js");
   
