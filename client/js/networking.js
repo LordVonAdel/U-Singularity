@@ -109,4 +109,8 @@ function initNetworking(){
   socket.on('pong', function(latency){
     $('#latency').html(latency);
   });
+
+  socket.on('kick', function(msg){
+    alert(msg);
+  });
 }

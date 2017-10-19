@@ -352,4 +352,10 @@ Player.prototype.changeBucket = function (bucket) {
   }
 }
 
+//Kick the player from the server
+Player.prototype.kick = function (message) {
+  this.socket.emit("kick", message);
+  this.socket.disconnect();
+}
+
 module.exports.Player = Player;
