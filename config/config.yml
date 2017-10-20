@@ -32,7 +32,7 @@ games:
   - gamemode: "gmSingularity"
     maps:
     - "lab"
-    playerLimit: 20
+    playerLimit: 1
 #A second game would look like this:
 #  - gamemode: "gmSingularity"
 #    maps:

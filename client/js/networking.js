@@ -45,9 +45,8 @@ function initNetworking(){
   });
 
   socket.on('server_content',function(data){
+    console.log("Open Popup "+data.id);
     contentSet(data.id,data.html);
-    //$("#server_content").html(data.html);
-    //$("#server_content").css("display","intial");
   });
 
   socket.on('change_tile',function(data){
@@ -111,6 +110,6 @@ function initNetworking(){
   });
 
   socket.on('kick', function(msg){
-    alert(msg);
+    
   });
 }

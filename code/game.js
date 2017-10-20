@@ -28,7 +28,7 @@ Game.prototype.broadcast = function(event, data){
 //Add a player to the game
 Game.prototype.addPlayer = function(player){
   if (this.config.playerLimit <= this.players.length){
-    player.kick("The player limit of this server have been already reached! Sorry... Try again later");
+    player.kick("Sorry", "The player limit of this server have been already reached! Sorry... Try again later");
     console.log("[Game]Player can't connect because the lobby is full!");
     return false;
   }

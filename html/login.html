@@ -1,39 +1,44 @@
 <div id="config" class="popup" style="width:300px; top:200px;">
- <h1>Welcome</h1>
- <hr>
- Please Set up you character.<br>
- {error}<br>
- Playername: 
- <input type="text" id="config_name" style="width:100%; float:bottom;"></input>
- 
- <div id="radio_sex">
-  <input type="radio" id="config_sex_m" name="sex" value="m" checked></input>
-  <label for="config_sex_m"> Male</label>
-  <input type="radio" id="config_sex_f" name="sex" value="f"></input>
-  <label for="config_sex_f"> Female</label><br>
- </div>
- Job:<br>
- <div id="radio_job">
-  <input type="radio" id="config_job_che" name="job" value="chemist" checked></input>
-  <label for="config_job_che"> Chemist</label><br> 
-  <input type="radio" id="config_job_phy" name="job" value="physicist"></input>
-  <label for="config_job_phy"> Physicist</label><br>
-  <input type="radio" id="config_job_eng" name="job" value="engineer"></input>
-  <label for="config_job_eng"> Engineer</label><br>
-  <!--<div class="widget_radio" id="config_job_che" value="che">Chemist</div>
+  <h1>Welcome</h1>
+  <hr> Please Set up you character.
+  <br> {error}
+  <br> Playername:
+  <input type="text" id="config_name" style="width:100%; float:bottom;"></input>
+
+  <div id="radio_sex">
+    <input type="radio" id="config_sex_m" name="sex" value="m" checked></input>
+    <label for="config_sex_m"> Male</label>
+    <input type="radio" id="config_sex_f" name="sex" value="f"></input>
+    <label for="config_sex_f"> Female</label>
+    <br>
+  </div>
+  Job:
+  <br>
+  <div id="radio_job">
+    <input type="radio" id="config_job_che" name="job" value="chemist" checked></input>
+    <label for="config_job_che"> Chemist</label>
+    <br>
+    <input type="radio" id="config_job_phy" name="job" value="physicist"></input>
+    <label for="config_job_phy"> Physicist</label>
+    <br>
+    <input type="radio" id="config_job_eng" name="job" value="engineer"></input>
+    <label for="config_job_eng"> Engineer</label>
+    <br>
+    <!--<div class="widget_radio" id="config_job_che" value="che">Chemist</div>
   <div class="widget_radio" id="config_job_phy" value="phy">Physicist</div>-->
- </div>
- <hr>
- <div class="button" onclick="submit()">Play!</div></center>
- <script>
-  function submit(){
-   var name = $('#config_name').val();
-   var sex = $('input[name=sex]:checked').val();
-   var job = $('input[name=job]:checked').val();
-   socket.emit('config',{'name': name, 'sex': sex, 'job': job});
-   contentRemove("config");
-  }
+  </div>
+  <hr>
+  <div class="button" onclick="submit()">Play!</div>
+  </center>
+  <script>
+    function submit() {
+      var name = $('#config_name').val();
+      var sex = $('input[name=sex]:checked').val();
+      var job = $('input[name=job]:checked').val();
+      socket.emit('config', { 'name': name, 'sex': sex, 'job': job });
+      contentRemove("config");
+    }
   //widget_radio($("#radio_job"),["che","phy"]);
   //widget_radio($("#radio_sex"),["m","f"]);
- </script>
+  </script>
 </div>

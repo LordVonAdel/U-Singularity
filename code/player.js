@@ -227,6 +227,7 @@ Player.prototype.stringSave = function (str) {
 Player.prototype.popup = function (id, filename, data) {
   var that = this;
   fs.readFile(filename, "utf-8", function (err, str) {
+    if (err){console.error(err); return false;}
     for (var k in data){
       str = str.replace("{"+k+"}", data[k]);
     }
@@ -353,9 +354,12 @@ Player.prototype.changeBucket = function (bucket) {
 }
 
 //Kick the player from the server
-Player.prototype.kick = function (message) {
-  this.socket.emit("kick", message);
-  this.socket.disconnect();
+Player.prototype.kick = function (title, message) {
+  this.popup("kicked", "html/kicked.html", {title: title || "", msg:message});
+  var that = this;
+  setTimeout(function(){
+    that.socket.disconnect();
+  }, 1000);
 }
 
 module.exports.Player = Player;
