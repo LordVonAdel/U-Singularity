@@ -13,9 +13,14 @@ function Game(maps, gamemode, gameConfig){
     world.load("maps/"+maps[i]+".json");
     this.worlds[i] = world;
   }
-
-  var GM = require("./../gamemodes/"+gamemode+".js");
-  this.gamemode = new GM(this);
+  this.gamemode = null;
+  var path = __dirname + "./../gamemodes/"+gamemode+".js"
+  if (fs.existsSync(path)){
+    var GM = require(path);
+    this.gamemode = new GM(this);
+  }else{
+    console.error("[Game]Gamemode not found: "+gamemode);
+  }
 }
 
 //Sends a packet to all players in the game
@@ -36,7 +41,9 @@ Game.prototype.addPlayer = function(player){
   this.players.push(player);
   player.ent = new Entity(this.worlds[0], "player", this.spawnX, this.spawnY);
   this.changeWorld(player, 0);
-  this.gamemode.playerJoined(player);
+  if (this.gamemode){
+    this.gamemode.playerJoined(player);
+  }
   return true;
 }
 
@@ -48,7 +55,9 @@ Game.prototype.step = function(delta){
   this.players.forEach(function(player){
     player.step(delta);
   });
-  this.gamemode.step(delta);
+  if (this.gamemode){
+    this.gamemode.step(delta);
+  }
 }
 
 //Change the world for one player

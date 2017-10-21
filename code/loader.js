@@ -175,6 +175,7 @@ function load(filename,callback){
 
 //loads all the things of the modules directory
 function auto(callback){
+  var starttime = Date.now();
   fs.readdir( "./content", function( err, files ){
     if(err){
       console.error("[Loader]Can't list the modules directory.", err);
@@ -187,6 +188,7 @@ function auto(callback){
         ind++
         if (ind >= num){
           if(callback){
+            console.log("[Loader]Loaded all content in " + (Date.now() - starttime) + "ms")
             callback();
           }
         }

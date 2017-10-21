@@ -34,6 +34,6 @@ games:
     - "lab"
     playerLimit: 1
 #A second game would look like this:
-#  - gamemode: "gmSingularity"
+#  - gamemode: "creative"
 #    maps:
 #    - "lab"
