@@ -22,6 +22,8 @@ enableAPI: true
 player:
   #The speed in tiles per second the player can walk
   walkSpeed: 1.5
+  #The speed of the items, the player is throwing
+  throwSpeed: 2.3
   #Is the player allowed to have a 0 character name?
   allowEmptyName: true
 #Use the atomspherics simulation system?

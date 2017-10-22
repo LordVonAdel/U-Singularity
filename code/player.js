@@ -124,15 +124,27 @@ function Player(socket) {
   });
 
   socket.on('drop', function (data) {
-    if (that.alive){
+    if (that.game && that.alive){
       var itm = that.inventory[that.inventoryActive];
-      if (!that.world.collisionCheck(data.x, data.y)) {
-        if (itm != null) {
+      var distance = Math.hypot(data.x - that.ent.tx, data.y - that.ent.ty);
+
+      if (item == null){return false}
+
+      if (distance < (that.handRange + 1)){ //Put
+        if (!that.world.collisionCheck(data.x, data.y)) {
           world.spawnItem(data.x, data.y, itm);
+
           that.inventory[that.inventoryActive] = null;
           that.shareSelf();
         }
+      }else{ //else throw the item.
+        var itemEnt = world.spawnItem(that.ent.tx, that.ent.ty, itm);
+        itemEnt.moveTo(data.x, data.y, config.player.throwSpeed);
+
+        that.inventory[that.inventoryActive] = null;
+        that.shareSelf();
       }
+
       that.update();
     }
   });

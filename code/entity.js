@@ -80,10 +80,9 @@ function Entity(world, type, tx, ty, extraData){
   this.fire("onInit");
 
   this.world.ents[this.world.nextEntId] = this;
-  if (this.ent.onStep || this.ent.onAnimation){
-    this.world.entsStep.push(this);
-  }
   this.world.nextEntId ++;
+
+  this.checkToStepList();
 
   this.world.gridEntAdd(this.tx, this.ty, this);
 
@@ -116,6 +115,7 @@ Entity.prototype.step = function(delta){
     this.y = handy.transition(this.y,this.ty*32,this.speed*(delta/10),0);
     if (Math.abs(this.x - this.tx*32)+Math.abs(this.y - this.ty*32) < this.speed){
       this.isMoving = false;
+      this.checkToStepList();
     }
   }
 }
@@ -250,6 +250,7 @@ Entity.prototype.move = function(x,y){
     this.share({tx: this.tx, ty: this.ty, speed: this.speed});
     this.updateBucket();
     this.isMoving = true;
+    this.addToStepList();
     if (this.drag){
       this.drag.moveTo(dx, dy, this.speed);
     }
@@ -351,6 +352,29 @@ Entity.prototype.toggleState = function(state){
 Entity.prototype.reload = function(){
   this.ent = res.objects[this.type];
   this.update();
+}
+
+//Say, that this entity needs to be calculated every step
+Entity.prototype.addToStepList = function(){
+  if (!this.world.entsStep.includes(this))
+    this.world.entsStep.push(this);
+}
+
+//This entity don't need to be calculated every step
+Entity.prototype.removeFromStepList = function(){
+  var index = this.world.entsStep.indexOf(this);
+  if (index){
+    this.world.entsStep.splice(index, 1);
+  }
+}
+
+//Check if this belongs on the step list, and if yes move it on it
+Entity.prototype.checkToStepList = function(){
+  if (this.ent.onStep || this.ent.onAnimation || this.isMoving){
+    this.addToStepList();
+  }else{
+    this.removeFromStepList();
+  }
 }
 
 module.exports = Entity;
