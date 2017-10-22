@@ -6,7 +6,7 @@ function Entity(world, type, tx, ty, extraData){
   this.ent = res.objects[type];
 
   if (this.ent == undefined){
-    console.log("Unknown ent-type: "+type);
+    console.log("Unknown ent-type: " + type);
     this.error = "Entity type does not exists!";
     return null;
   }
@@ -378,7 +378,7 @@ Entity.prototype.removeFromStepList = function(){
 
 //Check if this belongs on the step list, and if yes move it on it (or remove)
 Entity.prototype.checkToStepList = function(){
-  if (this.ent.onStep || this.ent.onAnimation || this.isMoving){
+  if (this.ent.onStep || this.animation || this.isMoving){
     this.addToStepList();
   }else{
     this.removeFromStepList();
