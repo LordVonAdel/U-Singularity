@@ -139,7 +139,8 @@ function Player(socket) {
         }
       }else{ //else throw the item.
         var itemEnt = world.spawnItem(that.ent.tx, that.ent.ty, itm);
-        itemEnt.moveTo(data.x, data.y, config.player.throwSpeed);
+        itemEnt.impulse(data.x - that.ent.tx, data.y - that.ent.ty, config.player.throwSpeed);
+        //itemEnt.moveTo(data.x, data.y, config.player.throwSpeed);
 
         that.inventory[that.inventoryActive] = null;
         that.shareSelf();

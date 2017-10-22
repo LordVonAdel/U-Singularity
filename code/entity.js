@@ -55,6 +55,9 @@ function Entity(world, type, tx, ty, extraData){
   this.client = null;
   this.noclip = false;
 
+  this.momentumX = 0;
+  this.momentumY = 0;
+
   this.lights = [];
 
   this.states = [];
@@ -116,6 +119,7 @@ Entity.prototype.step = function(delta){
     if (Math.abs(this.x - this.tx*32)+Math.abs(this.y - this.ty*32) < this.speed){
       this.isMoving = false;
       this.checkToStepList();
+      this.processImpulse();
     }
   }
 }
@@ -216,10 +220,14 @@ Entity.prototype.moveDir = function(direction,speed){
   var x = this.tx;
   var y = this.ty;
   switch (direction){
-    case 0: x+= 1; break;
-    case 1: y-= 1; break;
-    case 2: x-= 1; break;
-    case 3: y+= 1; break;
+    case 0: x+= 1; break; //west
+    case 1: y-= 1; break; //north
+    case 2: x-= 1; break; //east
+    case 3: y+= 1; break; //south
+    case 4: x++; y--; break; //north-west
+    case 5: x--; y--; break; //north-east
+    case 6: x--; y++; break; //south-east
+    case 7: x++; y++; break; //south-west
   }
   var c = this.world.collisionsGet(x, y);
   for (var i=0; i<c.length; i++){
@@ -368,12 +376,34 @@ Entity.prototype.removeFromStepList = function(){
   }
 }
 
-//Check if this belongs on the step list, and if yes move it on it
+//Check if this belongs on the step list, and if yes move it on it (or remove)
 Entity.prototype.checkToStepList = function(){
   if (this.ent.onStep || this.ent.onAnimation || this.isMoving){
     this.addToStepList();
   }else{
     this.removeFromStepList();
+  }
+}
+
+//Impulse Speed up a thing in a direction
+Entity.prototype.impulse = function(x, y, speed){
+  this.momentumX += x;
+  this.momentumY += y;
+  if (speed){
+    this.speed = speed;
+  }
+  this.processImpulse();
+}
+
+//process impulse
+Entity.prototype.processImpulse = function(){
+  var s = this.moveTo(this.tx + Math.sign(this.momentumX), this.ty + Math.sign(this.momentumY), this.speed);
+  if (s){
+    this.momentumX -= Math.sign(this.momentumX);
+    this.momentumY -= Math.sign(this.momentumY);
+  }else{
+    this.momentumX = 0;
+    this.momentumY = 0;
   }
 }
 
