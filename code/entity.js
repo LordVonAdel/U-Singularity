@@ -1,5 +1,5 @@
 //Entity constuctor
-handy = require('./handy.js');
+utils = require('./utils.js');
 
 function Entity(world, type, tx, ty, extraData){
   this.id = world.nextEntId;
@@ -114,8 +114,8 @@ Entity.prototype.setDragger = function(dragger){
 Entity.prototype.step = function(delta){
   this.fire("onStep", delta);
   if (this.x != this.tx*32 || this.y != this.ty*32){
-    this.x = handy.transition(this.x,this.tx*32,this.speed*(delta/10),0);
-    this.y = handy.transition(this.y,this.ty*32,this.speed*(delta/10),0);
+    this.x = utils.transition(this.x,this.tx*32,this.speed*(delta/10),0);
+    this.y = utils.transition(this.y,this.ty*32,this.speed*(delta/10),0);
     if (Math.abs(this.x - this.tx*32)+Math.abs(this.y - this.ty*32) < this.speed){
       this.isMoving = false;
       this.checkToStepList();

@@ -1,4 +1,4 @@
-var handy = require('./handy.js');
+var utils = require('./utils.js');
 var fs = require('fs');
 var item = require('./item.js');
 
@@ -289,8 +289,8 @@ Player.prototype.shareSelf = function (data) {
 
 //will be executed every step
 Player.prototype.step = function (delta) {
-  this.x = handy.transition(this.x, this.tileX * 32, this.speed * (delta * 100), 0);
-  this.y = handy.transition(this.y, this.tileY * 32, this.speed * (delta * 100), 0);
+  this.x = utils.transition(this.x, this.tileX * 32, this.speed * (delta * 100), 0);
+  this.y = utils.transition(this.y, this.tileY * 32, this.speed * (delta * 100), 0);
   if (this.x == this.tileX * 32 && this.y == this.tileY * 32) {
     this.inMovement = false;
   }

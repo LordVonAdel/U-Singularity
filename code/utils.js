@@ -1,4 +1,4 @@
-//some handy misc functions
+//some utils misc functions
 
 module.exports = {
   transition: function (now, target, speed, ease) {
