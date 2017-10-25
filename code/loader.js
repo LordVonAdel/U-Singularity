@@ -103,7 +103,6 @@ function load(filename,callback){
   }
 
   function checkItem(item){
-
     var img = [];
     if (typeof item.image == "string"){
       img = [{source: item.image}];
@@ -120,6 +119,19 @@ function load(filename,callback){
 
     item.image = img;
     return item;
+  }
+
+  function checkObject(obj){
+    if (obj.extends){
+      var parent = res.objects[obj.extends];
+      if (!parent){
+        console.error("Can't extend from not existing object: "+obj.extends);
+        return false;
+      }
+      return Object.assign({}, parent, obj);
+    }else{
+      return obj;
+    }
   }
 
   var ext = path.extname(filename);
@@ -163,6 +175,11 @@ function load(filename,callback){
     if (exp.objects != undefined){
       Object.assign(res.objects,exp.objects);
       num.objects = Object.keys(exp.objects).length;
+
+      //extending and stuff
+      for (var k in exp.objects){
+        res.objects[k] = checkObject(exp.objects[k]);
+      }
     }
     logLoad(num,"tiles",filename);
     logLoad(num,"items",filename);
@@ -187,8 +204,8 @@ function auto(callback){
       load(file, function(){
         ind++
         if (ind >= num){
+          console.log("[Loader]Loaded all content in " + (Date.now() - starttime) + "ms");
           if(callback){
-            console.log("[Loader]Loaded all content in " + (Date.now() - starttime) + "ms")
             callback();
           }
         }

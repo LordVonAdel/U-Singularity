@@ -160,12 +160,16 @@ World.prototype.load = function(filename){
         var ent = that.spawnEntity(spwn.type, spwn.tx, spwn.ty);
         ent.x = spwn.x;
         ent.y = spwn.y;
-        if (spwn.sync == undefined){
-          
+        if (!ent.ent){
+          console.error("There are things in this map, which we don't know what they are! ("+spwn.type+")");
         }else{
-          Object.assign(ent.sync, spwn.sync);
+          if (spwn.sync == undefined){
+            
+          }else{
+            Object.assign(ent.sync, spwn.sync);
+          }
+          ent.update();
         }
-        ent.update();
       }
       that.broadcast('world',{w:that.width,h:that.height,str:that.grid.save()});
     }

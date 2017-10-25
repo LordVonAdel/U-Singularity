@@ -1,3 +1,5 @@
+item = require('../code/item.js');
+
 module.exports = {
   items: {
     destroyer: {

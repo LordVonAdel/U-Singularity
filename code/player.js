@@ -41,7 +41,6 @@ function Player(socket) {
 
   socket.on('move', function (data) {
     if (that.game != null && that.config && that.alive) {
-      //that.move(data.dir);
       if (!that.ent.isMoving) {
         that.ent.moveDir(data.dir, that.speed);
         that.direction = data.dir;
@@ -159,14 +158,12 @@ function Player(socket) {
           ent.use(that, itm);
         }
       }
-      //console.log("player clicked on "+data.id);
-      //ents.data.id.click();
     }
   });
 
   socket.on('ent_drag', function (data) {
     if (that.game != null && that.alive) {
-      var ent = that.world.getEntById(data.id);//that.world.ents[data.id];
+      var ent = that.world.getEntById(data.id);
       if (ent != null) {
         if (ent == that.ent.drag) {
           ent.clearDragger();
@@ -198,8 +195,6 @@ function Player(socket) {
     if (item1 == null || item2 == null){return};
     that.shareSelf();
   });
-
-  //this.updateBucket();
 
   if (this.bucket != null) {
     this.bucket.sendMegaPacketArea(this.socket);

@@ -178,6 +178,10 @@ module.exports = {
       tile:{"connectionGroup":"walls"},
       layer:30
     },
+    door_control_room: {
+      extends: "door_default",
+      image:[{"number":8,"source":"objects/door_control_room.png", "width": 32, "height": 32}]
+    },
     detail: {
       image:"detail/exit_signs.png",
       imageNumber:1,
@@ -188,14 +192,14 @@ module.exports = {
       image:"objects/fire_extinguisher_box.png",
       imageNumber:2,
       collision:false,
-        sync:{item: null},
-        onInit:function(){this.sync.item = item.create("fire_ext")},
-        onClick:function(user){if (this.sync.item != null && user.inventory[user.inventoryActive]==null){user.inventory[user.inventoryActive] = this.sync.item;this.sync.item = null; this.sprites[0].index = 1; this.share(); user.shareSelf();}},
-        onUpdate:function(){if(this.sync.item == null){this.sprites[0].index = 1}else{this.sprites[0].index = 0; item.check(this.sync.item)}; this.share()},
-        actions:{
-          fire_ext_box:function(user,item){if (this.sync.item == null){this.sync.item = user.inventory[user.inventoryActive]; user.inventory[user.inventoryActive] = null; this.sprites[0].index = 0; this.share(); user.shareSelf()}}
-        }
-      },
+      sync:{item: null},
+      onInit:function(){this.sync.item = item.create("fire_ext")},
+      onClick:function(user){if (this.sync.item != null && user.inventory[user.inventoryActive]==null){user.inventory[user.inventoryActive] = this.sync.item;this.sync.item = null; this.sprites[0].index = 1; this.share(); user.shareSelf();}},
+      onUpdate:function(){if(this.sync.item == null){this.sprites[0].index = 1}else{this.sprites[0].index = 0; item.check(this.sync.item)}; this.share()},
+      actions:{
+        fire_ext_box:function(user,item){if (this.sync.item == null){this.sync.item = user.inventory[user.inventoryActive]; user.inventory[user.inventoryActive] = null; this.sprites[0].index = 0; this.share(); user.shareSelf()}}
+      }
+    },
     lamp_standing: {
       image: [{number: 1, source: "objects/lamp_standing.png", width: 32, height: 32}],
       sync: {isOn: true},
