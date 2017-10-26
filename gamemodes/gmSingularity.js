@@ -36,6 +36,10 @@ gm.prototype.step = function(delta){
         lamp.sync.isOn = true;
         lamp.update();
       });
+      var controlDoors = this.game.worlds[0].getEntsByType("door_control_room");
+      controlDoors.forEach(function(door){
+        door.sync.locked = false;
+      });
     }else{
       if (this.second >= 1){
         this.game.showGlobalPopupFromFile("countdown", "./html/countdown.html", {time: Math.floor(this.countdown)});

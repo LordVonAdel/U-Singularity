@@ -7,6 +7,12 @@ module.exports = {
       name:"Destroyer",
       image:"items/item_destroyer.png",
       actions:["destroy"]
+    },
+    admin_key: {
+      id: "admin_key",
+      name: "Admin Key",
+      image: "items/item_admin_key.png",
+      actions:["admin_locktoggle"]
     }
   },
   commands: {

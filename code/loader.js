@@ -255,6 +255,5 @@ module.exports.auto = auto;
 module.exports.load = load;
 module.exports.res = res;
 module.exports.commands = commands;
-//module.exports.Item = Item;
 module.exports.loadConfig = loadConfig;
 module.exports.loadClasses = loadClasses;

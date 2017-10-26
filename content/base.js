@@ -159,27 +159,37 @@ module.exports = {
     door_default: {
       image:[{"number":8,"source":"objects/door_default.png", "width": 32, "height": 32}],
       collision:true, 
-      sync:{open: 0, frame: 0},
+      sync:{open: 0, frame: 0, locked: false},
       onInit:function(){this.sync.open = 0; this.sync.frame = 0;},
       onClick:function(user){
-        this.sync.open = 1-this.sync.open;
-        this.share();
-        this.update();
-        this.animation = true;
-        this.checkToStepList()},
+        if (!this.sync.locked){
+          this.sync.open = 1-this.sync.open;
+          this.share();
+          this.update();
+          this.animation = true;
+          this.checkToStepList();
+        }
+      },
       onAnimation:function(delta){this.sync.frame = utils.transition(this.sync.frame, this.sync.open, delta/100, 0); this.sprites[0].index = Math.floor(this.sync.frame*(this.sprites[0].number-1)); this.collision = (Math.floor(this.sync.frame)==0);this.update(); this.share(); if(this.sync.frame == this.sync.open){this.animation = false}},
       onPush:function(pusher){
-        this.sync.open = 1;
-        this.animation = true
-        this.checkToStepList();
+        if (!this.sync.locked){
+          this.sync.open = 1;
+          this.animation = true
+          this.checkToStepList();
+        }
       },
       onUpdate:function(){this.changeImageIndex(0, Math.floor(this.sync.frame*(this.sprites[0].number-1)));this.collision = (Math.floor(this.sync.frame)==0);},
-      actions:{},
+      actions:{
+        "admin_locktoggle": function(){
+          this.sync.locked = !this.sync.locked;
+        }
+      },
       tile:{"connectionGroup":"walls"},
       layer:30
     },
     door_control_room: {
       extends: "door_default",
+      sync: {open: 0, frame: 0, locked: true},
       image:[{"number":8,"source":"objects/door_control_room.png", "width": 32, "height": 32}]
     },
     detail: {
