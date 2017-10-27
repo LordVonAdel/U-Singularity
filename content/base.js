@@ -143,7 +143,7 @@ module.exports = {
         //world.spawnEntity("gas_argon",tileX,tileY);
       }
     },
-    scanAtmo: function(world, tileX,tileY,user){
+    scanAtmo: function(world, tileX,tileY, user){
       var str = "---Atmosphere---"
       var tile = world.gridAtmos.cellGet(tileX,tileY);
       if (tile){

@@ -54,6 +54,7 @@ function Entity(world, type, tx, ty, extraData){
   this.isMoving = false;
   this.client = null;
   this.noclip = false;
+  this.isOnStepList = false;
 
   this.momentumX = 0;
   this.momentumY = 0;
@@ -114,13 +115,15 @@ Entity.prototype.setDragger = function(dragger){
 Entity.prototype.step = function(delta){
   this.fire("onStep", delta);
   if (this.x != this.tx*32 || this.y != this.ty*32){
-    this.x = utils.transition(this.x,this.tx*32,this.speed*(delta/10),0);
-    this.y = utils.transition(this.y,this.ty*32,this.speed*(delta/10),0);
+    this.x = Math.round(utils.transition(this.x,this.tx*32,this.speed*(delta/10),0));
+    this.y = Math.round(utils.transition(this.y,this.ty*32,this.speed*(delta/10),0));
     if (Math.abs(this.x - this.tx*32)+Math.abs(this.y - this.ty*32) < this.speed){
       this.isMoving = false;
       this.checkToStepList();
       this.processImpulse();
     }
+  }else{
+    this.isMoving = false;
   }
 }
 
@@ -151,7 +154,11 @@ Entity.prototype.use = function(user, item){
 //Change the sprite data
 Entity.prototype.changeSprite = function(index, data){
   var spr = this.sprites[index];
-  Object.assign(spr, data);
+  if (!spr){
+    this.sprites[index] = data;
+  }else{
+    Object.assign(spr, data);
+  }
   this.share({spriteData: this.sprites});
 }
 
@@ -191,10 +198,11 @@ Entity.prototype.share = function(data){
   }
 }
 
-//update because maybe something changed with you and you were not aware about that
+//update because maybe something changed and you were not aware about that
 Entity.prototype.update = function(){
   this.updateBucket();
   this.fire("onUpdate");
+  this.checkToStepList();
 }
 
 //suicide
@@ -364,12 +372,14 @@ Entity.prototype.reload = function(){
 
 //Say, that this entity needs to be calculated every step
 Entity.prototype.addToStepList = function(){
+  this.isOnStepList = true;
   if (!this.world.entsStep.includes(this))
     this.world.entsStep.push(this);
 }
 
 //This entity don't need to be calculated every step
 Entity.prototype.removeFromStepList = function(){
+  this.isOnStepList = false;
   var index = this.world.entsStep.indexOf(this);
   if (index){
     this.world.entsStep.splice(index, 1);
@@ -381,7 +391,8 @@ Entity.prototype.checkToStepList = function(){
   if (this.ent.onStep || this.animation || this.isMoving){
     this.addToStepList();
   }else{
-    this.removeFromStepList();
+    if (this.isOnStepList)
+      this.removeFromStepList();
   }
 }
 

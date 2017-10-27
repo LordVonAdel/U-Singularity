@@ -26,8 +26,6 @@ player:
   throwSpeed: 2.3
   #Is the player allowed to have a 0 character name?
   allowEmptyName: true
-#Use the atomspherics simulation system?
-enableAtmos: true
 
 #A server can host multiple rounds at the same time
 games:

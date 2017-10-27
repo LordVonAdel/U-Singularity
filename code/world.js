@@ -1,8 +1,11 @@
-var Grid = require('./grid.js');
-var Entity = require('./entity.js');
-var fs = require('fs');
-var mixtures = require('./mixtures.js');
-var Bucket = require('./bucket.js');
+const Grid = require('./grid.js');
+const Entity = require('./entity.js');
+const fs = require('fs');
+const mixtures = require('./mixtures.js');
+const Bucket = require('./bucket.js');
+
+const PowerSystem = require('./systems/power.js');
+const Atmos = require('./systems/atmos.js');
 
 //The constructor for a world instance
 function World(game){
@@ -25,16 +28,18 @@ function World(game){
   }, this);
   this.game = game;
 
-  //atmospherics
-
-  if (config.enableAtmos){
-    this.gridAtmos = new Grid(100,100);
-    this.gridAtmos.forEach(function(tileX,tileY){
-      this.gridAtmos.cellSet(tileX,tileY,mixtures.air());
-    }, this);
-  }
-  console.log("[World]Initalized World");
+  console.log("[World]Initialized World");
   console.log("[World]Using "+this.buckets.width+"x"+this.buckets.height+" ("+this.buckets.width*this.buckets.height+") buckets");
+
+  //Initializing systems
+  this.systems = [
+    new PowerSystem(this),
+    new Atmos(this)
+  ];
+  for (var i = 0; i < this.systems.length; i++){
+    console.log("[World]Initialized " + this.systems[i].modulename);
+  }
+
 }
 
 //resizes the world to a new width and height

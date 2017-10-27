@@ -105,11 +105,16 @@ function Player(socket) {
     if (that.config && that.alive) {
       var xx = data.x;
       var yy = data.y;
-      if (that.inventory[that.inventoryActive] != null) {
-        var fun = res.actions[res.items[that.inventory[that.inventoryActive].type].onUseFloor];
-        if (Math.hypot(xx - that.ent.tx, yy - that.ent.ty) < that.handRange + 1) {
+      var itm = that.inventory[that.inventoryActive];
+
+      var distance = Math.hypot(xx - that.ent.tx, yy - that.ent.ty);
+      that.lookAt(xx, yy);
+
+      if (itm != null) {
+        var fun = res.actions[res.items[itm.type].onUseFloor];
+        if (distance < that.handRange + 1) {
           if (fun != undefined) {
-            fun(that.world, xx, yy, that);
+            fun(that.world, xx, yy, that, itm);
           }
         }
       }
@@ -154,6 +159,7 @@ function Player(socket) {
       if (itm == null) { itm = { type: "hand" } }
       var ent = that.world.ents[data.id];
       if (ent) {
+        that.lookAt(ent.tx, ent.ty);
         if (Math.hypot(ent.x - that.ent.x, ent.y - that.ent.y) < (that.handRange + 1) * 32) {
           ent.use(that, itm);
           var master = item.getMaster(itm);
@@ -378,6 +384,16 @@ Player.prototype.kick = function (title, message) {
   setTimeout(function(){
     that.socket.disconnect();
   }, 1000);
+}
+
+//rotates the player
+Player.prototype.lookAt = function(tileX, tileY){
+
+  var angle = Math.atan2(-(tileY - this.ent.ty), (tileX - this.ent.tx));
+  //Thanks to Mario for the next line of code
+  this.direction = Math.floor(2*angle / Math.PI + 4.5) % 4;
+
+  this.ent.changeImageIndex(0, this.direction);
 }
 
 module.exports.Player = Player;

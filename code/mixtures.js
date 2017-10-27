@@ -12,10 +12,9 @@ Mixture.prototype.getPressure = function(){
   return press;
 }
 
-air = function(){
+Mixture.air = function(){
   var mix = new Mixture({o2: 21, n2: 78, ar:1},290);
   return mix;
 }
 
-module.exports.Mixture = Mixture;
-module.exports.air = air;
+module.exports = Mixture;

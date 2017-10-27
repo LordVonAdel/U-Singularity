@@ -1,4 +1,4 @@
-//require("./static_file_server.js")
+//Entrance point
 
 var fs = require("fs");
 loader = require("./loader.js");
