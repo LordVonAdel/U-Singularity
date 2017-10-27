@@ -38,7 +38,7 @@ gm.prototype.step = function(delta){
       });
       var controlDoors = this.game.worlds[0].getEntsByType("door_control_room");
       controlDoors.forEach(function(door){
-        door.sync.locked = false;
+        door.sync.isLocked = false;
       });
     }else{
       if (this.second >= 1){

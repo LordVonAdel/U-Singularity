@@ -156,6 +156,17 @@ function Player(socket) {
       if (ent) {
         if (Math.hypot(ent.x - that.ent.x, ent.y - that.ent.y) < (that.handRange + 1) * 32) {
           ent.use(that, itm);
+          var master = item.getMaster(itm);
+          if (master){
+            if (master.onUseEnt){
+              var fun = res.actions[master.onUseEnt];
+              if (fun){
+                fun(ent, itm);
+              }else{
+                console.error("Action " + master.onUseEnt + " not found! Requested from item '" + itm.type + "'");
+              }
+            }
+          }
         }
       }
     }

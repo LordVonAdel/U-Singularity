@@ -40,6 +40,7 @@ function transform(item, type){
 
 //Combines to items if possible
 function combine(item1, item2){
+  if (!item1 || !item2){return false;}
   var type1 = res.items[item1.type];
   var type2 = res.items[item2.type];
   if (type1 && type2 && type1.on && type2.actions){
@@ -52,7 +53,13 @@ function combine(item1, item2){
   }
 }
 
+function getMaster(item){
+  var master = res.items[item.type];
+  return master ? master : null;
+}
+
 module.exports.create = createItem;
 module.exports.check = check;
 module.exports.transform = transform;
 module.exports.combine = combine;
+module.exports.getMaster = getMaster;

@@ -12,7 +12,15 @@ module.exports = {
       id: "admin_key",
       name: "Admin Key",
       image: "items/item_admin_key.png",
+      onUseEnt: "admin_locktoggle",
       actions:["admin_locktoggle"]
+    }
+  },
+  actions: {
+    admin_locktoggle: function(ent, item){
+      if (ent.sync.isLocked != undefined){
+        ent.sync.isLocked = !ent.sync.isLocked;
+      }
     }
   },
   commands: {

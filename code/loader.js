@@ -87,9 +87,6 @@ var res = { //object with every dynamic loaded content, excepts maps and command
         }
       }
     }
-  },
-  classes:{
-
   }
 }
 
