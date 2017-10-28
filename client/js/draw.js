@@ -35,6 +35,10 @@ function initRenderer(){
   stageFOV.addChild(grFOV);
   stageLight.addChild(sprLight);
 
+  for (var i = 0; i < 8; i++){ //layer
+    stageEntities.addChild(new PIXI.Container());
+  }
+
   renderer.render(stage);
 
   renderer.view.style.position = "absolute";

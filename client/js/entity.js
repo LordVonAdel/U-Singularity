@@ -11,6 +11,7 @@ function Entity(id,x,y,spriteData){
   this.lights = [];
   this.speed = 3.2;
   this.states = [];
+  this.layer = 3;
 
   this.container = new PIXI.Container();
   this.container.x = this.x;
@@ -33,7 +34,7 @@ function Entity(id,x,y,spriteData){
     sprite.y = spr.y;
   }
 
-  stageEntities.addChild(this.container);
+  stageEntities.children[this.layer].addChild(this.container);
 }
 
 Entity.prototype.update = function(data){
@@ -54,6 +55,9 @@ Entity.prototype.update = function(data){
         sprite = new PIXI.Sprite(getTextureFrame(path,sprData.index, sprData.width || 32, sprData.height || 32));
       }
       //sprite.setTexture(getTextureFrame(path, data.index, data.width || 32, data.height || 32));
+      if (sprData.layer && this.layer != sprData.layer){
+        this.changeLayer(sprData.layer);
+      }
     }
   }
   if (data.lightData != undefined){
@@ -150,5 +154,13 @@ Entity.prototype.destroy = function(){
   if (this.spriteBurnBack){
     this.spriteBurnBack.destroy();
     this.spriteBurnFront.destroy();
+  }
+}
+
+Entity.prototype.changeLayer = function(layer){
+  if (layer != this.layer){
+    stageEntities.children[layer].removeChild(this.container);
+    this.layer = layer;
+    stageEntities.children[layer].addChild(this.container);
   }
 }

@@ -12,7 +12,6 @@ function Player(socket) {
   nextEntId += 1;
   this.name = "unnamed(" + this.id + ")";
   this.speed = config.player.walkSpeed;//3.2;
-  this.inMovement = 0;
   this.config = false;
   this.inventory = {};
   this.direction = 0;
@@ -301,11 +300,11 @@ Player.prototype.shareSelf = function (data) {
 
 //will be executed every step
 Player.prototype.step = function (delta) {
-  this.x = utils.transition(this.x, this.tileX * 32, this.speed * (delta * 100), 0);
+  /*this.x = utils.transition(this.x, this.tileX * 32, this.speed * (delta * 100), 0);
   this.y = utils.transition(this.y, this.tileY * 32, this.speed * (delta * 100), 0);
   if (this.x == this.tileX * 32 && this.y == this.tileY * 32) {
     this.inMovement = false;
-  }
+  }*/
   if (this.ent.getState("burning")){
     this.ent.sync.hp -= delta;
     this.shareSelf({"hp" : Math.ceil(this.ent.sync.hp)});

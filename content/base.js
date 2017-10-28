@@ -228,7 +228,7 @@ module.exports = {
     },
     wall_lamp: {
       wallMounted: true,
-      image: [{number: 8, source: "objects/wall_lamp.png", width:32, height: 32}],
+      image: [{layer: 6, number: 8, source: "objects/wall_lamp.png", width:32, height: 32}],
       onInit: function(){
         this.update();
       },
@@ -238,7 +238,7 @@ module.exports = {
     },
     wall_lamp_warning: {
       wallMounted: true,
-      image: [{number: 8, source: "objects/wall_lamp_warning.png", width:32, height: 32}],
+      image: [{layer: 6, number: 8, source: "objects/wall_lamp_warning.png", width:32, height: 32}],
       collision: false,
       sync: {isOn: false},
       onInit: function(){

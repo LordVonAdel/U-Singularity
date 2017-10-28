@@ -83,7 +83,7 @@ var update = function() {
     game.step(delta);
   });
   
-  if (delta > (1000/config.tickRate) * 1.5){ //50% tolerance
+  if (Date.now() - lasttime > (1000/config.tickRate) * 1.5){ //50% tolerance
     console.log("The server is overloaded or the system time changed! Delta: " + delta);
   }
 }
