@@ -114,6 +114,7 @@ function Player(socket) {
         if (distance < that.handRange + 1) {
           if (fun != undefined) {
             fun(that.world, xx, yy, that, itm);
+            that.inventory[that.inventoryActive] = item.update(itm);
           }
         }
       }
@@ -162,11 +163,13 @@ function Player(socket) {
         if (Math.hypot(ent.x - that.ent.x, ent.y - that.ent.y) < (that.handRange + 1) * 32) {
           ent.use(that, itm);
           var master = item.getMaster(itm);
+
           if (master){
             if (master.onUseEnt){
               var fun = res.actions[master.onUseEnt];
               if (fun){
                 fun(ent, itm);
+                that.inventory[that.inventoryActive] = item.update(itm);
               }else{
                 console.error("Action " + master.onUseEnt + " not found! Requested from item '" + itm.type + "'");
               }
@@ -207,8 +210,12 @@ function Player(socket) {
     console.log("Player combined with "+index);
     var item2 = that.inventory[that.inventoryActive];
     var item1 = that.inventory[index];
-    item.combine(item1, item2);
     if (item1 == null || item2 == null){return};
+
+    item.combine(item1, item2);
+    that.inventory[that.inventoryActive] = item.update(item1);
+    that.inventory[that.index] = item.update(item2);
+
     that.shareSelf();
   });
 

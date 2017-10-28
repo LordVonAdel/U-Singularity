@@ -16,7 +16,7 @@ var res = { //object with every dynamic loaded content, excepts maps and command
   objects: {
     "item":{ //the item entity
       "sync":{item: null},
-      "image":"items/item_crowbar.png",
+      "image":[{layer: 2, source: "items/item_crowbar.png", width:32, height: 32}],
       "onClick":function(user, _item){
         if(_item.type == "hand"){
           user.inventory[user.inventoryActive] = this.sync.item;
@@ -25,6 +25,7 @@ var res = { //object with every dynamic loaded content, excepts maps and command
           this.destroy();
         }else{
           item.combine(this.sync.item, _item);
+          this.sync.item = item.update(this.sync.item);
           this.update();
         }
       },

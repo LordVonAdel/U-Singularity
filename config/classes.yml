@@ -18,6 +18,7 @@ engineer:
     - "wall_frame"
     - "glass"
     - "cable_red"
+    - "wirecutter"
 medic:
   name: "Medic"
   #ToDo: Make Medic sprites

@@ -1,3 +1,5 @@
+const is = require('../code/item.js'); //itemSystem
+
 module.exports = {
   items: {
     cable_red: {
@@ -6,7 +8,24 @@ module.exports = {
       image:"items/item_cable_red.png",
       actions:["cable"],
       onUseFloor: "cable_red",
-      sync: {number: 10}
+      sync: {content: 10},
+      on: {
+        cable(other){
+          other.sync.content += this.sync.content;
+          is.destroy(this);
+        }
+      },
+      onUpdate(){
+        if (this.sync.content <= 0){
+          is.destroy(this);
+        }
+      }
+    },
+    wirecutter: {
+      id: "wirecutter",
+      name: "Wirecutter",
+      image: "items/item_wirecutter.png",
+      actions: ["cut"]
     }
   },
   actions: {
@@ -23,16 +42,17 @@ module.exports = {
       cable.update();
 
       item.sync.content --;
+      is.update(item);
     }
   },
   objects: {
     cable_red: {
       sync: {e: false, n: false, w: false, s: false},
       image: [{number: 4, source: "objects/cable_red.png", width:32, height: 32, visible: false}],
-      onInit: function(){
+      onInit(){
         this.update();
       },
-      onUpdate: function(){
+      onUpdate(){
         this.changeSprite(1, {layer: 1, number: 4, source: "objects/cable_red.png", width: 32, height: 32, index: 0, visible: this.sync.e});
         this.changeSprite(2, {layer: 1, number: 4, source: "objects/cable_red.png", width: 32, height: 32, index: 1, visible: this.sync.n});
         this.changeSprite(3, {layer: 1, number: 4, source: "objects/cable_red.png", width: 32, height: 32, index: 2, visible: this.sync.w});
@@ -53,9 +73,30 @@ module.exports = {
             if (!this.sync[a]){
               this.sync[a] = true;
               item.sync.content --;
+              is.update(item);
               this.update();
             }
           }
+        },
+        cut(user, item){
+          var a = null;
+          switch (user.direction){
+            case 0: a = "w"; break;
+            case 1: a = "s"; break;
+            case 2: a = "e"; break;
+            case 3: a = "n"; break;
+          }
+
+          if (a != null){
+            if (this.sync[a]){
+              this.sync[a] = false;
+              this.update();
+              var itm = this.world.spawnItem(this.tx, this.ty, is.create("cable_red")).sync.item;
+              itm.sync.content = 1;
+              is.update(itm);
+            }
+          }
+
         }
       }
     }

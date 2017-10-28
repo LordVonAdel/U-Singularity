@@ -58,8 +58,26 @@ function getMaster(item){
   return master ? master : null;
 }
 
+function destroy(item){
+  item.type = null;
+}
+
+function update(item){
+  if (item.type == null){
+    return null;
+  }else{
+    var master = res.items[item.type];
+    if (master.onUpdate){
+      master.onUpdate.call(item);
+    }
+    return item;
+  }
+}
+
 module.exports.create = createItem;
 module.exports.check = check;
 module.exports.transform = transform;
 module.exports.combine = combine;
 module.exports.getMaster = getMaster;
+module.exports.destroy = destroy;
+module.exports.update = update;

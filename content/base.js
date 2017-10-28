@@ -1,7 +1,7 @@
 var item = require('../code/item.js');
 
 module.exports = {
-  tiles: { //-------------------------Tiles-----------------------
+  tiles: { //-------------------------Tiles-------------------------
     0:  {"id":9, "name":"base.rock"         ,"collision":true , "image":"tiles/tile_rock.png", "transparent":false},
     1:  {"id":1, "name":"base.concrete"     ,"collision":false, "image":"tiles/tile_concrete.png"},
     2:  {"id":2, "name":"base.wall"         ,"collision":true , "image":"tiles/tile_wall.png"         ,"connectionType":"wall"   ,"connectionGroup": "walls", "transparent": false},
@@ -13,7 +13,7 @@ module.exports = {
     8:  {"id":8, "name":"base.floor_chamber","collision":false, "image":"tiles/tile_floor_chamber.png","connectionType":"simple" ,"connectionGroup": "floor_chamber"},
     9:  {"id":0, "name":"base.grass"        ,"collision":false, "image":"tiles/tile_grass.png"}
   },
-  items: { //-------------------------Items-----------------------
+  items: { //-------------------------Items-------------------------
     knife:             {"id":"knife"            ,"name":"Knife"            ,"onUseFloor":"test"       ,"image":"items/item_knife.png"            ,"actions":["stab", "cut", "carve"]},
     metal:             {"id":"metal"	          ,"name":"Metal Sheet"      ,"onUseFloor":"build_metal","image":"items/item_metal.png"},
     crowbar:           {"id":"crowbar"          ,"name":"Crowbar"          ,"onUseFloor":"crowbar"    ,"image":"items/item_crowbar.png", "actions":["crowbar"]},
@@ -26,7 +26,7 @@ module.exports = {
     stick:             {"id":"stick"            ,"name":"Stick"                                       ,"image":"items/item_stick.png", on: {carve: function(){item.transform(this, "stick_sharp")}}},
     stick_sharp:       {"id":"stick_sharp"      ,"name":"Sharp Stick"                                 ,"image":"items/item_stick_sharp.png", "actions":["stab"]}
   },
-  commands: {  //-------------------------Commands-----------------------
+  commands: {  //-------------------------Commands-------------------------
     ping: {
       permission: "cmd.ping",
       fun: function(sender,args){
