@@ -208,6 +208,13 @@ Entity.prototype.update = function(){
 //suicide
 Entity.prototype.destroy = function(){
   this.clearDragger();
+  this.fire("onDestroy");
+
+  //power system
+  if (this.power_nw){
+    this.power_nw.removeMember(this);
+  }
+
   this.world.gridEntFree(this.tx,this.ty,this); //say the world you are not any more blocking your position
   delete this.world.ents[this.id]; //let the world forgot about you
   if (this.ent.onStep || this.ent.onAnimation){

@@ -63,7 +63,7 @@ function destroy(item){
 }
 
 function update(item){
-  if (item.type == null){
+  if (item == null || item.type == null){
     return null;
   }else{
     var master = res.items[item.type];

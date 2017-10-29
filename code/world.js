@@ -32,12 +32,12 @@ function World(game){
   console.log("[World]Using "+this.buckets.width+"x"+this.buckets.height+" ("+this.buckets.width*this.buckets.height+") buckets");
 
   //Initializing systems
-  this.systems = [
-    new PowerSystem(this),
-    new Atmos(this)
-  ];
-  for (var i = 0; i < this.systems.length; i++){
-    console.log("[World]Initialized " + this.systems[i].modulename);
+  this.systems = {
+    power: new PowerSystem(this),
+    atmos: new Atmos(this)
+  };
+  for (var k in this.systems){
+    console.log("[World]Initialized " + this.systems[k].modulename);
   }
 
 }
@@ -235,6 +235,12 @@ World.prototype.step = function(delta){
       ent.animate(delta);
     }
   }
+  for (var k in this.systems){
+    var sys = this.systems[k];
+    if (sys.step){
+      sys.step(delta);
+    }
+  }
 }
 
 //sends a packet to all player on this world
@@ -267,6 +273,11 @@ World.prototype.getEntsByType = function(type){
     }
   }
   return list;
+}
+
+//gets a list of entities from this world based on the position
+World.prototype.getEntsByPosition = function(tileX, tileY){
+  return this.gridEntities.cellGet(tileX, tileY);
 }
 
 //Spawn an entity somewhere in the world

@@ -50,6 +50,10 @@ module.exports = {
       sync: {e: false, n: false, w: false, s: false},
       image: [{number: 4, source: "objects/cable_red.png", width:32, height: 32, visible: false}],
       onInit(){
+        var power = this.world.systems.power;
+        if (power){
+          this.power_nw = power.createNetwork(this);
+        }
         this.update();
       },
       onUpdate(){
@@ -57,6 +61,30 @@ module.exports = {
         this.changeSprite(2, {layer: 1, number: 4, source: "objects/cable_red.png", width: 32, height: 32, index: 1, visible: this.sync.n});
         this.changeSprite(3, {layer: 1, number: 4, source: "objects/cable_red.png", width: 32, height: 32, index: 2, visible: this.sync.w});
         this.changeSprite(4, {layer: 1, number: 4, source: "objects/cable_red.png", width: 32, height: 32, index: 3, visible: this.sync.s});
+
+        if (!this.power_nw){
+          if (this.world.systems.power){
+            this.power_nw = this.world.systems.power.createNetwork(this);
+          }
+        }
+
+        if (this.power_nw){
+          var l = [];
+          if (this.sync.n)
+            l = l.concat(this.world.getEntsByPosition(this.tx, this.ty - 1));
+          if (this.sync.e)
+            l = l.concat(this.world.getEntsByPosition(this.tx + 1, this.ty));
+          if (this.sync.s)
+            l = l.concat(this.world.getEntsByPosition(this.tx, this.ty + 1));
+          if (this.sync.w)
+            l = l.concat(this.world.getEntsByPosition(this.tx - 1, this.ty));
+          for (var i = 0; i < l.length; i++){
+            var element = l[i];
+            if (element.power_nw){
+              this.world.systems.power.connectNetworks(this.power_nw, element.power_nw);
+            }
+          }
+        }
       },
       actions: {
         cable(user, item){
@@ -95,6 +123,10 @@ module.exports = {
               itm.sync.content = 1;
               is.update(itm);
             }
+          }
+
+          if (!this.sync.e && !this.sync.n && !this.sync.w && !this.sync.s){
+            this.destroy();
           }
 
         }
