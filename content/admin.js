@@ -13,7 +13,8 @@ module.exports = {
       name: "Admin Key",
       image: "items/item_admin_key.png",
       onUseEnt: "admin_locktoggle",
-      actions:["admin_locktoggle"]
+      actions:["admin_locktoggle"],
+      range: 10
     }
   },
   actions: {

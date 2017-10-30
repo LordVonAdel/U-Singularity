@@ -159,9 +159,10 @@ function Player(socket) {
       var itm = that.inventory[that.inventoryActive];
       if (itm == null) { itm = { type: "hand" } }
       var ent = that.world.ents[data.id];
+      var itemMaster = item.getMaster(itm);
       if (ent) {
         that.lookAt(ent.tx, ent.ty);
-        if (Math.hypot(ent.x - that.ent.x, ent.y - that.ent.y) < (that.handRange + 1) * 32) {
+        if (Math.hypot(ent.x - that.ent.x, ent.y - that.ent.y) < (Math.max(that.handRange, itemMaster.range || 1) + 1) * 32) {
           ent.use(that, itm);
 
           var master = item.getMaster(itm);
