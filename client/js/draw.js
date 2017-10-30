@@ -2,8 +2,9 @@ function initRenderer(){
 
   var type = PIXI.utils.isWebGLSupported() ? "WebGL" : "canvas";
   PIXI.utils.sayHello(type);
+  PIXI.SCALE_MODES.DEFAULT = PIXI.SCALE_MODES.NEAREST;
 
-  renderer = PIXI.autoDetectRenderer(256, 256);
+  renderer = PIXI.autoDetectRenderer({width: 256, height: 256, roundPixels: false, antialias: false, resolution: window.devicePixelRatio || 1});
   rendererLight = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight);
   rendererLight.autoResize = true;
 

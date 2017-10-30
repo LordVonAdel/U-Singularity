@@ -32,7 +32,6 @@ var res = { //object with every dynamic loaded content, excepts maps and command
       "onUpdate":function(){
         if (this.sync.item == null){
           this.destroy();
-          console.log("Destroyed Null Item");
         }else{
           for (var i = 0; i < this.sync.item.sprite.length; i++){
             this.sprites[i] = Object.assign({}, this.sync.item.sprite[i]);

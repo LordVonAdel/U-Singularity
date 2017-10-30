@@ -26,6 +26,40 @@ module.exports = {
       name: "Wirecutter",
       image: "items/item_wirecutter.png",
       actions: ["cut"]
+    },
+    debug_power: {
+      id: "debug_power",
+      name: "Power debugger",
+      image: "items/item_debug_power.png",
+      actions: ["debug_power"]
+    }
+  },
+  commands: {
+    power: {
+      fun: function(sender, args){
+        var power = sender.world.systems.power;
+        if (power){
+          sender.msg("Power networks: " + power.networks.length);
+        }else{
+          sender.msg("This world does not use the power system!");
+        }
+      }
+    },
+    power_reload: {
+      fun: function(sender, args){
+        var cables = sender.world.getEntsByType("cable_red");
+        for (var i = 0; i < cables.length; i++) {
+          var cable = cables[i];
+          if (cable.power_nw){
+            cable.power_nw.removeMember(cable);
+            cable.power_nw = null;
+          }
+        }
+        for (var i = 0; i < cables.length; i++) {
+          var cable = cables[i];
+          cable.update();
+        }
+      }
     }
   },
   actions: {
@@ -71,13 +105,13 @@ module.exports = {
         if (this.power_nw){
           var l = [];
           if (this.sync.n)
-            l = l.concat(this.world.getEntsByPosition(this.tx, this.ty - 1));
+            l = l.concat(this.world.getEntsByPosition(this.tx, this.ty - 1).filter(function(ent){return (ent.sync.s)}));
           if (this.sync.e)
-            l = l.concat(this.world.getEntsByPosition(this.tx + 1, this.ty));
+            l = l.concat(this.world.getEntsByPosition(this.tx + 1, this.ty).filter(function(ent){return (ent.sync.w)}));
           if (this.sync.s)
-            l = l.concat(this.world.getEntsByPosition(this.tx, this.ty + 1));
+            l = l.concat(this.world.getEntsByPosition(this.tx, this.ty + 1).filter(function(ent){return (ent.sync.n)}));
           if (this.sync.w)
-            l = l.concat(this.world.getEntsByPosition(this.tx - 1, this.ty));
+            l = l.concat(this.world.getEntsByPosition(this.tx - 1, this.ty).filter(function(ent){return (ent.sync.e)}));
           for (var i = 0; i < l.length; i++){
             var element = l[i];
             if (element.power_nw){
@@ -87,6 +121,13 @@ module.exports = {
         }
       },
       actions: {
+        debug_power(user){
+          if (this.power_nw){
+            user.msg("I am member of network: " + this.power_nw.id + "<br>That contains " + this.power_nw.members.length + " members");
+          }else{
+            user.msg("I am not part of a power network!");
+          }
+        },
         cable(user, item){
 
           var a = null;
@@ -123,12 +164,15 @@ module.exports = {
               itm.sync.content = 1;
               is.update(itm);
             }
+            if (this.power_nw){
+              this.power_nw.removeMember(this);
+              //this entity will automatically get a new network
+            } 
           }
 
           if (!this.sync.e && !this.sync.n && !this.sync.w && !this.sync.s){
             this.destroy();
           }
-
         }
       }
     }

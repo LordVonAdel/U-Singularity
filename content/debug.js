@@ -46,16 +46,6 @@ module.exports = {
           <br>Entities: ${entnum}
           `)
       }
-    },
-    power: {
-      fun: function(sender, args){
-        var power = sender.world.systems.power;
-        if (power){
-          sender.msg("Power networks: " + power.networks.length);
-        }else{
-          sender.msg("This world does not use the power system!");
-        }
-      }
     }
   }
 }

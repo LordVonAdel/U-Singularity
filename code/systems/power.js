@@ -7,7 +7,7 @@ function PowerSystem(world){
 }
 PowerSystem.prototype.connectNetworks = function(network1, network2){
   if (network1 != network2){
-    for (var i = 0; i < network2.members; i++){
+    for (var i = 0; i < network2.members.length; i++){
       var mem = network2.members[i];
       network1.members.push(mem);
       mem.power_nw = network1;
@@ -40,14 +40,11 @@ Network.prototype.destroy = function(){
     if (this.members[i].power_nw == this)
       this.members[i].power_nw = null;
   }
-
   if (index >= 0){
     this.system.networks.splice(index, 1);
   }
 }
 Network.prototype.removeMember = function(entity){
-  var index = this.members.indexOf(entity);
-  this.members.splice(index, 1);
   for (var i = 0; i < this.members.length; i++){
     this.members[i].power_nw = null;
   }
@@ -58,10 +55,13 @@ Network.prototype.removeMember = function(entity){
   this.destroy();
 }
 Network.prototype.addMember = function(entity){
-  this.members.push(entity);
+  if (this.members.indexOf(entity) == -1)
+    this.members.push(entity);
 }
 Network.prototype.step = function(delta){
-  //do nothing yet
+  if (this.members.length == 0){
+    this.destroy();
+  }
 }
 
 module.exports = PowerSystem;
