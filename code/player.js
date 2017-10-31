@@ -17,7 +17,6 @@ function Player(socket) {
   this.direction = 0;
   this.sex = "m";
   this.job = "phy";
-  this.burning = false;
   this.hands = 9;
   this.inventoryActive = 0;
   this.handRange = 1; //in tiles
@@ -110,8 +109,9 @@ function Player(socket) {
       that.lookAt(xx, yy);
 
       if (itm != null) {
-        var fun = res.actions[res.items[itm.type].onUseFloor];
-        if (distance < that.handRange + 1) {
+        var master = item.getMaster(itm);
+        var fun = master.onUseFloor;
+        if (distance < Math.max(that.handRange, master.range)  + 1) {
           if (fun != undefined) {
             fun(that.world, xx, yy, that, itm);
             that.inventory[that.inventoryActive] = item.update(itm);

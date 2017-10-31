@@ -25,7 +25,6 @@ function initNetworking(){
       obj.name = data.name;
       obj.sex = data.sex;
       obj.job = data.job;
-      obj.burning = data.burning;
     }
     if (data.inventory){
       player.inventory = data.inventory;
