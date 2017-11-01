@@ -36,7 +36,7 @@ module.exports = {
   },
   commands: {
     power: {
-      fun: function(sender, args){
+      fun(sender, args){
         var power = sender.world.systems.power;
         if (power){
           sender.msg("Power networks: " + power.networks.length);
@@ -46,7 +46,7 @@ module.exports = {
       }
     },
     power_reload: {
-      fun: function(sender, args){
+      fun(sender, args){
         var cables = sender.world.getEntsByType("cable_red");
         for (var i = 0; i < cables.length; i++) {
           var cable = cables[i];
@@ -80,6 +80,18 @@ module.exports = {
     }
   },
   objects: {
+    battery: {
+      sync: {
+        mode: 0,
+        energy: 1000,
+        voltage: 300
+      },
+      image: [{number: 1, source: "objects/battery.png", width: 32, height: 32}],
+      collision: true,
+      onInit(){
+        this.capacity = 1000;
+      }
+    },
     cable_red: {
       sync: {e: false, n: false, w: false, s: false},
       image: [{number: 4, source: "objects/cable_red.png", width:32, height: 32, visible: false}],

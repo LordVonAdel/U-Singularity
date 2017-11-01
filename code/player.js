@@ -110,8 +110,8 @@ function Player(socket) {
 
       if (itm != null) {
         var master = item.getMaster(itm);
-        var fun = master.onUseFloor;
-        if (distance < Math.max(that.handRange, master.range)  + 1) {
+        var fun = res.actions[master.onUseFloor];
+        if (distance < Math.max(that.handRange, master.range || 1) + 1) {
           if (fun != undefined) {
             fun(that.world, xx, yy, that, itm);
             that.inventory[that.inventoryActive] = item.update(itm);
