@@ -57,6 +57,7 @@ Network.prototype.removeMember = function(entity){
 Network.prototype.addMember = function(entity){
   if (this.members.indexOf(entity) == -1)
     this.members.push(entity);
+  return this;
 }
 Network.prototype.step = function(delta){
   if (this.members.length == 0){

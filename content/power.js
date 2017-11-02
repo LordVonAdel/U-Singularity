@@ -31,7 +31,8 @@ module.exports = {
       id: "debug_power",
       name: "Power debugger",
       image: "items/item_debug_power.png",
-      actions: ["debug_power"]
+      actions: ["debug_power"],
+      onUseEnt: "debug_power"
     }
   },
   commands: {
@@ -63,7 +64,7 @@ module.exports = {
     }
   },
   actions: {
-    cable_red(world, tileX,tileY, user, item){
+    cable_red(world, tileX, tileY, user, item){
       var cable = world.spawnEntity("cable_red", tileX, tileY);
       switch (user.direction){
         case 0: a = "w"; break;
@@ -77,6 +78,13 @@ module.exports = {
 
       item.sync.content --;
       is.update(item);
+    },
+    debug_power(ent, item, user){
+      if (ent.power_nw){
+        user.msg("I am member of network: " + ent.power_nw.id + "<br>That contains " + ent.power_nw.members.length + " members");
+      }else{
+        user.msg("I am not part of a power network!");
+      }
     }
   },
   objects: {
@@ -89,7 +97,19 @@ module.exports = {
       image: [{number: 1, source: "objects/battery.png", width: 32, height: 32}],
       collision: true,
       onInit(){
+        this.power_nw = null;
         this.capacity = 1000;
+      },
+      onUpdate(){
+        var power = this.world.systems.power;
+        var cables = this.world.getEntsByPosition(this.tx, this.ty).filter(function(ent){return (ent.power_nw)});
+        for (var i = 0; i < cables.length; i++){
+          var cable = cables[i];
+          if (cable != this && cable.power_nw){
+            cable.power_nw.addMember(this);
+            this.power_nw = cable.power_nw;
+          }
+        }
       }
     },
     cable_red: {
@@ -100,7 +120,6 @@ module.exports = {
         if (power){
           this.power_nw = power.createNetwork(this);
         }
-        this.update();
       },
       onUpdate(){
         this.changeSprite(1, {layer: 1, number: 4, source: "objects/cable_red.png", width: 32, height: 32, index: 0, visible: this.sync.e});
@@ -133,13 +152,6 @@ module.exports = {
         }
       },
       actions: {
-        debug_power(user){
-          if (this.power_nw){
-            user.msg("I am member of network: " + this.power_nw.id + "<br>That contains " + this.power_nw.members.length + " members");
-          }else{
-            user.msg("I am not part of a power network!");
-          }
-        },
         cable(user, item){
 
           var a = null;

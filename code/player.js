@@ -170,7 +170,7 @@ function Player(socket) {
             if (master.onUseEnt){
               var fun = res.actions[master.onUseEnt];
               if (fun){
-                fun(ent, itm);
+                fun(ent, itm, that);
                 that.inventory[that.inventoryActive] = item.update(that.inventory[that.inventoryActive]);     
               }else{
                 console.error("Action " + master.onUseEnt + " not found! Requested from item '" + itm.type + "'");

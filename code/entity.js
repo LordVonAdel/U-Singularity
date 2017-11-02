@@ -82,6 +82,7 @@ function Entity(world, type, tx, ty, extraData){
   Object.assign(this.sync, this.ent.sync);
   Object.assign(this, extraData);
   this.fire("onInit");
+  this.fire("onUpdate");
 
   this.world.ents[this.world.nextEntId] = this;
   this.world.nextEntId ++;

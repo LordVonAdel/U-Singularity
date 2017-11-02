@@ -210,7 +210,6 @@ module.exports = {
       image: [{number: 1, source: "objects/lamp_standing.png", width: 32, height: 32}],
       sync: {isOn: true},
       draggable: true,
-      onInit: function(){ this.update(); },
       collision: true,
       onUpdate: function(){
         if (this.sync.isOn){
@@ -229,9 +228,6 @@ module.exports = {
     wall_lamp: {
       wallMounted: true,
       image: [{layer: 6, number: 8, source: "objects/wall_lamp.png", width:32, height: 32}],
-      onInit: function(){
-        this.update();
-      },
       onUpdate: function(){
         this.setLight(0, {radius: 256, color: 0xfffefe, intensity: 0.9});
       }
@@ -241,9 +237,6 @@ module.exports = {
       image: [{layer: 6, number: 8, source: "objects/wall_lamp_warning.png", width:32, height: 32}],
       collision: false,
       sync: {isOn: false},
-      onInit: function(){
-        this.update();
-      },
       onUpdate: function(){
         if (this.sync.isOn){
           this.setLight(0, {radius: 128, color: 0xff0000, pattern: "0138XXXX0", patternTime: 2000, intensity: 0.6});
