@@ -70,6 +70,12 @@ a{
   margin-left: auto; 
   margin-right: auto; 
 }
+
+.overlay{
+  background: rgba(0, 0, 0, 0.4);
+  color: white;
+}
+
 #chat_input{
   background-color: black;
   color: white;
@@ -121,4 +127,13 @@ a{
 }
 #game_config table tr td{
   background-color: orange;
+}
+#hoverlist-list{
+  list-style-type: none;
+}
+#hoverlist-list li img{
+  clip: rect(0px, 0px, -32px, -32px);
+}
+#hoverlist-list li img.active{
+  background-color: yellow;
 }

@@ -34,13 +34,16 @@
       Ping: <span id="latency"></span>ms<br>
     </div>
     
-    <div id="server_content">
+    <div id="server_content"></div>
     
+    <div id="chat" class="overlay" style="position:fixed; width:400px; top:10%; left:0px; background-color: rgba(0,0,0,0.4); color: white; height:80%">
+      <div id="chat_msg" style="height: 100%; overflow-y: vertical; overflow-x: hidden;"></div>
+      <input type="text" id="chat_input" style="width:100%; float:bottom;"></input>
     </div>
-    
-    <div id="chat" style="position:fixed; width:400px; top:10%; left:0px; background-color: rgba(0,0,0,0.4); color: white; height:80%">
-    <div id="chat_msg" style="height: 100%; overflow-y: vertical; overflow-x: hidden;"></div>
-    <input type="text" id="chat_input" style="width:100%; float:bottom;"></input>
+    <div id="hoverlist" style="position: fixed; width: 300px; right: 0px;" class="overlay">
+      <ul id="hoverlist-list">
+
+      </ul>
     </div>
   </body>
 </html>

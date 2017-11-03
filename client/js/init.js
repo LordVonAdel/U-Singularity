@@ -5,6 +5,7 @@ camId = null;
 
 players = {};
 ents = {};
+hoverlist = [];
 
 gm = {};
 
@@ -23,7 +24,6 @@ var lastTime = Date.now();
 
 $(document).ready(function(){
 
-  
   mouseX_ui = 0;
   mouseY_ui = 0;
   mouseX = 0;

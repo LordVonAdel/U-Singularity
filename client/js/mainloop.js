@@ -33,9 +33,44 @@ function gameLoop(){
   document.getElementById("mouse_position_ui").innerHTML = mouseX_ui+" , "+mouseY_ui;
   document.getElementById("mouse_position_world").innerHTML = mouseX+" , "+mouseY;
 
-  $.each(ents,function(key,value){
-    value.step(delta);
-  });
+  hoverlist = ["tile"];
+  for (k in ents){
+    ents[k].step(delta);
+  }
+
+  var tx = Math.floor(mouseX / 32);
+  var ty = Math.floor(mouseY / 32);
+  var tile = world.tileGet(tx, ty);
+
+  var list = $("#hoverlist-list");
+  list.empty();
+  for (var i = 0; i < hoverlist.length; i++){
+    var item = hoverlist[i];
+    if (item == "tile"){
+      list.append(`<li><img src="${subfolder + "sprites/" + tile.sprite}"></img></li>`);
+    }else{
+      list.append(`<li><img src="${subfolder + "sprites/" + hoverlist[i].spriteData[0].source}"></img></li>`);
+    }
+  }
+
+  var target = hoverlist[1];
+
+  if (target){
+    if (mouseCheckPressed(0)){
+      if (target == "tile"){
+        socket.emit('useOnFloor', { x: tx, y: ty });
+      }else{
+        if (keyboardCheck(input.DRAG)){
+          socket.emit('ent_drag',{id: target.id});
+        }else{
+          socket.emit('ent_click',{id: target.id});
+        }
+      }
+    }
+    if (mouseCheckPressed(2)){
+      console.log(target);
+    }
+  }
 
   //draw
   renderLoop();

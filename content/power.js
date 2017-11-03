@@ -101,7 +101,6 @@ module.exports = {
         this.capacity = 1000;
       },
       onUpdate(){
-        var power = this.world.systems.power;
         var cables = this.world.getEntsByPosition(this.tx, this.ty).filter(function(ent){return (ent.power_nw)});
         for (var i = 0; i < cables.length; i++){
           var cable = cables[i];

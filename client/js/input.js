@@ -125,3 +125,10 @@ function mouseOverUI(x1,y1,x2,y2,id){
   }
   return (input.hlast == id)
 }
+
+function mouseOverRaw(x1,y1,x2,y2){
+  if (mouseX > x1 && mouseX < x2 && mouseY > y1 && mouseY < y2){
+    return true;
+  }
+  return false;
+}

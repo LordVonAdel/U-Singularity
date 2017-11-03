@@ -58,13 +58,14 @@ Player.prototype.step = function () {
     }
     //drawSprite(2,player.sprite,player.x,player.y);
   }
+  /*
   if (mouseCheckPressed(0)) {
     var tx = Math.floor(mouseX / 32);
     var ty = Math.floor(mouseY / 32);
     if (input.hlast == null) {
       socket.emit('useOnFloor', { x: tx, y: ty });
     }
-  }
+  }*/
   if (mouseWheelUp()) {
     this.inventoryActive = (this.inventoryActive + 1) % this.hands;
     socket.emit('inv_active', { slot: this.inventoryActive });

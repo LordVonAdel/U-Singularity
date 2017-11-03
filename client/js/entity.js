@@ -126,18 +126,10 @@ Entity.prototype.step = function(delta){
     }
   }
   
-  if (mouseOver(this.x,this.y,this.x+32,this.y+32,this)){
-    if (mouseCheckPressed(0)){
-      if (keyboardCheck(input.DRAG)){
-        socket.emit('ent_drag',{id: this.id});
-      }else{
-        socket.emit('ent_click',{id: this.id});
-      }
-    }
-    if (mouseCheckPressed(2)){
-      console.log(this);
-    }
+  if (mouseOverRaw(this.x,this.y,this.x+32,this.y+32)){
+    hoverlist.push(this);
   }
+  
 }
 
 Entity.prototype.destroy = function(){
