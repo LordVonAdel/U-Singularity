@@ -25,9 +25,9 @@ function Game(maps, gamemode, gameConfig){
 
 //Sends a packet to all players in the game
 Game.prototype.broadcast = function(event, data){
-  this.players.forEach(function(obj){
-    obj.socket.emit(event, data);
-  });
+  for (var i = 0; i < this.players.length; i++) {
+    this.players[i].socket.emit(event, data);
+  }
 }
 
 //Add a player to the game

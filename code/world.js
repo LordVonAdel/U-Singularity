@@ -245,12 +245,12 @@ World.prototype.step = function(delta){
 
 //sends a packet to all player on this world
 World.prototype.broadcast = function(event, data){
-  var that = this;
-  this.game.players.forEach(function(player){
-    if (player.world == that){
+  for (var i = 0; i < this.game.players.length; i++) {
+    var player = this.game.players[i];
+    if (player.world == this){
       player.socket.emit(event, data);
     }
-  });
+  }
 }
 
 //gets an entity form this world by its id

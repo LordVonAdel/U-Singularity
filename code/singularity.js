@@ -79,9 +79,9 @@ var update = function() {
   setTimeout(update, 1000/config.tickRate);
   delta = Date.now() - lasttime;
   lasttime = Date.now();
-  games.forEach(function(game){
-    game.step(delta);
-  });
+  for (var i = 0; i < games.length; i++) {
+    games[i].step(delta);
+  }
   
   if (Date.now() - lasttime > (1000/config.tickRate) * 1.5){ //50% tolerance
     console.log("The server is overloaded or the system time changed! Delta: " + delta);

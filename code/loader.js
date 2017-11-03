@@ -197,7 +197,8 @@ function auto(callback){
     }
     var num = files.length;
     var ind = 0;
-    files.forEach(function(file, index){
+    for (var i = 0; i < files.length; i++) {
+      var file = files[i];
       load(file, function(){
         ind++
         if (ind >= num){
@@ -207,7 +208,7 @@ function auto(callback){
           }
         }
       });
-    });
+    }
   });
 }
 
