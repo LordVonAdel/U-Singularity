@@ -53,7 +53,7 @@ function gameLoop(){
     }
   }
 
-  var target = hoverlist[1];
+  var target = hoverlist.length > 1 ? hoverlist[1] : hoverlist[0];
 
   if (target){
     if (mouseCheckPressed(0)){
