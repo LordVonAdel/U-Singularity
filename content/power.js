@@ -65,7 +65,9 @@ module.exports = {
   },
   actions: {
     cable_red(world, tileX, tileY, user, item){
-      var cable = world.spawnEntity("cable_red", tileX, tileY);
+      var cables = this.world.getEntsByPosition(tileX, tileY).filter(function(ent){return (ent.type == "cable_red")});
+      var cable = cables.length > 0 ? cables[0] : world.spawnEntity("cable_red", tileX, tileY);
+
       switch (user.direction){
         case 0: a = "w"; break;
         case 1: a = "s"; break;
@@ -73,11 +75,13 @@ module.exports = {
         case 3: a = "n"; break;
         default: a = "n"; break;
       }
-      cable.sync[a] = true;
-      cable.update();
+      if (!cable.sync[a]){
+        cable.sync[a] = true;
+        cable.update();
 
-      item.sync.content --;
-      is.update(item);
+        item.sync.content --;
+        is.update(item);
+      }
     },
     debug_power(ent, item, user){
       if (ent.power_nw){
