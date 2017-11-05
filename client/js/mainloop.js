@@ -40,20 +40,31 @@ function gameLoop(){
 
   var tx = Math.floor(mouseX / 32);
   var ty = Math.floor(mouseY / 32);
+  var lx = Math.floor(mouseX) % 32;
+  var ly = Math.floor(mouseY) % 32;
+  var pixel = ly * 32 + lx;
   var tile = world.tileGet(tx, ty);
+  var targetIndex = 0;
 
   var list = $("#hoverlist-list");
   list.empty();
   for (var i = 0; i < hoverlist.length; i++){
     var item = hoverlist[i];
     if (item == "tile"){
-      list.append(`<li><img src="${subfolder + "sprites/" + tile.sprite}"></img></li>`);
+      list.append(`<li id="hover-index-${i}"><img src="${subfolder + "sprites/" + tile.sprite}"></img></li>`);
     }else{
-      list.append(`<li><img src="${subfolder + "sprites/" + hoverlist[i].spriteData[0].source}"></img></li>`);
+      //list.append(`<li><img src="${subfolder + "sprites/" + hoverlist[i].spriteData[0].source}"></img></li>`);
+      var pixels = renderer.extract.pixels(item.container);
+      var image = renderer.extract.image(item.container);
+      if (pixels[pixel*4+3] > 0){
+        targetIndex = i;
+      }
+      list.append($("<li>").attr("id", "hover-index-"+i).append(image));
     }
   }
 
-  var target = hoverlist.length > 1 ? hoverlist[1] : hoverlist[0];
+  $("#hover-index-"+targetIndex).attr("class", "active")
+  var target = hoverlist[targetIndex];
 
   if (target){
     if (mouseCheckPressed(0)){
