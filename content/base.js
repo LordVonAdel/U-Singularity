@@ -8,7 +8,7 @@ module.exports = {
     3:  {"id":3, "name":"base.wall_window"  ,"collision":true , "image":"tiles/tile_wall_window.png"  ,"connectionType":"wall"   ,"connectionGroup": "walls"},
     4:  {"id":4, "name":"base.wall_glass"   ,"collision":true , "image":"tiles/tile_wall_glass.png"   ,"connectionType":"wall"   ,"connectionGroup": "walls"},
     5:  {"id":5, "name":"base.wall_frame"   ,"collision":true , "image":"tiles/tile_wall_frame.png"},
-    6:  {"id":6, "name":"base.floor_metal"  ,"collision":false, "image":"tiles/tile_floor_metalC.png"},
+    6:  {"id":6, "name":"base.floor_metal"  ,"collision":false, "image":"tiles/tile_floor_metalD.png"},
     7:  {"id":7, "name":"base.wall_chamber" ,"collision":true , "image":"tiles/tile_wall_chamber.png" ,"connectionType":"wall"   ,"connectionGroup": "walls", "transparent": false},
     8:  {"id":8, "name":"base.floor_chamber","collision":false, "image":"tiles/tile_floor_chamber.png","connectionType":"simple" ,"connectionGroup": "floor_chamber"},
     9:  {"id":0, "name":"base.grass"        ,"collision":false, "image":"tiles/tile_grass.png"}
@@ -181,7 +181,6 @@ module.exports = {
       onUpdate:function(){this.changeImageIndex(0, Math.floor(this.sync.frame*(this.sprites[0].number-1)));this.collision = (Math.floor(this.sync.frame)==0);},
       actions:{},
       tile:{"connectionGroup":"walls"},
-      layer:30
     },
     door_control_room: {
       extends: "door_default",
@@ -227,7 +226,8 @@ module.exports = {
     },
     wall_lamp: {
       wallMounted: true,
-      image: [{layer: 6, number: 8, source: "objects/wall_lamp.png", width:32, height: 32}],
+      layer: 7,
+      image: [{number: 8, source: "objects/wall_lamp.png", width:32, height: 32}],
       onUpdate(){
         this.setLight(0, {radius: 256, color: 0xfffefe, intensity: 0.9});
         var cables = this.world.getEntsByPosition(this.tx, this.ty).filter(function(ent){return (ent.power_nw)});
@@ -243,7 +243,8 @@ module.exports = {
     },
     wall_lamp_warning: {
       wallMounted: true,
-      image: [{layer: 6, number: 8, source: "objects/wall_lamp_warning.png", width:32, height: 32}],
+      layer: 7,
+      image: [{number: 8, source: "objects/wall_lamp_warning.png", width:32, height: 32}],
       collision: false,
       sync: {isOn: false},
       onUpdate: function(){

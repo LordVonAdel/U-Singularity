@@ -62,7 +62,7 @@ function initNetworking(){
   });
 
   socket.on('ent_spawn',function(data){
-    var ent = new Entity(data.id,data.tx*32,data.ty*32,data.spriteData);
+    var ent = new Entity(data.id,data.tx*32,data.ty*32,data);
     ent.update(data);
     ents[data.id] = ent;
   });
@@ -75,7 +75,7 @@ function initNetworking(){
       if (data.tx == undefined || data.spriteData == undefined){
         
       }else{
-        ents[data.id] = new Entity(data.id,data.tx*32,data.ty*32,data.spriteData);
+        ents[data.id] = new Entity(data.id,data.tx*32,data.ty*32,data);
         ent = ents[data.id];
       }
     }else{

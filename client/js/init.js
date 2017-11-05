@@ -31,7 +31,6 @@ $(document).ready(function(){
 
   initRenderer();
   player = new Player();
-  //cam = player;
 
   view = new View(320,320);
   view.setZoom(2);
@@ -42,8 +41,6 @@ $(document).ready(function(){
 
   world = new World();
   world.resize(100,100);
-
-  //$("#chat_msg").mCustomScrollbar();
 
   $('#chat_input').hide();
 

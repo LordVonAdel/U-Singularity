@@ -1,28 +1,27 @@
-function Entity(id,x,y,spriteData){
+function Entity(id, x, y, data){
   this.x = x; //x-coordinate in pixels
   this.y = y; //y-coordinate in pixels
   this.tx = Math.floor(x/32); //target x-coordinate in tiles
   this.ty = Math.floor(y/32); //target y-coordinate in tiles
   this.id = id;
-  this.layer = 10;
-  this.spriteData = spriteData;
+  this.spriteData = data.spriteData;
   this.lightData = [];
   this.sprites = [];
   this.lights = [];
   this.speed = 3.2;
   this.states = [];
-  this.layer = 3;
+  this.layer = data.layer || 3;
 
   this.container = new PIXI.Container();
   this.container.x = this.x;
   this.container.y = this.y;
   for (var i=0; i < this.spriteData.length; i++){
-    var data = this.spriteData[i];
+    var sData = this.spriteData[i];
     var spr = {
-      source: data.source,
-      x: data.x || 0,
-      y: data.y || 0,
-      index: data.index || 0
+      source: sData.source,
+      x: sData.x || 0,
+      y: sData.y || 0,
+      index: sData.index || 0
     }
     var imagePath = subfolder+"sprites/"+spr.source;
     var tex = getTextureFrame(imagePath,spr.index,32,32);
@@ -35,11 +34,16 @@ function Entity(id,x,y,spriteData){
   }
 
   stageEntities.children[this.layer].addChild(this.container);
+
+  this.update(data);
 }
 
 Entity.prototype.update = function(data){
   //world.cellSetOverwrite(this.tx,this.ty,{})
   Object.assign(this,data);
+  if (data.layer){
+    this.changeLayer(data.layer);
+  }
   if (data.x != undefined){
     this.tx = Math.floor(data.x/32);
   }
@@ -55,9 +59,6 @@ Entity.prototype.update = function(data){
         sprite = new PIXI.Sprite(getTextureFrame(path,sprData.index, sprData.width || 32, sprData.height || 32));
       }
       //sprite.setTexture(getTextureFrame(path, data.index, data.width || 32, data.height || 32));
-      if (sprData.layer && this.layer != sprData.layer){
-        this.changeLayer(sprData.layer);
-      }
     }
   }
   if (data.lightData != undefined){

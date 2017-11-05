@@ -28,7 +28,7 @@ function World() {
 
 World.prototype.updateView = function(view){
   for (var i=0; i<(Math.ceil(view.width/32)+1)*(Math.ceil(view.height/32)+1); i++){
-    var cx = Math.floor(view.x / 32)+(i % (Math.ceil(view.width/32)+1)) //cellXvie
+    var cx = Math.floor(view.x / 32)+(i % (Math.ceil(view.width/32)+1)) //cellX
     var cy = Math.floor(view.y / 32)+Math.floor(i / (Math.ceil(view.width/32)+1)) //cellY
     view.sprites[i].x = cx*32;
     view.sprites[i].y = cy*32;

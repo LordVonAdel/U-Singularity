@@ -47,7 +47,7 @@ function Entity(world, type, tx, ty, extraData){
   this.speed = 1;
   this.bucket = null;
   this.sync = {};
-  this.layer = this.ent.layer || 10;
+  this.layer = this.ent.layer || 3;
   this.dragger = null; //The thing this is dragged by
   this.drag = null; //The thing this is dragging
   this.world = world;

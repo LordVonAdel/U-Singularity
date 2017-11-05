@@ -45,6 +45,7 @@ var res = { //object with every dynamic loaded content, excepts maps and command
       "draggable": true,
       "collision":true,
       "sync":{client: null, hp: 100},
+      "layer": 3,
       "image":[
         {
           source: "chars/char_chemist_f.png",

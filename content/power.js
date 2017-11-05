@@ -116,6 +116,7 @@ module.exports = {
       }
     },
     cable_red: {
+      layer: 1,
       sync: {e: false, n: false, w: false, s: false},
       image: [{number: 4, source: "objects/cable_red.png", width:32, height: 32, visible: false}],
       onInit(){
@@ -125,10 +126,10 @@ module.exports = {
         }
       },
       onUpdate(){
-        this.changeSprite(1, {layer: 1, number: 4, source: "objects/cable_red.png", width: 32, height: 32, index: 0, visible: this.sync.e});
-        this.changeSprite(2, {layer: 1, number: 4, source: "objects/cable_red.png", width: 32, height: 32, index: 1, visible: this.sync.n});
-        this.changeSprite(3, {layer: 1, number: 4, source: "objects/cable_red.png", width: 32, height: 32, index: 2, visible: this.sync.w});
-        this.changeSprite(4, {layer: 1, number: 4, source: "objects/cable_red.png", width: 32, height: 32, index: 3, visible: this.sync.s});
+        this.changeSprite(1, {number: 4, source: "objects/cable_red.png", width: 32, height: 32, index: 0, visible: this.sync.e});
+        this.changeSprite(2, {number: 4, source: "objects/cable_red.png", width: 32, height: 32, index: 1, visible: this.sync.n});
+        this.changeSprite(3, {number: 4, source: "objects/cable_red.png", width: 32, height: 32, index: 2, visible: this.sync.w});
+        this.changeSprite(4, {number: 4, source: "objects/cable_red.png", width: 32, height: 32, index: 3, visible: this.sync.s});
 
         if (!this.power_nw){
           if (this.world.systems.power){
