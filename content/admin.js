@@ -3,18 +3,22 @@ item = require('../code/item.js');
 module.exports = {
   items: {
     destroyer: {
-      id:"destroyer",
       name:"Destroyer",
       image:"items/item_destroyer.png",
       actions:["destroy"]
     },
     admin_key: {
-      id: "admin_key",
       name: "Admin Key",
       image: "items/item_admin_key.png",
       onUseEnt: "admin_locktoggle",
       actions:["admin_locktoggle"],
       range: 10
+    },
+    world_edit: {
+      name:"World Edit",
+      onUseFloor:"worldEdit",
+      image:"items/item_world_edit.png",
+      sync:{mode:0}
     }
   },
   actions: {

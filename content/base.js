@@ -2,29 +2,28 @@ var item = require('../code/item.js');
 
 module.exports = {
   tiles: { //-------------------------Tiles-------------------------
-    0:  {"id":9, "name":"base.rock"         ,"collision":true , "image":"tiles/tile_rock.png", "transparent":false},
-    1:  {"id":1, "name":"base.concrete"     ,"collision":false, "image":"tiles/tile_concrete.png"},
-    2:  {"id":2, "name":"base.wall"         ,"collision":true , "image":"tiles/tile_wall.png"         ,"connectionType":"wall"   ,"connectionGroup": "walls", "transparent": false},
-    3:  {"id":3, "name":"base.wall_window"  ,"collision":true , "image":"tiles/tile_wall_window.png"  ,"connectionType":"wall"   ,"connectionGroup": "walls"},
-    4:  {"id":4, "name":"base.wall_glass"   ,"collision":true , "image":"tiles/tile_wall_glass.png"   ,"connectionType":"wall"   ,"connectionGroup": "walls"},
-    5:  {"id":5, "name":"base.wall_frame"   ,"collision":true , "image":"tiles/tile_wall_frame.png"},
-    6:  {"id":6, "name":"base.floor_metal"  ,"collision":false, "image":"tiles/tile_floor_metalD.png"},
-    7:  {"id":7, "name":"base.wall_chamber" ,"collision":true , "image":"tiles/tile_wall_chamber.png" ,"connectionType":"wall"   ,"connectionGroup": "walls", "transparent": false},
-    8:  {"id":8, "name":"base.floor_chamber","collision":false, "image":"tiles/tile_floor_chamber.png","connectionType":"simple" ,"connectionGroup": "floor_chamber"},
-    9:  {"id":0, "name":"base.grass"        ,"collision":false, "image":"tiles/tile_grass.png"}
+    0:  {"name":"base.rock"         ,"collision":true , "image":"tiles/tile_rock.png", "transparent":false},
+    1:  {"name":"base.concrete"     ,"collision":false, "image":"tiles/tile_concrete.png"},
+    2:  {"name":"base.wall"         ,"collision":true , "image":"tiles/tile_wall.png"         ,"connectionType":"wall"   ,"connectionGroup": "walls", "transparent": false},
+    3:  {"name":"base.wall_window"  ,"collision":true , "image":"tiles/tile_wall_window.png"  ,"connectionType":"wall"   ,"connectionGroup": "walls"},
+    4:  {"name":"base.wall_glass"   ,"collision":true , "image":"tiles/tile_wall_glass.png"   ,"connectionType":"wall"   ,"connectionGroup": "walls"},
+    5:  {"name":"base.wall_frame"   ,"collision":true , "image":"tiles/tile_wall_frame.png"},
+    6:  {"name":"base.floor_metal"  ,"collision":false, "image":"tiles/tile_floor_metalD.png"},
+    7:  {"name":"base.wall_chamber" ,"collision":true , "image":"tiles/tile_wall_chamber.png" ,"connectionType":"wall"   ,"connectionGroup": "walls", "transparent": false},
+    8:  {"name":"base.floor_chamber","collision":false, "image":"tiles/tile_floor_chamber.png","connectionType":"simple" ,"connectionGroup": "floor_chamber"},
+    9:  {"name":"base.grass"        ,"collision":false, "image":"tiles/tile_grass.png"}
   },
   items: { //-------------------------Items-------------------------
-    knife:             {"id":"knife"            ,"name":"Knife"            ,"onUseFloor":"test"       ,"image":"items/item_knife.png"            ,"actions":["stab", "cut", "carve"]},
-    metal:             {"id":"metal"	          ,"name":"Metal Sheet"      ,"onUseFloor":"build_metal","image":"items/item_metal.png"},
-    crowbar:           {"id":"crowbar"          ,"name":"Crowbar"          ,"onUseFloor":"crowbar"    ,"image":"items/item_crowbar.png", "actions":["crowbar"]},
-    glass:             {"id":"glass"            ,"name":"Glass"            ,"onUseFloor":"buildGlass" ,"image":"items/item_glass.png"},
-    wall_frame:        {"id":"wall_frame"       ,"name":"Wall Frame"       ,"onUseFloor":"buildWall"  ,"image":"items/item_wall_frame.png"},
-    armor_plating:     {"id":"armor_plating"    ,"name":"Armor Plating"    ,"onUseFloor":"buildArmor" ,"image":"items/item_armor_plating.png"},
-    fire_ext:          {"id":"fire_ext"         ,"name":"Fire Extinguisher","onUseFloor":"extinguish" ,"image":"items/item_fire_extinguisher.png","actions":["fire_ext_box"]},
-    atmo_scanner:      {"id":"atmo_scanner"     ,"name":"Atmo scanner"     ,"onUseFloor":"scanAtmo"   ,"image":"items/item_atmo_scanner.png"},
-    world_edit:        {"id":"world_edit"       ,"name":"World Edit"       ,"onUseFloor":"worldEdit"  ,"image":"items/item_world_edit.png","sync":{"mode":0}},
-    stick:             {"id":"stick"            ,"name":"Stick"                                       ,"image":"items/item_stick.png", on: {carve: function(){item.transform(this, "stick_sharp")}}},
-    stick_sharp:       {"id":"stick_sharp"      ,"name":"Sharp Stick"                                 ,"image":"items/item_stick_sharp.png", "actions":["stab"]}
+    knife:             {"name":"Knife"            ,"onUseFloor":"test"       ,"image":"items/item_knife.png"            ,"actions":["stab", "cut", "carve"]},
+    metal:             {"name":"Metal Sheet"      ,"onUseFloor":"build_metal","image":"items/item_metal.png"},
+    crowbar:           {"name":"Crowbar"          ,"onUseFloor":"crowbar"    ,"image":"items/item_crowbar.png", "actions":["crowbar"]},
+    glass:             {"name":"Glass"            ,"onUseFloor":"buildGlass" ,"image":"items/item_glass.png"},
+    wall_frame:        {"name":"Wall Frame"       ,"onUseFloor":"buildWall"  ,"image":"items/item_wall_frame.png"},
+    armor_plating:     {"name":"Armor Plating"    ,"onUseFloor":"buildArmor" ,"image":"items/item_armor_plating.png"},
+    fire_ext:          {"name":"Fire Extinguisher","onUseFloor":"extinguish" ,"image":"items/item_fire_extinguisher.png","actions":["fire_ext_box"]},
+    atmo_scanner:      {"name":"Atmo scanner"     ,"onUseFloor":"scanAtmo"   ,"image":"items/item_atmo_scanner.png"},
+    stick:             {"name":"Stick"                                       ,"image":"items/item_stick.png", on: {carve: function(){item.transform(this, "stick_sharp")}}},
+    stick_sharp:       {"name":"Sharp Stick"                                 ,"image":"items/item_stick_sharp.png", "actions":["stab"]}
   },
   commands: {  //-------------------------Commands-------------------------
     ping: {

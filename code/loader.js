@@ -157,6 +157,7 @@ function load(filename,callback){
     }
     if (exp.items != undefined){
       for (var k in exp.items){
+        exp.items[k].id = k;
         exp.items[k] = checkItem(exp.items[k]);
       }
       Object.assign(res.items,exp.items);
