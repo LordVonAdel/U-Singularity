@@ -4,10 +4,6 @@ var item = require('./item.js');
 
 function Player(socket) {
   this.socket = socket;
-  this.tileX = 0;
-  this.tileY = 0;
-  this.x = this.tileX * 32;
-  this.y = this.tileY * 32;
   this.id = nextEntId;
   nextEntId += 1;
   this.name = "unnamed(" + this.id + ")";
@@ -281,7 +277,7 @@ Player.prototype.disconnect = function () {
   if (this.game){
     this.ent.destroy();
     this.game.broadcast('disc', { id: this.id });
-    this.game.players.splice(this.game.players.indexOf(this), 1);
+    this.game.clients.splice(this.game.clients.indexOf(this), 1);
   }
   var i = playerlist.indexOf(this);
   playerlist.splice(i, 1);
@@ -313,11 +309,6 @@ Player.prototype.shareSelf = function (data) {
 
 //will be executed every step
 Player.prototype.step = function (delta) {
-  /*this.x = utils.transition(this.x, this.tileX * 32, this.speed * (delta * 100), 0);
-  this.y = utils.transition(this.y, this.tileY * 32, this.speed * (delta * 100), 0);
-  if (this.x == this.tileX * 32 && this.y == this.tileY * 32) {
-    this.inMovement = false;
-  }*/
   if (this.ent.getState("burning")){
     this.ent.sync.hp -= delta;
     this.shareSelf({"hp" : Math.ceil(this.ent.sync.hp)});
@@ -400,12 +391,27 @@ Player.prototype.kick = function (title, message) {
 
 //rotates the player
 Player.prototype.lookAt = function(tileX, tileY){
+  if (tileX == this.ent.tx && tileY == this.ent.ty){
+    return this.direction;
+  }
 
   var angle = Math.atan2(-(tileY - this.ent.ty), (tileX - this.ent.tx));
   //Thanks to Mario for the next line of code
   this.direction = Math.floor(2*angle / Math.PI + 4.5) % 4;
 
   this.ent.changeImageIndex(0, this.direction);
+
+  return this.direction;
+}
+
+function Spectator(){
+
+}
+
+function Editor(){
+
 }
 
 module.exports.Player = Player;
+module.exports.Editor = Editor;
+module.exports.Spectator = Spectator;

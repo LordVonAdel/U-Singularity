@@ -1,10 +1,10 @@
 //Game object, which handles everything!
-var World = require("./world.js");
-var Entity = require("./entity.js");
-var fs = require("fs");
+const World = require("./world.js");
+const Entity = require("./entity.js");
+const fs = require("fs");
 
 function Game(maps, gamemode, gameConfig){
-  this.players = [];
+  this.clients = [];
   this.worlds = [];
   this.config = gameConfig;
   //Load a map
@@ -23,22 +23,22 @@ function Game(maps, gamemode, gameConfig){
   }
 }
 
-//Sends a packet to all players in the game
+//Sends a packet to all clients in the game
 Game.prototype.broadcast = function(event, data){
-  for (var i = 0; i < this.players.length; i++) {
-    this.players[i].socket.emit(event, data);
+  for (var i = 0; i < this.clients.length; i++) {
+    this.clients[i].socket.emit(event, data);
   }
 }
 
 //Add a player to the game
 Game.prototype.addPlayer = function(player){
-  if (this.config.playerLimit <= this.players.length){
+  if (this.config.playerLimit <= this.clients.length){
     player.kick("Sorry", "The player limit of this server have been already reached! Sorry... Try again later");
     console.log("[Game]Player can't connect because the lobby is full!");
     return false;
   }
   player.game = this;
-  this.players.push(player);
+  this.clients.push(player);
   player.ent = new Entity(this.worlds[0], "player", this.spawnX, this.spawnY);
   this.changeWorld(player, 0);
   if (this.gamemode){
@@ -52,7 +52,7 @@ Game.prototype.step = function(delta){
   this.worlds.forEach(function(world){
     world.step(delta);
   });
-  this.players.forEach(function(player){
+  this.clients.forEach(function(player){
     player.step(delta);
   });
   if (this.gamemode){
@@ -82,8 +82,8 @@ Game.prototype.showGlobalPopup = function(id, str, data){
   for (var k in data){
     str = str.replace("{"+k+"}", data[k]);
   }
-  for (var i = 0; i < this.players.length; i++){
-    var player = this.players[i];
+  for (var i = 0; i < this.clients.length; i++){
+    var player = this.clients[i];
     player.socket.emit('server_content', { html: str, id: id });
   }
 }
@@ -99,8 +99,8 @@ Game.prototype.showGlobalPopupFromFile = function(id, filename, data){
 
 //Sends a chat message to every player in the game
 Game.prototype.sendChatMessage = function(message){
-  for (var i = 0; i < this.players.length; i++){
-    this.players[i].msg(message);
+  for (var i = 0; i < this.clients.length; i++){
+    this.clients[i].msg(message);
   }
 }
 

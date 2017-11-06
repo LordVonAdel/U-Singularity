@@ -1,13 +1,11 @@
 //Entrance point
 
-var fs = require("fs");
+const fs = require("fs");
 loader = require("./loader.js");
-var player = require("./player.js");
-var world = require("./world.js");
 config = null;
 loader.loadConfig();
 loader.loadClasses();
-var Game = require("./game.js");
+const Game = require("./game.js");
 
 var http = require("http").createServer(function( req, res){
   url = req.url;

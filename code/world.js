@@ -245,8 +245,8 @@ World.prototype.step = function(delta){
 
 //sends a packet to all player on this world
 World.prototype.broadcast = function(event, data){
-  for (var i = 0; i < this.game.players.length; i++) {
-    var player = this.game.players[i];
+  for (var i = 0; i < this.game.clients.length; i++) {
+    var player = this.game.clients[i];
     if (player.world == this){
       player.socket.emit(event, data);
     }

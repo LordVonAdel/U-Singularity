@@ -1,4 +1,4 @@
-player = require('./player.js');
+const client = require('./client.js');
 
 io.on('connection', function(socket){
   var ip = socket.request.connection.remoteAddress;
@@ -22,7 +22,7 @@ io.on('connection', function(socket){
   }
 
   socket.on('welcome', function(data){
-    var pl = new player.Player(socket);
+    var pl = new client.Player(socket);
     if (games[0].addPlayer(pl)){ //return false if the player can't join the game
       pl.popup("config","./html/login.html", {error: ""});
       games[0].broadcast('player_joined',{id: pl.id});
