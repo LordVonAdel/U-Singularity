@@ -2,11 +2,195 @@ var utils = require('./utils.js');
 var fs = require('fs');
 var item = require('./item.js');
 
-function Player(socket) {
+//all handler for incoming data
+nw = {
+  move(data){
+    console.log(data);
+    if (this.game != null && this.config && this.ent.sync.alive){
+      if (!this.ent.isMoving) {
+        this.ent.moveDir(data.dir, this.speed);
+        this.direction = data.dir;
+        this.ent.changeImageIndex(0, data.dir);
+        this.updateBucket();
+      }
+    }
+  },
+  chat(data){
+    data.msg = this.stringSave(data.msg);
+    console.log(this.name + ": " + data.msg);
+    if (data.msg.charAt(0) == "/") { //if the message is a command
+      var args = data.msg.slice(1).split(" ");
+      this.executeCommand(args);
+    } else {
+      this.game.broadcast('chat', { msg: '<span class="name">' + this.name + ":</span> " + data.msg, player: this.id, raw: data.msg });
+    }
+  },
+  config(data){
+    if (!this.config) {
+      this.name = this.stringSave(data.name);
+      if (this.name == "" && !config.player.allowEmptyName){this.popup("config","./html/login.html", {error: "You need a name to play this great game!"}); return false;}
+      this.sex = data.sex;
+      this.job = data.job;
+      var cls = loader.res.classes[this.job];
+      if (!cls){
+        console.error("Unkown job: "+this.job);
+        return false;
+      }
+      var img = this.sex == "m" ? cls["sprite-male"] : cls["sprite-female"];
+      if (cls.inventory){
+        for (var i = 0; i < Math.min(this.hands, cls.inventory.length); i++){
+          this.ent.sync.inventory[i] = item.create(cls.inventory[i]);
+        }
+      }
+      this.shareSelf();
+      this.update();
+      if (img != undefined) {
+        this.ent.changeSprite(0, {source: img});
+      } else {
+        //Config was not correct!
+      }
+      this.config = true;
+    }
+  },
+  inv_active(data){
+    if (this.game){
+      if (data.slot < this.hands) {
+        this.ent.sync.inventoryActive = data.slot;
+        this.ent.update();
+      }
+    }
+  },
+  useOnFloor(data){
+    if (this.config && this.ent.sync.alive) {
+      var xx = data.x;
+      var yy = data.y;
+      var itm = this.ent.sync.inventory[this.ent.sync.inventoryActive];
+
+      var distance = Math.hypot(xx - this.ent.tx, yy - this.ent.ty);
+      this.lookAt(xx, yy);
+
+      if (itm != null) {
+        var master = item.getMaster(itm);
+        var fun = res.actions[master.onUseFloor];
+        if (distance < Math.max(this.handRange, master.range || 1) + 1) {
+          if (fun != undefined) {
+            fun(this.world, xx, yy, this, itm);
+            this.ent.sync.inventory[this.ent.sync.inventoryActive] = item.update(itm);
+            this.shareSelf();
+          }
+        }
+      }
+      this.update();
+    }
+  },
+  onUseEnt(data){
+    var inventory = this.ent.sync.inventory;
+    var active = this.ent.sync.inventoryActive;
+
+    if (this.game != null && this.ent.sync.alive) {
+      var itm = inventory[active];
+      if (itm == null) { itm = { type: "hand" } }
+      var ent = this.world.ents[data.id];
+      var itemMaster = item.getMaster(itm);
+      if (ent) {
+        this.lookAt(ent.tx, ent.ty);
+        if (Math.hypot(ent.x - this.ent.x, ent.y - this.ent.y) < (Math.max(this.handRange, itemMaster.range || 1) + 1) * 32) {
+          ent.use(this, itm);
+
+          var master = item.getMaster(itm);
+          if (master){
+            if (master.onUseEnt){
+              var fun = res.actions[master.onUseEnt];
+              if (fun){
+                fun(ent, itm, this);
+                inventory[active] = item.update(inventory[active]);     
+              }else{
+                console.error("Action " + master.onUseEnt + " not found! Requested from item '" + itm.type + "'");
+              }
+            }
+          }
+
+          inventory[active] = item.update(inventory[active]);
+          this.update();
+          this.shareSelf();
+        }
+      }
+    }
+  },
+  disconnect(data){
+    console.log("[Server]" + this.name + " disconnected!");
+    this.disconnect();
+  },
+  drop(data){
+    var inventory = this.ent.sync.inventory;
+    var active = this.ent.sync.inventoryActive;
+
+    if (this.game && this.ent.sync.alive){
+      var itm = inventory[active];
+      var distance = Math.hypot(data.x - this.ent.tx, data.y - this.ent.ty);
+      if (item == null){return false}
+      if (distance < (this.handRange + 1)){ //Put
+        if (!this.world.collisionCheck(data.x, data.y)) {
+          world.spawnItem(data.x, data.y, itm);
+          inventory[active] = null;
+          this.shareSelf();
+        }
+      }else{ //else throw the item.
+        var itemEnt = world.spawnItem(this.ent.tx, this.ent.ty, itm);
+        itemEnt.impulse(data.x - this.ent.tx, data.y - this.ent.ty, config.player.throwSpeed);
+        inventory[active] = null;
+        this.shareSelf();
+      }
+      this.update();
+    }
+  },
+  entDrag(data){
+    if (this.game != null && this.ent.sync.alive) {
+      var ent = this.world.getEntById(data.id);
+      if (ent != null) {
+        if (ent == this.ent.drag) {
+          ent.clearDragger();
+        } else {
+          if (ent.ent.draggable) {
+            if (Math.hypot(ent.x - this.ent.x, ent.y - this.ent.y) < (this.handRange + 1) * 32) {
+              this.ent.drag = ent;
+              ent.setDragger(this.ent);
+            }
+          }
+        }
+      }
+      this.shareSelf({ "drag": (this.ent.drag != null) });
+    }
+  },
+  entRequest(data){
+    var ent = this.world.getEntById(data.id);
+    if (ent) {
+      socket.emit('ent_data', ent.getClientData());
+    }
+  },
+  inventoryCombine(data){
+    var index = data.index;
+
+    var item2 = this.ent.sync.inventory[this.ent.sync.inventoryActive];
+    var item1 = this.ent.sync.inventory[index];
+    if (item1 == null || item2 == null){return};
+
+    item.combine(item1, item2);
+    this.ent.sync.inventory[this.ent.sync.inventoryActive] = item.update(item1);
+    this.ent.sync.inventory[index] = item.update(item2);
+
+    this.shareSelf();
+  }
+}
+
+function Client(socket) {
   this.socket = socket;
   this.id = nextEntId;
   nextEntId += 1;
   this.name = "unnamed(" + this.id + ")";
+
+  this.mode = "player";
+
   this.speed = config.player.walkSpeed;//3.2;
   this.config = false;
   this.inventory = {};
@@ -18,9 +202,7 @@ function Player(socket) {
   this.handRange = 1; //in tiles
   this.permissions = ['master.*', 'world.*','admin.*'];
   this.drag = null;
-  this.pushCooldown = 0;
   this.bucket = null;
-  this.alive = true;
 
   this.ent = null;
   this.world = null;
@@ -33,193 +215,17 @@ function Player(socket) {
 
   var that = this;
 
-  socket.on('move', function (data) {
-    if (that.game != null && that.config && that.alive) {
-      if (!that.ent.isMoving) {
-        that.ent.moveDir(data.dir, that.speed);
-        that.direction = data.dir;
-        that.ent.changeImageIndex(0, data.dir);
-        that.updateBucket();
-      }
-    }
-  });
-
-  socket.on('chat', function (data) {
-    data.msg = that.stringSave(data.msg);
-    console.log(that.name + ": " + data.msg);
-    if (data.msg.charAt(0) == "/") { //if the message is a command
-      var args = data.msg.slice(1).split(" ");
-      var sender = that;
-      that.executeCommand(args);
-    } else {
-      that.game.broadcast('chat', { msg: '<span class="name">' + that.name + ":</span> " + data.msg, player: that.id, raw: data.msg });
-    }
-  });
-
-  socket.on('config', function (data) {
-    if (!that.config) {
-      that.name = that.stringSave(data.name);
-      if (that.name == "" && !config.player.allowEmptyName){that.popup("config","./html/login.html", {error: "You need a name to play this great game!"}); return false;}
-      that.sex = data.sex;
-      that.job = data.job;
-      var cls = loader.res.classes[that.job];
-      if (!cls){
-        console.error("Unkown job: "+that.job);
-        return false;
-      }
-      var img = that.sex == "m" ? cls["sprite-male"] : cls["sprite-female"];
-
-      if (cls.inventory){
-        for (var i = 0; i < Math.min(that.hands, cls.inventory.length); i++){
-          that.inventory[i] = item.create(cls.inventory[i]);
-        }
-      }
-
-      that.shareSelf();
-      that.update();
-      if (img != undefined) {
-        that.ent.changeSprite(0, {source: img});
-      } else {
-        //Config was not correct!
-      }
-      that.config = true;
-    }
-  });
-
-  socket.on('inv_active', function (data) {
-    if (that.game){
-      if (data.slot < that.hands) {
-        that.inventoryActive = data.slot;
-        that.update();
-      }
-    }
-  });
-
-  socket.on('useOnFloor', function (data) {
-    if (that.config && that.alive) {
-      var xx = data.x;
-      var yy = data.y;
-      var itm = that.inventory[that.inventoryActive];
-
-      var distance = Math.hypot(xx - that.ent.tx, yy - that.ent.ty);
-      that.lookAt(xx, yy);
-
-      if (itm != null) {
-        var master = item.getMaster(itm);
-        var fun = res.actions[master.onUseFloor];
-        if (distance < Math.max(that.handRange, master.range || 1) + 1) {
-          if (fun != undefined) {
-            fun(that.world, xx, yy, that, itm);
-            that.inventory[that.inventoryActive] = item.update(itm);
-            that.shareSelf();
-          }
-        }
-      }
-      that.update();
-    }
-  });
-
-  socket.on('disconnect', function (data) {
-    console.log("[Server]" + that.name + " disconnected!");
-    that.disconnect();
-  });
-
-  socket.on('drop', function (data) {
-    if (that.game && that.alive){
-      var itm = that.inventory[that.inventoryActive];
-      var distance = Math.hypot(data.x - that.ent.tx, data.y - that.ent.ty);
-
-      if (item == null){return false}
-
-      if (distance < (that.handRange + 1)){ //Put
-        if (!that.world.collisionCheck(data.x, data.y)) {
-          world.spawnItem(data.x, data.y, itm);
-
-          that.inventory[that.inventoryActive] = null;
-          that.shareSelf();
-        }
-      }else{ //else throw the item.
-        var itemEnt = world.spawnItem(that.ent.tx, that.ent.ty, itm);
-        itemEnt.impulse(data.x - that.ent.tx, data.y - that.ent.ty, config.player.throwSpeed);
-
-        that.inventory[that.inventoryActive] = null;
-        that.shareSelf();
-      }
-
-      that.update();
-    }
-  });
-
-  socket.on('ent_click', function (data) {
-    if (that.game != null && that.alive) {
-      var itm = that.inventory[that.inventoryActive];
-      if (itm == null) { itm = { type: "hand" } }
-      var ent = that.world.ents[data.id];
-      var itemMaster = item.getMaster(itm);
-      if (ent) {
-        that.lookAt(ent.tx, ent.ty);
-        if (Math.hypot(ent.x - that.ent.x, ent.y - that.ent.y) < (Math.max(that.handRange, itemMaster.range || 1) + 1) * 32) {
-          ent.use(that, itm);
-
-          var master = item.getMaster(itm);
-          if (master){
-            if (master.onUseEnt){
-              var fun = res.actions[master.onUseEnt];
-              if (fun){
-                fun(ent, itm, that);
-                that.inventory[that.inventoryActive] = item.update(that.inventory[that.inventoryActive]);     
-              }else{
-                console.error("Action " + master.onUseEnt + " not found! Requested from item '" + itm.type + "'");
-              }
-            }
-          }
-
-          that.inventory[that.inventoryActive] = item.update(that.inventory[that.inventoryActive]);
-          that.update();
-          that.shareSelf();
-        }
-      }
-    }
-  });
-
-  socket.on('ent_drag', function (data) {
-    if (that.game != null && that.alive) {
-      var ent = that.world.getEntById(data.id);
-      if (ent != null) {
-        if (ent == that.ent.drag) {
-          ent.clearDragger();
-        } else {
-          if (ent.ent.draggable) {
-            if (Math.hypot(ent.x - that.ent.x, ent.y - that.ent.y) < (that.handRange + 1) * 32) {
-              that.ent.drag = ent;
-              ent.setDragger(that.ent);
-            }
-          }
-        }
-      }
-      that.shareSelf({ "drag": (that.ent.drag != null) });
-    }
-  });
-
-  socket.on('ent_request', function (id) {
-    var ent = that.world.getEntById(id);
-    if (ent) {
-      socket.emit('ent_data', ent.getClientData());
-    }
-  });
-
-  socket.on('inventory_combine', function(index){
-    console.log("Player combined with "+index);
-    var item2 = that.inventory[that.inventoryActive];
-    var item1 = that.inventory[index];
-    if (item1 == null || item2 == null){return};
-
-    item.combine(item1, item2);
-    that.inventory[that.inventoryActive] = item.update(item1);
-    that.inventory[that.index] = item.update(item2);
-
-    that.shareSelf();
-  });
+  socket.on('move', nw.move.bind(this));
+  socket.on('chat', nw.chat.bind(this));
+  socket.on('config', nw.config.bind(this));
+  socket.on('inv_active', nw.inv_active.bind(this));
+  socket.on('useOnFloor', nw.useOnFloor.bind(this));
+  socket.on('ent_click', nw.onUseEnt.bind(this));
+  socket.on('disconnect', nw.disconnect.bind(this));
+  socket.on('drop', nw.drop.bind(this));
+  socket.on('ent_drag', nw.entDrag.bind(this));
+  socket.on('ent_request', nw.entRequest.bind(this));
+  socket.on('inventory_combine', nw.inventoryCombine.bind(this));
 
   if (this.bucket != null) {
     this.bucket.sendMegaPacketArea(this.socket);
@@ -227,7 +233,7 @@ function Player(socket) {
 }
 
 //Executes a command as the player
-Player.prototype.executeCommand = function (args) {
+Client.prototype.executeCommand = function (args) {
   var cmd = loader.commands[args[0]];
   if (cmd != undefined) {
     var allowed = true;
@@ -249,14 +255,14 @@ Player.prototype.executeCommand = function (args) {
 }
 
 //Makes a string save
-Player.prototype.stringSave = function (str) {
+Client.prototype.stringSave = function (str) {
   str = str.replace(/>/g, '&gt');
   str = str.replace(/</g, '&lt');
   return str;
 }
 
 //shows a popup at the client
-Player.prototype.popup = function (id, filename, data) {
+Client.prototype.popup = function (id, filename, data) {
   var that = this;
   fs.readFile(filename, "utf-8", function (err, str) {
     if (err){console.error(err); return false;}
@@ -268,12 +274,12 @@ Player.prototype.popup = function (id, filename, data) {
 }
 
 //Sends a chat message to the player
-Player.prototype.msg = function (msg) {
+Client.prototype.msg = function (msg) {
   this.socket.emit('chat', { msg: msg, id: this.id });
 }
 
 //When the player disconnects
-Player.prototype.disconnect = function () {
+Client.prototype.disconnect = function () {
   if (this.game){
     this.ent.destroy();
     this.game.broadcast('disc', { id: this.id });
@@ -284,23 +290,23 @@ Player.prototype.disconnect = function () {
 }
 
 //Teleports the player to a specific position
-Player.prototype.teleport = function (tileX, tileY) {
+Client.prototype.teleport = function (tileX, tileY) {
   this.ent.teleport(tileX, tileY);
   this.updateBucket();
 }
 
 //Resets the dragging of an object. So you don't drag anymore, since this is executed
-Player.prototype.resetDrag = function () {
+Client.prototype.resetDrag = function () {
   this.ent.drag = null;
   this.shareSelf({ drag: false });
 }
 
 //sends data to the client about his player
-Player.prototype.shareSelf = function (data) {
+Client.prototype.shareSelf = function (data) {
   if (!data){
     data = {
       hp: Math.floor(this.ent.sync.hp),
-      inventory: this.inventory,
+      inventory: this.ent.sync.inventory,
       drag: this.drag
     }
   }
@@ -308,7 +314,7 @@ Player.prototype.shareSelf = function (data) {
 }
 
 //will be executed every step
-Player.prototype.step = function (delta) {
+Client.prototype.step = function (delta) {
   if (this.ent.getState("burning")){
     this.ent.sync.hp -= delta;
     this.shareSelf({"hp" : Math.ceil(this.ent.sync.hp)});
@@ -316,22 +322,15 @@ Player.prototype.step = function (delta) {
 }
 
 //update refreshes values and stuff
-Player.prototype.update = function(){
-  var hand = this.inventory[this.inventoryActive];
-  if (hand != null){
-    if (hand.sprite.length > 0){
-      this.ent.changeSprite(1, {source: hand.sprite[0].source, visible: true});
-    }
-  }else{
-    this.ent.changeSprite(1, {visible: false});
-  }
+Client.prototype.update = function(){
+  this.ent.update();
 }
 
 //Gives the player an item
-Player.prototype.give = function (itemData) {
+Client.prototype.give = function (itemData) {
   for (var val in this.inventory) {
-    if (this.inventory[val] == null) {
-      this.inventory[val] = itemData;
+    if (this.ent.sync.inventory[val] == null) {
+      this.ent.sync.inventory[val] = itemData;
       this.shareSelf();
       this.update();
       break;
@@ -340,7 +339,7 @@ Player.prototype.give = function (itemData) {
 }
 
 //Checks if the player have a permission to do something
-Player.prototype.getPermission = function (permission) {
+Client.prototype.getPermission = function (permission) {
   if (this.permissions.includes("*.*")){
     return true;
   }
@@ -361,13 +360,13 @@ Player.prototype.getPermission = function (permission) {
 }
 
 //Updates the bucket the player is in
-Player.prototype.updateBucket = function () {
+Client.prototype.updateBucket = function () {
   var tbucket = this.world.buckets.cellGet(Math.floor(this.ent.tx / config.bucket.width), Math.floor(this.ent.ty / config.bucket.height));
   this.changeBucket(tbucket);
 }
 
 //Changes the bucket, the player belongs to
-Player.prototype.changeBucket = function (bucket) {
+Client.prototype.changeBucket = function (bucket) {
   if (bucket) {
     if (this.bucket != bucket) {
       bucket.addPlayer(this);
@@ -381,7 +380,7 @@ Player.prototype.changeBucket = function (bucket) {
 }
 
 //Kick the player from the server
-Player.prototype.kick = function (title, message) {
+Client.prototype.kick = function (title, message) {
   this.popup("kicked", "html/kicked.html", {title: title || "", msg:message});
   var that = this;
   setTimeout(function(){
@@ -390,7 +389,7 @@ Player.prototype.kick = function (title, message) {
 }
 
 //rotates the player
-Player.prototype.lookAt = function(tileX, tileY){
+Client.prototype.lookAt = function(tileX, tileY){
   if (tileX == this.ent.tx && tileY == this.ent.ty){
     return this.direction;
   }
@@ -404,14 +403,4 @@ Player.prototype.lookAt = function(tileX, tileY){
   return this.direction;
 }
 
-function Spectator(){
-
-}
-
-function Editor(){
-
-}
-
-module.exports.Player = Player;
-module.exports.Editor = Editor;
-module.exports.Spectator = Spectator;
+module.exports = Client;

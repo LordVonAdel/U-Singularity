@@ -19,7 +19,7 @@ var res = { //object with every dynamic loaded content, excepts maps and command
       "image":[{layer: 2, source: "items/item_crowbar.png", width:32, height: 32}],
       "onClick":function(user, _item){
         if(_item.type == "hand"){
-          user.inventory[user.inventoryActive] = this.sync.item;
+          user.ent.sync.inventory[user.ent.sync.inventoryActive] = this.sync.item;
           user.shareSelf();
           user.update();
           this.destroy();
@@ -44,7 +44,7 @@ var res = { //object with every dynamic loaded content, excepts maps and command
     "player":{
       "draggable": true,
       "collision":true,
-      "sync":{client: null, hp: 100},
+      "sync":{client: null, hp: 100, alive: true, inventory:{}, inventoryActive: 0},
       "layer": 3,
       "image":[
         {
@@ -85,6 +85,14 @@ var res = { //object with every dynamic loaded content, excepts maps and command
       "onUpdate": function(){
         if (this.client == undefined){
           this.destroy();
+        }
+        var hand = this.sync.inventory[this.sync.inventoryActive];
+        if (hand != null){
+          if (hand.sprite.length > 0){
+            this.changeSprite(1, {source: hand.sprite[0].source, visible: true});
+          }
+        }else{
+          this.changeSprite(1, {visible: false});
         }
       }
     }
