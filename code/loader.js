@@ -81,6 +81,10 @@ var res = { //object with every dynamic loaded content, excepts maps and command
           this.changeSprite(0, {angle: 90, animation: "none"});
           this.client.alive = false;
         }
+        if (this.getState("burning")){
+          this.ent.sync.hp -= 1000/delta;
+          this.client.shareSelf({"hp" : Math.ceil(this.ent.sync.hp)});
+        }
       },
       "onUpdate": function(){
         if (this.client == undefined){
@@ -237,25 +241,6 @@ function loadConfig(){
     config = doc;
   } catch (e) {
     console.log(e);
-  }
-}
-
-function Tile(name, collision, image){ 
-  //I don't know if this is called somewhere...
-  //Ok, used the search function and it is not called anywhere.
-  //There is a constructor which uses the name "Tile", but it is in the client code
-  //As you see down below, this is not event exported
-  this.collision = collision;
-  this.image = image;
-}
-
-function Item(type){
-  if (res.items[type] != undefined){
-    this.type = type;
-    this.sync = Object.assign({}, res.items[type].sync || {});
-  }else{
-    console.log("Item not found: " + type)
-    return null;
   }
 }
 

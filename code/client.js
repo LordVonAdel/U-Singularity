@@ -5,7 +5,6 @@ var item = require('./item.js');
 //all handler for incoming data
 nw = {
   move(data){
-    console.log(data);
     if (this.game != null && this.config && this.ent.sync.alive){
       if (!this.ent.isMoving) {
         this.ent.moveDir(data.dir, this.speed);
@@ -230,6 +229,7 @@ function Client(socket) {
   if (this.bucket != null) {
     this.bucket.sendMegaPacketArea(this.socket);
   }
+
 }
 
 //Executes a command as the player
@@ -238,7 +238,7 @@ Client.prototype.executeCommand = function (args) {
   if (cmd != undefined) {
     var allowed = true;
     if (cmd.permission) {
-      allowed = this.getPermission(cmd.permission)
+      allowed = this.getPermission(cmd.permission);
     }
     if (allowed) {
       if (args.length > cmd.argNum || cmd.argNum == undefined) {
@@ -315,10 +315,7 @@ Client.prototype.shareSelf = function (data) {
 
 //will be executed every step
 Client.prototype.step = function (delta) {
-  if (this.ent.getState("burning")){
-    this.ent.sync.hp -= delta;
-    this.shareSelf({"hp" : Math.ceil(this.ent.sync.hp)});
-  }
+
 }
 
 //update refreshes values and stuff

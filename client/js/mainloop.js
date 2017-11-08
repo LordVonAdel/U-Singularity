@@ -1,3 +1,5 @@
+var lasttarget = null;
+
 function gameLoop(){
 
   var delta = Date.now() - lastTime;
@@ -64,6 +66,15 @@ function gameLoop(){
 
   $("#hover-index-"+targetIndex).attr("class", "active")
   var target = hoverlist[targetIndex];
+
+  /*
+  if (target != lasttarget){
+    if (lasttarget && typeof lasttarget != 'string'){
+      lasttarget.container.filters = [];
+      lasttarget = target;
+      target.container.filters = [hoverflilter];
+    }
+  }*/
 
   if (target){
     if (mouseCheckPressed(0)){
