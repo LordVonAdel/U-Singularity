@@ -44,7 +44,18 @@ var res = { //object with every dynamic loaded content, excepts maps and command
     "player":{
       "draggable": true,
       "collision":true,
-      "sync":{client: null, hp: 100, alive: true, inventory:{}, inventoryActive: 0},
+      "sync":{
+        client: null, 
+        hp: 100, 
+        alive: true, 
+        inventory:{},
+        inventoryActive: 0,
+        dmgSuffocation: 0,
+        dmgBrute: 0,
+        dmgToxin: 0,
+        dmgBurn: 0,
+        dmgGenetic: 0
+      },
       "layer": 3,
       "image":[
         {
@@ -68,22 +79,25 @@ var res = { //object with every dynamic loaded content, excepts maps and command
       ],
       "actions": {
         "stab": function(){
-          this.sync.hp -= 5;
-          this.client.msg("Ouch!");
-          this.client.shareSelf({hp: this.sync.hp});
+          if (this.client){
+            this.sync.dmgBrute += 5;
+            this.client.msg("Ouch!");
+            this.update();
+          }
         }
       },
       "onInit": function(){
         this.setLight(0, {color: 0xffffff, radius: 128, intensity: 1});
       },
       "onStep": function(delta){
+        if (this.getState("burning")){
+          this.sync.dmgBurn += delta/1000;
+          this.update();
+        }
+
         if (this.sync.hp <= 0){
           this.changeSprite(0, {angle: 90, animation: "none"});
           this.client.alive = false;
-        }
-        if (this.getState("burning")){
-          this.ent.sync.hp -= 1000/delta;
-          this.client.shareSelf({"hp" : Math.ceil(this.ent.sync.hp)});
         }
       },
       "onUpdate": function(){
@@ -97,6 +111,11 @@ var res = { //object with every dynamic loaded content, excepts maps and command
           }
         }else{
           this.changeSprite(1, {visible: false});
+        }
+
+        this.sync.hp = 100 - this.sync.dmgBrute - this.sync.dmgBurn - this.sync.dmgGenetic - this.sync.dmgSuffocation - this.sync.dmgToxin;
+        if (this.client){
+          this.client.shareSelf({"hp" : Math.ceil(this.sync.hp)});
         }
       }
     }
