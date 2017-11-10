@@ -46,7 +46,7 @@ function initRenderer(){
   renderer.view.style.display = "block";
   renderer.autoResize = true;
   renderer.resize(window.innerWidth, window.innerHeight);
-  //rendererLight.resize(512, 512);
+  rendererLight.resize(window.innerWidth, window.innerHeight);
 }
 
 function renderLoop(){
@@ -61,6 +61,7 @@ function renderLoop(){
   stageLight.visible = useLight;
 
   renderer.resize(window.innerWidth, window.innerHeight);
+  rendererLight.resize(window.innerWidth, window.innerHeight);
   view.setZoom(2);
   world.updateView(view);
   player.updateFOV();
