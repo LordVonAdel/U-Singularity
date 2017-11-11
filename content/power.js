@@ -118,7 +118,7 @@ module.exports = {
     cable_red: {
       layer: 1,
       sync: {e: false, n: false, w: false, s: false},
-      image: [{number: 4, source: "objects/cable_red.png", width:32, height: 32, visible: false}],
+      image: [{number: 4, source: "objects/cable_red.png", width: 32, height: 32, visible: false}],
       onInit(){
         var power = this.world.systems.power;
         if (power){

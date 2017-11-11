@@ -55,6 +55,7 @@ function Entity(world, type, tx, ty, extraData){
   this.client = null;
   this.noclip = false;
   this.isOnStepList = false;
+  this.isHidden = false;
 
   this.momentumX = 0;
   this.momentumY = 0;
@@ -293,16 +294,18 @@ Entity.prototype.move = function(x,y){
 
 //reveal everything about you, the clients should know
 Entity.prototype.getClientData = function(){
-  return {
-    id: this.id, 
-    tx:this.tx, 
-    ty:this.ty, 
-    spriteData: this.sprites,
-    lightData: this.lights,
-    layer: this.layer,
-    tile: this.ent.tile != {} ? this.ent.tile : undefined,
-    states: this.states
-  }
+  if (!this.isHidden)
+    return {
+      id: this.id, 
+      tx:this.tx, 
+      ty:this.ty, 
+      spriteData: this.sprites,
+      lightData: this.lights,
+      layer: this.layer,
+      tile: this.ent.tile != {} ? this.ent.tile : undefined,
+      states: this.states
+    }
+  return null;
 }
 
 //when you spawn send the things returning from the function above to the clients. This is obviously called when the ent spawns.
@@ -423,6 +426,18 @@ Entity.prototype.processImpulse = function(){
   }else{
     this.momentumX = 0;
     this.momentumY = 0;
+  }
+}
+
+//Hides an entity, so no one can see it
+//UNTESTED!
+Entity.prototype.setHidden = function(isHidden){
+  if (this.isHidden == isHidden){return false}
+  this.isHidden = isHidden;
+  if (isHidden){
+    this.world.broadcast('ent_destroy',{id: this.id});
+  }else{
+    this.bucket.broadcastArea('ent_spawn', this.getClientData());
   }
 }
 

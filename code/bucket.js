@@ -51,7 +51,9 @@ Bucket.prototype.broadcastArea = function(msg,data,range){
 
 Bucket.prototype.sendMegaPacket = function(socket){ //to the left you see a function which tells everything about himself what a player should know about him
   for(k in this.objects){
-    socket.emit('ent_data',this.objects[k].getClientData());
+    if (!k.isHidden){
+      socket.emit('ent_data',this.objects[k].getClientData());
+    }
   }
   socket.emit('world_region',{str: this.world.grid.saveRegion(this.x*this.width, this.y*this.height, this.width, this.height),x:this.x*this.width,y:this.y*this.height,w:this.width})
 }

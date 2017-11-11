@@ -13,7 +13,7 @@ bucket:
   height: 16
 
 #How many ticks per second should happen
-tickRate: 30
+tickRate: 60
 
 #Use the http API?
 enableAPI: true
