@@ -37,6 +37,7 @@ module.exports = {
   },
   commands: {
     power: {
+      permission: "admin.power.debug",
       fun(sender, args){
         var power = sender.world.systems.power;
         if (power){
@@ -47,6 +48,7 @@ module.exports = {
       }
     },
     power_reload: {
+      permission: "admin.power.reload",
       fun(sender, args){
         var cables = sender.world.getEntsByType("cable_red");
         for (var i = 0; i < cables.length; i++) {
