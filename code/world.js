@@ -59,6 +59,10 @@ World.prototype.cellSet = function(tileX,tileY,id){
   var bucket = this.buckets.cellGet(Math.floor(tileX/config.bucket.width),Math.floor(tileY/config.bucket.height))
   bucket.broadcastArea('change_tile',{x:tileX, y:tileY, id:id});
   this.grid.cellSet(tileX,tileY,id);
+  var ents = this.gridEntities.cellGet(tileX, tileY);
+  for (var i = 0; i < ents.length; i++){
+    ents[i].update();
+  }
 }
 
 //gets the content of a cell in the world
