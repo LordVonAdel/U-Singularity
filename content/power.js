@@ -119,15 +119,31 @@ module.exports = {
     },
     cable_red: {
       layer: 1,
-      sync: {e: false, n: false, w: false, s: false},
+      sync: {e: false, n: false, w: false, s: false, u: false}, //u = is Underground?
       image: [{number: 4, source: "objects/cable_red.png", width: 32, height: 32, visible: false}],
       onInit(){
         var power = this.world.systems.power;
         if (power){
           this.power_nw = power.createNetwork(this);
         }
+        var tile = world.cellGet(this.tx, this.ty);
+        if (tile == 10){
+          this.sync.u = true;
+          console.log("Cable is underground");
+        }
       },
       onUpdate(){
+        console.log("update cable");
+        if (this.sync.u){
+          var tile = world.cellGet(this.tx, this.ty);
+          if (tile == 10){
+            this.setHidden(false);
+          }else{
+            this.setHidden(true);
+            console.log("Hide underground cable");
+          }
+        }
+
         this.changeSprite(1, {number: 4, source: "objects/cable_red.png", width: 32, height: 32, index: 0, visible: this.sync.e});
         this.changeSprite(2, {number: 4, source: "objects/cable_red.png", width: 32, height: 32, index: 1, visible: this.sync.n});
         this.changeSprite(3, {number: 4, source: "objects/cable_red.png", width: 32, height: 32, index: 2, visible: this.sync.w});

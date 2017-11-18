@@ -430,7 +430,6 @@ Entity.prototype.processImpulse = function(){
 }
 
 //Hides an entity, so no one can see it
-//UNTESTED!
 Entity.prototype.setHidden = function(isHidden){
   if (this.isHidden == isHidden){return false}
   this.isHidden = isHidden;

@@ -11,7 +11,8 @@ module.exports = {
     6:  {"name":"base.floor_metal"  ,"collision":false, "image":"tiles/tile_floor_metalD.png"},
     7:  {"name":"base.wall_chamber" ,"collision":true , "image":"tiles/tile_wall_chamber.png" ,"connectionType":"wall"   ,"connectionGroup": "walls", "transparent": false},
     8:  {"name":"base.floor_chamber","collision":false, "image":"tiles/tile_floor_chamber.png","connectionType":"simple" ,"connectionGroup": "floor_chamber"},
-    9:  {"name":"base.grass"        ,"collision":false, "image":"tiles/tile_grass.png"}
+    9:  {"name":"base.grass"        ,"collision":false, "image":"tiles/tile_grass.png"},
+    10: {"name":"base.underground"  ,"collision":false, "image":"tiles/tile_underground.png"}
   },
   items: { //-------------------------Items-------------------------
     knife:             {"name":"Knife"            ,"onUseFloor":"test"       ,"image":"items/item_knife.png"            ,"actions":["stab", "cut", "carve"]},
@@ -102,13 +103,15 @@ module.exports = {
   actions: { //----------------------------Actions-----------------------------
     build_metal: function(world, tileX, tileY){
       var index = world.cellGet(tileX,tileY);
-      console.log("Build metal! Floor has index: "+index);
       switch(index){
         case 0:
           world.cellSet(tileX,tileY,6);
         break;
         case 5:
           world.cellSet(tileX,tileY,2);
+        break;
+        case 10: 
+          world.cellSet(tileX,tileY,6);
         break;
       }
     },
@@ -134,7 +137,15 @@ module.exports = {
       world.cellSet(tileX,tileY,5);
     },
     crowbar: function(world, tileX, tileY){
-      world.cellSet(tileX,tileY,0);
+      var index = world.cellGet(tileX,tileY);
+      switch(index){
+        case 6:
+          world.cellSet(tileX,tileY,10);
+        break;
+        default:
+          world.cellSet(tileX,tileY,0);
+        break;
+      }
     },
     extinguish: function(world, tileX,tileY){
       var index = world.cellGet(tileX,tileY);
