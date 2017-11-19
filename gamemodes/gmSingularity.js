@@ -1,4 +1,4 @@
-var gm  = function(game){
+var GM  = function(game){
   this.game = game;
   this.name = "Singularity";
   this.apiData = {};
@@ -12,7 +12,7 @@ var gm  = function(game){
 }
 
 //will be executed when the game starts. Currently only executable via "/start" command
-gm.prototype.start = function(){
+GM.prototype.start = function(){
   if (this.stage == "lobby"){
     this.countdown = 5;
     this.stage = "countdown";
@@ -21,7 +21,7 @@ gm.prototype.start = function(){
 }
 
 //Will be called every step (60 times per second)
-gm.prototype.step = function(delta){
+GM.prototype.step = function(delta){
   this.second += delta/1000;
   if (this.stage == "countdown"){
     this.countdown -= delta/1000;
@@ -52,14 +52,14 @@ gm.prototype.step = function(delta){
 }
 
 //Will be executed when a player joins
-gm.prototype.playerJoined = function(player){
+GM.prototype.playerJoined = function(player){
   if (this.stage == "ingame"){
     player.popup("info","./html/info.html", {info: "Wait for the elevator!"});
   }
 }
 
 //return data for the API
-gm.prototype.getAPIData = function(){
+GM.prototype.getAPIData = function(){
   return {
     roundTime: this.roundStartTime != null ? (Date.now() - this.roundStartTime) : 0,
     stage: this.stage,
@@ -67,4 +67,4 @@ gm.prototype.getAPIData = function(){
   }
 }
 
-module.exports = gm;
+module.exports = GM;
