@@ -51,7 +51,7 @@ nw = {
       this.config = true;
     }
   },
-  inv_active(data){
+  invActive(data){
     if (this.game){
       if (data.slot < this.hands) {
         this.ent.sync.inventoryActive = data.slot;
@@ -217,14 +217,14 @@ function Client(socket) {
   socket.on('move', nw.move.bind(this));
   socket.on('chat', nw.chat.bind(this));
   socket.on('config', nw.config.bind(this));
-  socket.on('inv_active', nw.inv_active.bind(this));
+  socket.on('invActive', nw.invActive.bind(this));
   socket.on('useOnFloor', nw.useOnFloor.bind(this));
-  socket.on('ent_click', nw.onUseEnt.bind(this));
+  socket.on('entClick', nw.onUseEnt.bind(this));
   socket.on('disconnect', nw.disconnect.bind(this));
   socket.on('drop', nw.drop.bind(this));
-  socket.on('ent_drag', nw.entDrag.bind(this));
-  socket.on('ent_request', nw.entRequest.bind(this));
-  socket.on('inventory_combine', nw.inventoryCombine.bind(this));
+  socket.on('entDrag', nw.entDrag.bind(this));
+  socket.on('entRequest', nw.entRequest.bind(this));
+  socket.on('invCombine', nw.inventoryCombine.bind(this));
 
   if (this.bucket != null) {
     this.bucket.sendMegaPacketArea(this.socket);

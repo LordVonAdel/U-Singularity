@@ -13,7 +13,7 @@ function initNetworking(){
     if (ent != undefined){
       cam = ent;
     }else{
-      socket.emit('ent_request',data);
+      socket.emit('entRequest',data);
     }
   });
 
@@ -70,7 +70,7 @@ function initNetworking(){
   socket.on('ent_data',function(data){
     var ent = ents[data.id];
     if (ent == undefined){
-      socket.emit('ent_request',data.id);
+      socket.emit('entRequest',data.id);
       
       if (data.tx == undefined || data.spriteData == undefined){
         

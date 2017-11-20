@@ -82,9 +82,9 @@ function gameLoop(){
         socket.emit('useOnFloor', { x: tx, y: ty });
       }else{
         if (keyboardCheck(input.DRAG)){
-          socket.emit('ent_drag',{id: target.id});
+          socket.emit('entDrag',{id: target.id});
         }else{
-          socket.emit('ent_click',{id: target.id});
+          socket.emit('entClick',{id: target.id});
         }
       }
     }

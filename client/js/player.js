@@ -68,7 +68,7 @@ Player.prototype.step = function () {
   }*/
   if (mouseWheelUp()) {
     this.inventoryActive = (this.inventoryActive + 1) % this.hands;
-    socket.emit('inv_active', { slot: this.inventoryActive });
+    socket.emit('invActive', { slot: this.inventoryActive });
     this.updateUI();
   }
   if (mouseWheelDown()) {
@@ -76,7 +76,7 @@ Player.prototype.step = function () {
     if (this.inventoryActive < 0) {
       this.inventoryActive = this.hands - 1;
     }
-    socket.emit('inv_active', { slot: this.inventoryActive });
+    socket.emit('invActive', { slot: this.inventoryActive });
     this.updateUI();
   }
   if (keyboardCheckPressed(input.DROP)) {
@@ -129,7 +129,7 @@ Player.prototype.updateUI = function(){
 
     if (mouseOverUI(sprite.x, sprite.y, sprite.x + sprite.width, sprite.y + sprite.height, "INV"+i)){
       if (mouseCheckPressed(0)){
-        socket.emit('inventory_combine',i);
+        socket.emit('invCombine',i);
       }
     }
   }
