@@ -25,17 +25,8 @@ function gameLoop(){
   stageWorld.scale.x = renderer.width / view.width;
   stageWorld.scale.y = renderer.height / view.height;
 
-  //player
-  player.step();
-  player.updateUI();
-
-  //fps calculation
-  var fps = Math.floor(1000/(delta));
-  document.getElementById("fps").innerHTML = fps;
-  document.getElementById("mouse_position_ui").innerHTML = mouseX_ui+" , "+mouseY_ui;
-  document.getElementById("mouse_position_world").innerHTML = mouseX+" , "+mouseY;
-
   hoverlist = ["tile"];
+
   for (k in ents){
     ents[k].step(delta);
   }
@@ -67,31 +58,15 @@ function gameLoop(){
   $("#hover-index-"+targetIndex).attr("class", "active")
   var target = hoverlist[targetIndex];
 
-  /*
-  if (target != lasttarget){
-    if (lasttarget && typeof lasttarget != 'string'){
-      lasttarget.container.filters = [];
-      lasttarget = target;
-      target.container.filters = [hoverflilter];
-    }
-  }*/
+  //player
+  player.step({mouseX, mouseY, target});
+  player.updateUI();
 
-  if (target){
-    if (mouseCheckPressed(0)){
-      if (target == "tile"){
-        socket.emit('useOnFloor', { x: tx, y: ty });
-      }else{
-        if (keyboardCheck(input.DRAG)){
-          socket.emit('entDrag',{id: target.id});
-        }else{
-          socket.emit('entClick',{id: target.id});
-        }
-      }
-    }
-    if (mouseCheckPressed(2)){
-      console.log(target);
-    }
-  }
+  //fps calculation
+  var fps = Math.floor(1000/(delta));
+  document.getElementById("fps").innerHTML = fps;
+  document.getElementById("mouse_position_ui").innerHTML = mouseX_ui+" , "+mouseY_ui;
+  document.getElementById("mouse_position_world").innerHTML = mouseX+" , "+mouseY;
 
   //draw
   renderLoop();

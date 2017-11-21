@@ -1,5 +1,6 @@
 function Player() {
   var player = this;
+  this.gm = "default"
   this.id = -1;
   this.tileX = 1;
   this.tileY = 1;
@@ -41,48 +42,67 @@ function Player() {
   this.updateUI();
 }
 
-Player.prototype.step = function () {
-  var speed = player.speed;
-  if (!chat_is_open) {
-    if (keyboardCheck(input.UP)) {
-      socket.emit('move', { dir: 1 })
+Player.prototype.step = function (data) {
+
+  var {mouseX, mouseY, target} = data;
+  var tx = Math.floor(mouseX / 32);
+  var ty = Math.floor(mouseY / 32);
+
+  if (this.gm == "default"){ //Default gamemode
+    var speed = player.speed;
+    if (!chat_is_open) {
+      if (keyboardCheck(input.UP)) {
+        socket.emit('move', { dir: 1 })
+      }
+      if (keyboardCheck(input.RIGHT)) {
+        socket.emit('move', { dir: 0 })
+      }
+      if (keyboardCheck(input.DOWN)) {
+        socket.emit('move', { dir: 3 })
+      }
+      if (keyboardCheck(input.LEFT)) {
+        socket.emit('move', { dir: 2 })
+      }
     }
-    if (keyboardCheck(input.RIGHT)) {
-      socket.emit('move', { dir: 0 })
+
+    if (mouseWheelUp()) {
+      this.inventoryActive = (this.inventoryActive + 1) % this.hands;
+      socket.emit('invActive', { slot: this.inventoryActive });
+      this.updateUI();
     }
-    if (keyboardCheck(input.DOWN)) {
-      socket.emit('move', { dir: 3 })
+    if (mouseWheelDown()) {
+      this.inventoryActive -= 1;
+      if (this.inventoryActive < 0) {
+        this.inventoryActive = this.hands - 1;
+      }
+      socket.emit('invActive', { slot: this.inventoryActive });
+      this.updateUI();
     }
-    if (keyboardCheck(input.LEFT)) {
-      socket.emit('move', { dir: 2 })
+
+    if (keyboardCheckPressed(input.DROP)) {
+      socket.emit('drop', { x: tx, y: ty });
     }
-    //drawSprite(2,player.sprite,player.x,player.y);
-  }
-  /*
-  if (mouseCheckPressed(0)) {
-    var tx = Math.floor(mouseX / 32);
-    var ty = Math.floor(mouseY / 32);
-    if (input.hlast == null) {
-      socket.emit('useOnFloor', { x: tx, y: ty });
+
+    //Mouse over
+    if (target){
+      if (mouseCheckPressed(0)){
+        if (target == "tile"){
+          socket.emit('useOnFloor', { x: tx, y: ty });
+        }else{
+          if (keyboardCheck(input.DRAG)){
+            socket.emit('entDrag',{id: target.id});
+          }else{
+            socket.emit('entClick',{id: target.id});
+          }
+        }
+      }
+      if (mouseCheckPressed(2)){
+        console.log(target);
+      }
     }
-  }*/
-  if (mouseWheelUp()) {
-    this.inventoryActive = (this.inventoryActive + 1) % this.hands;
-    socket.emit('invActive', { slot: this.inventoryActive });
-    this.updateUI();
-  }
-  if (mouseWheelDown()) {
-    this.inventoryActive -= 1;
-    if (this.inventoryActive < 0) {
-      this.inventoryActive = this.hands - 1;
-    }
-    socket.emit('invActive', { slot: this.inventoryActive });
-    this.updateUI();
-  }
-  if (keyboardCheckPressed(input.DROP)) {
-    var tx = Math.floor(mouseX / 32);
-    var ty = Math.floor(mouseY / 32);
-    socket.emit('drop', { x: tx, y: ty });
+
+  }else if(this.gm == "spectator"){ //Spectator mode
+
   }
 }
 
