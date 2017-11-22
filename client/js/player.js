@@ -5,10 +5,17 @@ function Player() {
   this.tileX = 1;
   this.tileY = 1;
   this.speed = 3;
+
+  //default
   this.hands = 9;         //the number of hands the player have
   this.inventoryActive = 0;
   this.drag = false;
   this.hp = 0;
+
+  //spectator
+  this.viewDrag = false;
+  this.viewDragX = 0;
+  this.viewDragY = 0;
 
   this.hudInventorySlots = [];
   this.hudInventoryItems = [];
@@ -52,16 +59,16 @@ Player.prototype.step = function (data) {
     var speed = player.speed;
     if (!chat_is_open) {
       if (keyboardCheck(input.UP)) {
-        socket.emit('move', { dir: 1 })
+        socket.emit('move', { dir: 1 });
       }
       if (keyboardCheck(input.RIGHT)) {
-        socket.emit('move', { dir: 0 })
+        socket.emit('move', { dir: 0 });
       }
       if (keyboardCheck(input.DOWN)) {
-        socket.emit('move', { dir: 3 })
+        socket.emit('move', { dir: 3 });
       }
       if (keyboardCheck(input.LEFT)) {
-        socket.emit('move', { dir: 2 })
+        socket.emit('move', { dir: 2 });
       }
     }
 
@@ -102,7 +109,33 @@ Player.prototype.step = function (data) {
     }
 
   }else if(this.gm == "spectator"){ //Spectator mode
-
+    if (mouseCheckPressed(2)){
+      this.viewDrag = true;
+      this.viewDragX = mouseX;
+      this.viewDragY = mouseY;
+    }
+    if (this.viewDrag){
+      cam.x = this.viewDragX - mouseX;
+      cam.y = this.viewDragY - mouseY;
+      if (mouseCheckReleased(2)){
+        this.viewDrag = false;
+      }
+    }
+    if (!chat_is_open) {
+      var spd = 5;
+      if (keyboardCheck(input.UP)) {
+        cam.y -= spd;
+      }
+      if (keyboardCheck(input.RIGHT)) {
+        cam.x += spd;
+      }
+      if (keyboardCheck(input.DOWN)) {
+        cam.y += spd;
+      }
+      if (keyboardCheck(input.LEFT)) {
+        cam.x -= spd;
+      }
+    }
   }
 }
 
