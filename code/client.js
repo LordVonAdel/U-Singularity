@@ -179,6 +179,13 @@ nw = {
     this.ent.sync.inventory[index] = item.update(item2);
 
     this.shareSelf();
+  },
+  spectatePosition(data){
+    if (this.mode == "spectator"){
+      if (this.ent){
+        this.ent.teleport(data.x, data.y);
+      }
+    }
   }
 }
 
@@ -225,6 +232,7 @@ function Client(socket) {
   socket.on('entDrag', nw.entDrag.bind(this));
   socket.on('entRequest', nw.entRequest.bind(this));
   socket.on('invCombine', nw.inventoryCombine.bind(this));
+  socket.on('spectatePosition', nw.spectatePosition.bind(this));
 
   if (this.bucket != null) {
     this.bucket.sendMegaPacketArea(this.socket);
@@ -398,6 +406,13 @@ Client.prototype.lookAt = function(tileX, tileY){
   this.ent.changeImageIndex(0, this.direction);
 
   return this.direction;
+}
+
+//Changes the mode of the player (spectator, builder and that stuff)
+Client.prototype.changeMode = function(mode){
+  this.mode = mode;
+  this.msg("Changed your mode to "+mode);
+  this.shareSelf({mode: mode});
 }
 
 module.exports = Client;

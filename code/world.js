@@ -296,6 +296,7 @@ World.prototype.spawnEntity = function(type, x, y){
   return entity;
 }
 
+//Spawn Item
 World.prototype.spawnItem = function(x, y, item){
   var entity = new Entity(this, "item", x, y);
   entity.spawn();

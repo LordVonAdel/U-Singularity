@@ -72,6 +72,15 @@ module.exports = {
 
         sender.msg("Reload complete!")
       }
+    },
+    mode: {
+      permission: "admin.mode",
+      fun: function(sender, args){
+        var modelist = {0:"player", 1:"spectator" ,"player": "player", "spectator":"spectator"};
+        var m = modelist[args[1]];
+        if (m)
+          sender.changeMode(m);
+      }
     }
   }
 }

@@ -1,6 +1,6 @@
 function Player() {
   var player = this;
-  this.gm = "default"
+  this.mode = "player"
   this.id = -1;
   this.tileX = 1;
   this.tileY = 1;
@@ -55,7 +55,7 @@ Player.prototype.step = function (data) {
   var tx = Math.floor(mouseX / 32);
   var ty = Math.floor(mouseY / 32);
 
-  if (this.gm == "default"){ //Default gamemode
+  if (this.mode == "player"){ //Default gamemode
     var speed = player.speed;
     if (!chat_is_open) {
       if (keyboardCheck(input.UP)) {
@@ -108,7 +108,7 @@ Player.prototype.step = function (data) {
       }
     }
 
-  }else if(this.gm == "spectator"){ //Spectator mode
+  }else if(this.mode == "spectator"){ //Spectator mode
     if (mouseCheckPressed(2)){
       this.viewDrag = true;
       this.viewDragX = mouseX;
@@ -120,6 +120,7 @@ Player.prototype.step = function (data) {
       if (mouseCheckReleased(2)){
         this.viewDrag = false;
       }
+      socket.emit("spectatePosition", {x: cam.x, y: cam.y});
     }
     if (!chat_is_open) {
       var spd = 5;
