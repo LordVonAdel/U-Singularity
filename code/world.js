@@ -222,7 +222,18 @@ World.prototype.collisionCheck = function(tileX,tileY){
 
 //get array of solid ents on position
 World.prototype.collisionsGet = function(tileX, tileY){
-  return this.gridEntities.cellGet(tileX,tileY).filter((ent) => {return ent.collision});
+  if (this.isInWorld(tileX, tileY)){
+    return this.gridEntities.cellGet(tileX,tileY).filter((ent) => {return ent.collision});
+  }
+}
+
+//Checks if a tile is in the world
+World.prototype.isInWorld = function(x, y){
+  if (x >= 0 && y >= 0 && x < this.width && y < this.height){
+    return true;
+  }else{
+    return false;
+  }
 }
 
 //returns the distance between to points
