@@ -126,15 +126,19 @@ Player.prototype.step = function (data) {
       var spd = 5;
       if (keyboardCheck(input.UP)) {
         cam.y -= spd;
+        socket.emit("spectatePosition", {x: Math.floor(cam.x/32), y: Math.floor(cam.y/32)});
       }
       if (keyboardCheck(input.RIGHT)) {
         cam.x += spd;
+        socket.emit("spectatePosition", {x: Math.floor(cam.x/32), y: Math.floor(cam.y/32)});
       }
       if (keyboardCheck(input.DOWN)) {
         cam.y += spd;
+        socket.emit("spectatePosition", {x: Math.floor(cam.x/32), y: Math.floor(cam.y/32)});
       }
       if (keyboardCheck(input.LEFT)) {
         cam.x -= spd;
+        socket.emit("spectatePosition", {x: Math.floor(cam.x/32), y: Math.floor(cam.y/32)});
       }
     }
   }

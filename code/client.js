@@ -413,6 +413,11 @@ Client.prototype.changeMode = function(mode){
   this.mode = mode;
   this.msg("Changed your mode to "+mode);
   this.shareSelf({mode: mode});
+  if (mode == "spectator"){
+    this.ent.setHidden(true);
+  }else{
+    this.ent.setHidden(false);
+  }
 }
 
 module.exports = Client;

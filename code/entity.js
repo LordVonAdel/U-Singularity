@@ -247,14 +247,16 @@ Entity.prototype.moveDir = function(direction,speed){
     case 7: x++; y++; break; //south-west
   }
   var c = this.world.collisionsGet(x, y);
-  for (var i=0; i<c.length; i++){
-    var ent = c[i];
-    if (ent.ent.draggable){
-      ent.moveDir(direction, speed);
-      ent.clearDragger();
+  if (c){
+    for (var i=0; i<c.length; i++){
+      var ent = c[i];
+      if (ent.ent.draggable){
+        ent.moveDir(direction, speed);
+        ent.clearDragger();
+      }
     }
+    return this.moveTo(x,y,speed);
   }
-  return this.moveTo(x,y,speed);
 }
 
 //move onto a specific tile
