@@ -95,7 +95,7 @@ function Entity(world, type, tx, ty, extraData){
   this.updateBucket();
 }
 
-//clear the thing that is dragging this thing
+//Clear the thing that is dragging this thing
 Entity.prototype.clearDragger = function(){
   if (this.dragger != null){
     if (this.dragger.client){
@@ -106,14 +106,14 @@ Entity.prototype.clearDragger = function(){
   }
 }
 
-//set another thing which is now dragging this thing
+//Set another thing which is now dragging this thing
 Entity.prototype.setDragger = function(dragger){
   this.clearDragger();
   this.dragger = dragger;
   this.dragger.drag = this;
 }
 
-//called every step. Yes 60 times per second!
+//Called every step. Yes 60 times per second!
 Entity.prototype.step = function(delta){
   this.fire("onStep", delta);
   if (this.x != this.tx*32 || this.y != this.ty*32){
@@ -129,12 +129,12 @@ Entity.prototype.step = function(delta){
   }
 }
 
-//uhm... there is an animation system in here?
+//Uhm... there is an animation system in here?
 Entity.prototype.animate = function(delta){
   this.fire("onAnimation", delta);
 }
 
-//so you can interact with entitys. This happens if somebody dares to interact!
+//So you can interact with entitys. This happens if somebody dares to interact!
 Entity.prototype.use = function(user, item){
   this.fire("onClick", user, item);
   var itemType = res.items[item.type];
@@ -164,7 +164,7 @@ Entity.prototype.changeSprite = function(index, data){
   this.share({spriteData: this.sprites});
 }
 
-//change the image index of a sprite with a specific index
+//Change the image index of a sprite with a specific index
 Entity.prototype.changeImageIndex = function(index, data){
   var oldIndex = this.sprites[index].index;
   if (oldIndex != data){
@@ -186,7 +186,7 @@ Entity.prototype.setLight = function(index, data){
   this.share({lightData: this.lights});
 }
 
-//tell everybody near you how cool you are
+//Tell everybody near you how cool you are
 Entity.prototype.share = function(data){
   if (data){
     var obj = Object.assign({id: this.id},data);
@@ -200,7 +200,7 @@ Entity.prototype.share = function(data){
   }
 }
 
-//update because maybe something changed and you were not aware about that
+//Update because maybe something changed and you were not aware about that
 Entity.prototype.update = function(){
   this.updateBucket();
   this.fire("onUpdate");
@@ -232,7 +232,7 @@ Entity.prototype.destroy = function(){
   //now you can go into entity heaven
 }
 
-//move in an direction with a specific speed. The distance is one tile
+//Move in an direction with a specific speed. The distance is one tile
 Entity.prototype.moveDir = function(direction,speed){
   var x = this.tx;
   var y = this.ty;
@@ -259,13 +259,13 @@ Entity.prototype.moveDir = function(direction,speed){
   }
 }
 
-//move onto a specific tile
+//Move onto a specific tile
 Entity.prototype.moveTo = function(x,y,speed){
   this.speed = speed;
   return this.move(x,y);
 }
 
-//why are there so many move function!!?
+//Why are there so many move function!!?
 Entity.prototype.move = function(x,y){
   if (!this.world.collisionCheck(x,y) || this.noclip){
     this.world.gridEntFree(this.tx,this.ty,this);
@@ -294,7 +294,7 @@ Entity.prototype.move = function(x,y){
   }
 }
 
-//reveal everything about you, the clients should know
+//Reveal everything about you, the clients should know
 Entity.prototype.getClientData = function(){
   if (!this.isHidden)
     return {
@@ -353,7 +353,7 @@ Entity.prototype.fire = function(event, a, b, c){
   }
 }
 
-//sets or unset a state. A state can be for example: "burning"
+//Sets or unset a state. A state can be for example: "burning"
 Entity.prototype.setState = function(state, value){
   if (value == true){
     if (!this.states.includes(state)){
@@ -372,7 +372,7 @@ Entity.prototype.getState = function(state){
   return this.states.includes(state);
 }
 
-//toggles the state of a state
+//Toggles the state of a state
 Entity.prototype.toggleState = function(state){
   this.setState(state, !this.getState(state));
 }
@@ -419,7 +419,7 @@ Entity.prototype.impulse = function(x, y, speed){
   this.processImpulse();
 }
 
-//process impulse
+//Process impulse
 Entity.prototype.processImpulse = function(){
   var s = this.moveTo(this.tx + Math.sign(this.momentumX), this.ty + Math.sign(this.momentumY), this.speed);
   if (s){
