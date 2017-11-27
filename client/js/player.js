@@ -215,6 +215,17 @@ Player.prototype.getActiveItem = function(){
   return this.inventory[this.inventoryActive];
 }
 
+Player.prototype.updateMode = function(){
+  switch (this.mode){
+    case "player":
+      stageUI.visible = true;
+    break;
+    case "spectator":
+      stageUI.visible = false;
+    break;
+  }
+}
+
 Player.prototype.updateFOV = function(){
   grFOV.visible = useFOV;
   if (useFOV){
