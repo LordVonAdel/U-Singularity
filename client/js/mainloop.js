@@ -6,8 +6,14 @@ function gameLoop(){
   lastTime = Date.now();
 
   if (cam != null){
-    view.x = transition(view.x,cam.x+16-view.width/2,0.4,1);
-    view.y = transition(view.y,cam.y-view.height/2,0.4,1);
+    if (player.mode == "player"){
+      view.x = transition(view.x,cam.x+16-view.width/2,0.4,1);
+      view.y = transition(view.y,cam.y-view.height/2,0.4,1);
+    }
+    if (player.mode == "spectator"){
+      view.x = cam.x - view.width / 2;
+      view.y = cam.y - view.height / 2;
+    }
   }else{
     if (camId != null){
       var ent = ents[camId];
