@@ -184,6 +184,7 @@ nw = {
     if (this.mode == "spectator"){
       if (this.ent){
         this.ent.teleport(data.x, data.y);
+        this.updateBucket();
       }
     }
   }

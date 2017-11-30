@@ -120,7 +120,7 @@ Player.prototype.step = function (data) {
       if (mouseCheckReleased(2)){
         this.viewDrag = false;
       }
-      socket.emit("spectatePosition", {x: cam.x, y: cam.y});
+      socket.emit("spectatePosition", {x: Math.floor(cam.x/32), y: Math.floor(cam.y/32)});
     }
     if (!chat_is_open) {
       var spd = 5;
