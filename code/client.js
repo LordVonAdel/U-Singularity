@@ -418,6 +418,7 @@ Client.prototype.changeMode = function(mode){
     this.ent.setHidden(true);
   }else{
     this.ent.setHidden(false);
+    this.socket.emit('cam', this.ent.id);
   }
 }
 

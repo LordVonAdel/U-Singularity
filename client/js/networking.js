@@ -47,12 +47,14 @@ function initNetworking(){
   });
 
   socket.on('ent_spawn',function(data){
+    if (data == null){return;}
     var ent = new Entity(data.id,data.tx*32,data.ty*32,data);
     ent.update(data);
     ents[data.id] = ent;
   });
 
   socket.on('ent_data',function(data){
+    if (data == null){return;}
     var ent = ents[data.id];
     if (ent == undefined){
       socket.emit('entRequest',data.id);
