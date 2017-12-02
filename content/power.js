@@ -87,7 +87,7 @@ module.exports = {
     },
     debug_power(ent, item, user){
       if (ent.power_nw){
-        user.msg("I am member of network: " + ent.power_nw.id + "<br>That contains " + ent.power_nw.members.length + " members");
+        user.msg("I am member of network: " + ent.power_nw.id + "<br>It contains " + ent.power_nw.members.length + " members");
       }else{
         user.msg("I am not part of a power network!");
       }

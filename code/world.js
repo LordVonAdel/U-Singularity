@@ -36,7 +36,7 @@ function World(game){
     power: new PowerSystem(this),
     atmos: new Atmos(this)
   };
-  for (var k in this.systems){
+  for (var k in this.systems)
     console.log("[World]Initialized " + this.systems[k].modulename);
   }
 

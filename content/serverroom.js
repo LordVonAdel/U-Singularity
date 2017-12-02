@@ -1,7 +1,7 @@
 module.exports = {
   tiles:{
-    101: {"id":101, "name":"serverroom.floor_lampertz","collision":false, "image":"tiles/tile_floor_lampertz.png"},
-    102: {"id":102, "name":"serverroom.wall_lampertz" ,"collision":true , "image":"tiles/tile_wall_lampertz.png" ,"connectionType":"perspective" ,"connectionGroup": "lampertz"},
+    101: {"name":"serverroom.floor_lampertz","collision":false, "image":"tiles/tile_floor_lampertz.png"},
+    102: {"name":"serverroom.wall_lampertz" ,"collision":true , "image":"tiles/tile_wall_lampertz.png" ,"connectionType":"perspective" ,"connectionGroup": "lampertz"},
   },
   items:{
     lampertz: {"id":"lampertz" ,"name":"Lampertz Plating","onUseFloor":"build_lampertz","image":"items/item_lampertz.png"}
