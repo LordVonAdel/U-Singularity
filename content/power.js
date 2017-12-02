@@ -104,6 +104,7 @@ module.exports = {
       collision: true,
       onInit(){
         this.power_nw = null;
+        this.power_voltage = this.sync.voltage;
         this.capacity = 1000;
       },
       onUpdate(){
@@ -115,6 +116,12 @@ module.exports = {
             this.power_nw = cable.power_nw;
           }
         }
+        this.power_voltage = this.sync.voltage;
+      },
+      onStep(delta){
+        if (this.power_nw){
+
+        }
       }
     },
     cable_red: {
@@ -122,6 +129,7 @@ module.exports = {
       sync: {e: false, n: false, w: false, s: false, u: false}, //u = is Underground?
       image: [{number: 4, source: "objects/cable_red.png", width: 32, height: 32, visible: false}],
       onInit(){
+        this.powerResistance = 1;
         var power = this.world.systems.power;
         if (power){
           this.power_nw = power.createNetwork(this);
