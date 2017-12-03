@@ -3,10 +3,12 @@ const World = require("./world.js");
 const Entity = require("./entity.js");
 const fs = require("fs");
 
-function Game(maps, gamemode, gameConfig){
+function Game(maps, gamemode, gameConfig, index){
   this.clients = [];
   this.worlds = [];
   this.config = gameConfig;
+  this.index = index;
+
   //Load a map
   for (var i = 0; i < maps.length; i++){
     world = new World(this);
@@ -18,8 +20,9 @@ function Game(maps, gamemode, gameConfig){
   if (fs.existsSync(path)){
     var GM = require(path);
     this.gamemode = new GM(this);
+    console.log("[Game:"+this.index+"]Started and using gamemode "+this.gamemode.name);
   }else{
-    console.error("[Game]Gamemode not found: "+gamemode);
+    console.error("[Game:"+this.index+"]Gamemode not found: "+gamemode);
   }
 }
 
@@ -34,7 +37,7 @@ Game.prototype.broadcast = function(event, data){
 Game.prototype.addPlayer = function(player){
   if (this.config.playerLimit <= this.clients.length){
     player.kick("Sorry", "The player limit of this server have been already reached! Sorry... Try again later");
-    console.log("[Game]Player can't connect because the lobby is full!");
+    console.log("[Game:"+this.index+"]Player can't connect because the lobby is full!");
     return false;
   }
   player.game = this;

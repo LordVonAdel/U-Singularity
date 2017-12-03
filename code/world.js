@@ -28,8 +28,10 @@ function World(game){
   }, this);
   this.game = game;
 
-  console.log("[World]Initialized World");
-  console.log("[World]Using "+this.buckets.width+"x"+this.buckets.height+" ("+this.buckets.width*this.buckets.height+") buckets");
+  this.consolePrefix = "[Game:"+game.index+"-World:0]";
+
+  console.log(this.consolePrefix+"Initialized World");
+  console.log(this.consolePrefix+"Using "+this.buckets.width+"x"+this.buckets.height+" ("+this.buckets.width*this.buckets.height+") buckets");
 
   //Initializing systems
   this.systems = {
@@ -37,7 +39,7 @@ function World(game){
     atmos: new Atmos(this)
   };
   for (var k in this.systems){
-    console.log("[World]Initialized " + this.systems[k].modulename);
+    console.log(this.consolePrefix+"Initialized " + this.systems[k].modulename);
   }
 
 }

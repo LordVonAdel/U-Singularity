@@ -60,7 +60,7 @@ loader.auto(function(){ //load all things from the modules directory
 
   for(var i = 0; i < config.games.length; i++){
     var cGame = config.games[i];
-    games[i] = new Game(cGame.maps, cGame.gamemode, cGame);
+    games[i] = new Game(cGame.maps, cGame.gamemode, cGame, i);
   }
   require("./startup.js");
   

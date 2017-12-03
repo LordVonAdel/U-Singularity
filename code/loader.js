@@ -125,7 +125,7 @@ var res = { //object with every dynamic loaded content, excepts maps and command
 //this thing loads all content found in one file
 function load(filename,callback){
 
-  function logLoad(num,key,filename){
+  function logLoad(num, key, filename){
     if (num[key] > 0){
       console.log("[Loader]Loaded "+num[key]+" "+key+" from "+filename)
     }
@@ -169,7 +169,6 @@ function load(filename,callback){
     items: 0,
     actions: 0,
     commands: 0,
-    actions: 0,
     objects: 0
   };
   if (ext == ".js"){
@@ -222,6 +221,7 @@ function load(filename,callback){
 
 //loads all the things of the modules directory
 function auto(callback){
+  console.log("[Loader]---Start auto load!---");
   var starttime = Date.now();
   fs.readdir( "./content", function( err, files ){
     if(err){
@@ -235,6 +235,12 @@ function auto(callback){
       load(file, function(){
         ind++
         if (ind >= num){
+          console.log("[Loader]---Finished auto load!---");
+          console.log("[Loader]Registered tiles: "+Object.keys(res.tiles).length);
+          console.log("[Loader]Registered items: "+Object.keys(res.items).length);
+          console.log("[Loader]Registered actions: "+Object.keys(res.actions).length);
+          console.log("[Loader]Registered commands: "+Object.keys(commands).length);
+          console.log("[Loader]Registered objects: "+Object.keys(res.objects).length);
           console.log("[Loader]Loaded all content in " + (Date.now() - starttime) + "ms");
           if(callback){
             callback();
@@ -246,20 +252,26 @@ function auto(callback){
 }
 
 function loadClasses(){
+  console.log("[Loader]Reading classes from file...");
   try {
     var doc = yaml.safeLoad(fs.readFileSync('./config/classes.yml', 'utf8'));
     res.classes = doc;
+    var keys = Object.keys(res.classes);
+    console.log("[Loader]Loaded "+keys.length+" classes: "+keys.join(", "));
   } catch (e) {
-    console.log(e);
+    console.error("[Loader]Classes: ", e);
   }
 }
 
 function loadConfig(){
+  console.log("[Loader]Reading config from file...");
   try {
     var doc = yaml.safeLoad(fs.readFileSync('./config/config.yml', 'utf8'));
     config = doc;
+    console.log("[Loader]Loaded config");
+    console.log("[Loader]Found "+config.games.length+" game configurations");
   } catch (e) {
-    console.log(e);
+    console.error("[Loader]Config: ", e);
   }
 }
 
