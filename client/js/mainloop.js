@@ -1,6 +1,10 @@
 var lasttarget = null;
+var isGettingTime = false; //set this to true, when you want to see the time needed for the next frame in the console.
 
 function gameLoop(){
+
+  if (isGettingTime)
+    console.time();
 
   var delta = Date.now() - lastTime;
   lastTime = Date.now();
@@ -77,8 +81,6 @@ function gameLoop(){
   //draw
   renderLoop();
 
-  //repeat!
-  requestAnimationFrame(gameLoop);
   if (keyboardCheckPressed(13)){
     chat_is_open = !chat_is_open;
     if (chat_is_open){
@@ -92,4 +94,11 @@ function gameLoop(){
     }
   }
   input.next();
+
+  if (isGettingTime){
+    console.timeEnd();
+    isGettingTime = false;
+  }
+  //repeat!
+  requestAnimationFrame(gameLoop);
 }

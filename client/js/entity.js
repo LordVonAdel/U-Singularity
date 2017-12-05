@@ -73,10 +73,13 @@ Entity.prototype.update = function(data){
 
 Entity.prototype.step = function(delta){
   if (player.mode == "spectator" && this == cam){return false;}
-  this.x += Math.sign(this.tx*32-this.x)*this.speed*(delta/10);
-  this.y += Math.sign(this.ty*32-this.y)*this.speed*(delta/10);
-  if (Math.abs(this.tx*32-this.x)<this.speed){this.x = this.tx*32}
-  if (Math.abs(this.ty*32-this.y)<this.speed){this.y = this.ty*32}
+
+  var spd = this.speed*(delta/10);
+
+  this.x += Math.sign(this.tx*32-this.x)*spd;
+  this.y += Math.sign(this.ty*32-this.y)*spd;
+  if (Math.abs(this.tx*32-this.x)<spd){this.x = this.tx*32}
+  if (Math.abs(this.ty*32-this.y)<spd){this.y = this.ty*32}
 
   this.container.x = this.x;
   this.container.y = this.y;
