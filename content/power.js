@@ -74,7 +74,6 @@ module.exports = {
         case 0: a = "w"; break;
         case 1: a = "s"; break;
         case 2: a = "e"; break;
-        case 3: a = "n"; break;
         default: a = "n"; break;
       }
       if (!cable.sync[a]){
@@ -137,18 +136,15 @@ module.exports = {
         var tile = world.cellGet(this.tx, this.ty);
         if (tile == 10){
           this.sync.u = true;
-          console.log("Cable is underground");
         }
       },
       onUpdate(){
-        console.log("update cable");
         if (this.sync.u){
           var tile = world.cellGet(this.tx, this.ty);
           if (tile == 10){
             this.setHidden(false);
           }else{
             this.setHidden(true);
-            console.log("Hide underground cable");
           }
         }
 
