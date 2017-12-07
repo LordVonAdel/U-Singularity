@@ -106,6 +106,13 @@ module.exports = {
         this.power_voltage = this.sync.voltage;
         this.capacity = 1000;
       },
+      onStep(delta){
+        if (this.mode == 0){
+          if (this.power_nw){
+            this.sync.energy -= 1000/delta;
+          }
+        }
+      },
       onUpdate(){
         var cables = this.world.getEntsByPosition(this.tx, this.ty).filter(function(ent){return (ent.power_nw)});
         for (var i = 0; i < cables.length; i++){
