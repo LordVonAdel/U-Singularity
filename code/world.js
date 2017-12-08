@@ -306,6 +306,16 @@ World.prototype.spawnEntity = function(type, x, y){
     entity.spawn();
     this.nextEntId ++;
   }
+
+  //update other ents on this cell
+  var ents = this.gridEntities.cellGet(x, y);
+  for (var i = 0; i < ents.length; i++){
+    var ent = ents[i];
+    if (ent != entity){
+      ent.update();
+    }
+  }
+
   return entity;
 }
 

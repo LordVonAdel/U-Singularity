@@ -114,7 +114,7 @@ Player.prototype.step = function (data) {
       this.viewDragX = mouseX;
       this.viewDragY = mouseY;
     }
-    if (this.viewDrag){
+    if (this.viewDrag && cam){
       cam.x = cam.x + (this.viewDragX - mouseX);
       cam.y = cam.y + (this.viewDragY - mouseY);
       if (mouseCheckReleased(2)){
