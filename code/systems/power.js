@@ -15,8 +15,13 @@ PowerSystem.prototype.connectNetworks = function(network1, network2){
       network1.members.push(mem);
       mem.power_nw = network1;
     }
+    for (var i = 0; i < network1.members.length; i++){
+      var mem = network1.members[i];
+      mem.update();
+    }
     network2.destroy();
   }
+  network1.update();
 }
 
 //This creates a new network and gives it its first member
@@ -43,6 +48,7 @@ function Network(system){
   this.resistance = 0;
   this.use = 0;
   this.flow = 0;
+  this.saturation = 0;
   system.nextNwId ++;
 }
 
@@ -67,9 +73,9 @@ Network.prototype.removeMember = function(entity){
   for (var i = 0; i < this.members.length; i++){
     this.members[i].update();
   }
+  this.update();
   this.members = [];
   this.destroy();
-  this.update();
 }
 
 //Adds a member to this network
@@ -105,7 +111,10 @@ Network.prototype.update = function(){
 
   flow -= resistance;
 
-  var covered = Math.min(use / flow, 1);
+  var covered = Math.min(flow / use, 1);
+  if (flow == 0){
+    covered = 0;
+  }
 
   //If the values differ, say your members that they have changed
   if (this.resistance != resistance || this.voltage != voltage || this.use != use || this.flow != flow){
@@ -113,6 +122,7 @@ Network.prototype.update = function(){
     this.voltage = voltage;
     this.use = use;
     this.flow = flow;
+    this.saturation = covered;
     for (var i = 0; i < this.members.length; i++){
       var member = this.members[i];
       member.fire("onPowerChange", covered);

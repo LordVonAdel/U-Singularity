@@ -91,7 +91,8 @@ module.exports = {
                 +"<br>Voltage: "+ent.power_nw.voltage
                 +"<br>Resistance: "+ent.power_nw.resistance
                 +"<br>Flow: "+ent.power_nw.flow
-                +"<br>Use: "+ent.power_nw.use);
+                +"<br>Use: "+ent.power_nw.use
+                +"<br>Network saturation: "+(ent.power_nw.saturation)*100+"%");
       }else{
         user.msg("I am not part of a power network!");
       }

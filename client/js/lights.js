@@ -49,18 +49,24 @@ LightController.prototype.render = function(){
 
         var len = data.patternTime || 1000;
 
-        var intensity = data.intensity || 0.8;
-        var time = ((Date.now() % len)/len);
-        var pattern = data.pattern || "X";
-        var current = Math.floor(pattern.length * time);
-        var char = pattern.charAt(current);
-      
-        var int = parseInt(char);
-        if (!isNaN(char)){
-          intensity = (int / 10) * (data.intensity || 0.8);
+        if (data.intensity != undefined){
+          var intensity = data.intensity;
         }else{
-          if (char == "X"){intensity = (data.intensity || 0.8);}
-          if (char == "-"){intensity = 0;}
+          intensity = 0.8;
+        }
+        if (intensity != 0){
+          var time = ((Date.now() % len)/len);
+          var pattern = data.pattern || "X";
+          var current = Math.floor(pattern.length * time);
+          var char = pattern.charAt(current);
+        
+          var int = parseInt(char);
+          if (!isNaN(char)){
+            intensity = (int / 10) * (data.intensity || 0.8);
+          }else{
+            if (char == "X"){intensity = (data.intensity || 0.8);}
+            if (char == "-"){intensity = 0;}
+          }
         }
 
         spr.alpha = intensity;

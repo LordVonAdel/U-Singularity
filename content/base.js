@@ -236,9 +236,11 @@ module.exports = {
     },
     wall_lamp: {
       wallMounted: true,
-      power_use: 0.2,
       layer: 7,
-      image: [{number: 8, source: "objects/wall_lamp.png", width:32, height: 32}],
+      image: [{number: 8, source: "objects/wall_lamp.png", width: 32, height: 32}],
+      onInit(){
+        this.power_use = 0.2;
+      },
       onUpdate(){
         var cables = this.world.getEntsByPosition(this.tx, this.ty).filter(function(ent){return (ent.power_nw)});
 

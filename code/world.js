@@ -309,10 +309,12 @@ World.prototype.spawnEntity = function(type, x, y){
 
   //update other ents on this cell
   var ents = this.gridEntities.cellGet(x, y);
-  for (var i = 0; i < ents.length; i++){
-    var ent = ents[i];
-    if (ent != entity){
-      ent.update();
+  if (ents){
+    for (var i = 0; i < ents.length; i++){
+      var ent = ents[i];
+      if (ent != entity){
+        ent.update();
+      }
     }
   }
 

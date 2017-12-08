@@ -35,16 +35,14 @@ module.exports = {
     },
     bucket: {
       fun: function(sender, args){
-        var playernum = 0;
-        var entnum = 0;
-        for (k in sender.bucket.players){ playernum ++}
-        for (k in sender.bucket.entities){ entnum ++}
+        var playernum = Object.keys(sender.bucket.players).length;
+        var entnum = Object.keys(sender.bucket.objects).length;
         sender.msg(
           `Current Bucket
           <br>Position: ${sender.bucket.x}, ${sender.bucket.y}
           <br>Players: ${playernum}
           <br>Entities: ${entnum}
-          `)
+          `);
       }
     }
   }

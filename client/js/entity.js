@@ -15,6 +15,7 @@ function Entity(id, x, y, data){
   this.container = new PIXI.Container();
   this.container.x = this.x;
   this.container.y = this.y;
+  /*
   for (var i=0; i < this.spriteData.length; i++){
     var sData = this.spriteData[i];
     var spr = {
@@ -32,6 +33,7 @@ function Entity(id, x, y, data){
     sprite.x = spr.x;
     sprite.y = spr.y;
   }
+  */
 
   stageEntities.children[this.layer].addChild(this.container);
 
@@ -52,11 +54,15 @@ Entity.prototype.update = function(data){
   }
   if (data.spriteData != undefined){
     for (var i=0; i<this.spriteData.length; i++){
-      var sprite = this.sprites[sprite];
+      //var sprite = this.sprites[sprite];
+      var sprite = this.sprites[i];
       var sprData = data.spriteData[i];
       var path = subfolder+"sprites/"+sprData.source;
       if (!sprite){
-        sprite = new PIXI.Sprite(getTextureFrame(path,sprData.index, sprData.width || 32, sprData.height || 32));
+        sprite = new PIXI.Sprite(getTextureFrame(path, sprData.index, sprData.width || 32, sprData.height || 32));
+        //this.sprites[sprite] = sprite;
+        this.sprites[i] = sprite;
+        this.container.addChild(sprite);
       }
       //sprite.setTexture(getTextureFrame(path, data.index, data.width || 32, data.height || 32));
     }
@@ -116,8 +122,8 @@ Entity.prototype.step = function(delta){
       this.container.swapChildren(this.spriteBurnBack, this.sprites[0]);
       this.container.addChild(this.spriteBurnFront);
     }
-    var current_time = (Date.now() % 500);
-    var frame = Math.floor(current_time / 125);
+    var currentTime = (Date.now() % 500);
+    var frame = Math.floor(currentTime / 125);
     this.spriteBurnFront.visible = true;
     this.spriteBurnBack.visible = true;
     this.spriteBurnFront.setTexture(getTextureFrame("sprites/effects/eff_fire_human_front.png",frame,32,32));
