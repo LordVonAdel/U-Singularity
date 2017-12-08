@@ -236,10 +236,10 @@ module.exports = {
     },
     wall_lamp: {
       wallMounted: true,
+      power_use: 0.2,
       layer: 7,
       image: [{number: 8, source: "objects/wall_lamp.png", width:32, height: 32}],
       onUpdate(){
-        this.setLight(0, {radius: 256, color: 0xfffefe, intensity: 0.9});
         var cables = this.world.getEntsByPosition(this.tx, this.ty).filter(function(ent){return (ent.power_nw)});
 
         for (var i = 0; i < cables.length; i++){
@@ -249,6 +249,9 @@ module.exports = {
             this.power_nw = cable.power_nw;
           }
         }
+      },
+      onPowerChange(income){
+        this.setLight(0, {radius: 256, color: 0xfffefe, intensity: 0.9 * income});
       }
     },
     wall_lamp_warning: {

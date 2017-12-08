@@ -86,7 +86,12 @@ module.exports = {
     },
     debug_power(ent, item, user){
       if (ent.power_nw){
-        user.msg("I am member of network: " + ent.power_nw.id + "<br>It contains " + ent.power_nw.members.length + " members");
+        user.msg("I am member of network: " + ent.power_nw.id 
+                +"<br>It contains "+ent.power_nw.members.length+" members"
+                +"<br>Voltage: "+ent.power_nw.voltage
+                +"<br>Resistance: "+ent.power_nw.resistance
+                +"<br>Flow: "+ent.power_nw.flow
+                +"<br>Use: "+ent.power_nw.use);
       }else{
         user.msg("I am not part of a power network!");
       }
@@ -104,14 +109,11 @@ module.exports = {
       onInit(){
         this.power_nw = null;
         this.power_voltage = this.sync.voltage;
+        this.power_give = 40;
         this.capacity = 1000;
       },
       onStep(delta){
-        if (this.mode == 0){
-          if (this.power_nw){
-            this.sync.energy -= 1000/delta;
-          }
-        }
+        //TODO make battery work
       },
       onUpdate(){
         var cables = this.world.getEntsByPosition(this.tx, this.ty).filter(function(ent){return (ent.power_nw)});
@@ -134,6 +136,7 @@ module.exports = {
       layer: 1,
       sync: {e: false, n: false, w: false, s: false, u: false}, //u = is Underground?
       image: [{number: 4, source: "objects/cable_red.png", width: 32, height: 32, visible: false}],
+      power_resistance: 0.1,
       onInit(){
         this.powerResistance = 1;
         var power = this.world.systems.power;

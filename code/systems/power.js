@@ -40,7 +40,9 @@ function Network(system){
   this.members = [];
   this.id = system.nextNwId;
   this.voltage = 0;
-  this.resitance = 0;
+  this.resistance = 0;
+  this.use = 0;
+  this.flow = 0;
   system.nextNwId ++;
 }
 
@@ -87,23 +89,33 @@ Network.prototype.step = function(delta){
 
 //Update the network
 Network.prototype.update = function(){
-  var resitance = 0;
-  var voltage = 0;
+  var resistance = 0; //The resistance of the network. Will lower the energy there
+  var voltage = 0; //The voltage in the network
+  var use = 0; //The power that is requested by all members
+  var flow = 0; //The power that is given by the members
 
-  //Calculate current voltage and resitance in the network
+  //Calculate current voltage and resistance in the network
   for (var i = 0; i < this.members.length; i++){
     var ent = this.members[i];
     voltage = Math.max(ent.power_voltage || 0, voltage);
-    resitance += ent.power_resitance || 0;
+    resistance += ent.power_resistance || 0;
+    use += ent.power_use || 0;
+    flow += ent.power_give || 0;
   }
 
+  flow -= resistance;
+
+  var covered = Math.min(use / flow, 1);
+
   //If the values differ, say your members that they have changed
-  if (this.resitance != resitance || this.voltage != voltage){
-    this.resitance = resitance;
+  if (this.resistance != resistance || this.voltage != voltage || this.use != use || this.flow != flow){
+    this.resistance = resistance;
     this.voltage = voltage;
+    this.use = use;
+    this.flow = flow;
     for (var i = 0; i < this.members.length; i++){
       var member = this.members[i];
-      member.fire("onPowerChange");
+      member.fire("onPowerChange", covered);
     }
   }
 }
