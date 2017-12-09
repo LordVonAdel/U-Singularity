@@ -54,13 +54,11 @@ Entity.prototype.update = function(data){
   }
   if (data.spriteData != undefined){
     for (var i=0; i<this.spriteData.length; i++){
-      //var sprite = this.sprites[sprite];
       var sprite = this.sprites[i];
       var sprData = data.spriteData[i];
       var path = subfolder+"sprites/"+sprData.source;
       if (!sprite){
         sprite = new PIXI.Sprite(getTextureFrame(path, sprData.index, sprData.width || 32, sprData.height || 32));
-        //this.sprites[sprite] = sprite;
         this.sprites[i] = sprite;
         this.container.addChild(sprite);
       }
