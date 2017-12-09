@@ -64,7 +64,7 @@ Entity.prototype.update = function(data){
         this.sprites[i] = sprite;
         this.container.addChild(sprite);
       }
-      //sprite.setTexture(getTextureFrame(path, data.index, data.width || 32, data.height || 32));
+      sprite.setTexture(getTextureFrame(path, data.index, data.width || 32, data.height || 32));
     }
   }
   if (data.lightData != undefined){
