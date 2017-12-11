@@ -29,11 +29,10 @@ player:
 
 #A server can host multiple rounds at the same time
 games:
-  - gamemode: "gmSingularity"
+  - name: "Default Game"
     maps:
     - "lab"
     playerLimit: 20
-#A second game would look like this:
-#  - gamemode: "creative"
-#    maps:
-#    - "lab"
+    gamemode: "gmSingularity"
+    gamemodeConfig:
+      elevatorTime: 300

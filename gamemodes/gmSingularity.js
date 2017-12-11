@@ -1,4 +1,4 @@
-var GM  = function(game){
+var GM  = function(game, gmConfig){
   this.game = game;
   this.name = "Singularity";
   this.apiData = {};
@@ -9,6 +9,7 @@ var GM  = function(game){
     "chemist", "physicist", "engineer"
   ]
   this.second = 0; //Used to send things only every second and not every tick!
+  this.elevatorRemainTime = gmConfig.elevatorTime || 30;
 }
 
 //will be executed when the game starts. Currently only executable via "/start" command
@@ -30,6 +31,7 @@ GM.prototype.step = function(delta){
       this.roundStartTime = Date.now();
       this.game.showGlobalPopup("countdown", "");
       this.game.sendChatMessage("Experiment starts!");
+      this.game.sendChatMessage("Emergency elevator arrives in "+this.elevatorRemainTime+" seconds");
       this.game.showGlobalPopupFromFile("info", "./html/info.html", {info: "Wait for the elevator!"});
       var lamps = this.game.worlds[0].getEntsByType("wall_lamp_warning");
       lamps.forEach(function(lamp){
@@ -46,9 +48,10 @@ GM.prototype.step = function(delta){
       }
     }
   }
-  if (this.second >= 1){
-    this.second = 0;
+  if (this.stage == "ingame"){
+    this.elevatorRemainTime -= delta/1000;
   }
+  this.second %= 1;
 }
 
 //Will be executed when a player joins

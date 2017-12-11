@@ -21,7 +21,8 @@ var http = require("http").createServer(function( req, res){
         gameList.push(Object.assign({
           playersOnline: game.players.length,
           gamemode: game.gamemode.name,
-          playerLimit: game.config.playerLimit
+          playerLimit: game.config.playerLimit,
+          name: game.name
         }, game.gamemode.getAPIData()));
       }
 

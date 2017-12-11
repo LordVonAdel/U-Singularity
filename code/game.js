@@ -19,7 +19,7 @@ function Game(maps, gamemode, gameConfig, index){
   var path = __dirname + "./../gamemodes/"+gamemode+".js"
   if (fs.existsSync(path)){
     var GM = require(path);
-    this.gamemode = new GM(this);
+    this.gamemode = new GM(this, gameConfig.gamemodeConfig || {});
     console.log("[Game:"+this.index+"]Started and using gamemode "+this.gamemode.name);
   }else{
     console.error("[Game:"+this.index+"]Gamemode not found: "+gamemode);
