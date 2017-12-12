@@ -10,6 +10,7 @@ var GM  = function(game, gmConfig){
   ]
   this.second = 0; //Used to send things only every second and not every tick!
   this.elevatorRemainTime = gmConfig.elevatorTime || 30;
+  this.timerHasSendThisInterval = true;
 }
 
 //will be executed when the game starts. Currently only executable via "/start" command
@@ -50,6 +51,14 @@ GM.prototype.step = function(delta){
   }
   if (this.stage == "ingame"){
     this.elevatorRemainTime -= delta/1000;
+    if (Math.floor(this.elevatorRemainTime) % 30 == 0){
+      if (this.timerHasSendThisInterval == false){
+        this.game.sendChatMessage(Math.floor(this.elevatorRemainTime)+" seconds remain!");
+        this.timerHasSendThisInterval = true;
+      }
+    }else{
+      this.timerHasSendThisInterval = false;
+    }
   }
   this.second %= 1;
 }
