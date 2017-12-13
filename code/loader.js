@@ -48,7 +48,7 @@ var res = { //object with every dynamic loaded content, excepts maps and command
         client: null, 
         hp: 100, 
         alive: true, 
-        inventory:{},
+        inventory: null, //will be replaced with an object in init event
         inventoryActive: 0,
         dmgSuffocation: 0,
         dmgBrute: 0,
@@ -87,6 +87,7 @@ var res = { //object with every dynamic loaded content, excepts maps and command
         }
       },
       "onInit": function(){
+        this.sync.inventory = {};
         this.setLight(0, {color: 0xffffff, radius: 128, intensity: 1});
       },
       "onStep": function(delta){

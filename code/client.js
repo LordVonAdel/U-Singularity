@@ -32,7 +32,7 @@ nw = {
       this.job = data.job;
       var cls = loader.res.classes[this.job];
       if (!cls){
-        console.error("Unkown job: "+this.job);
+        console.error("Unkown class: "+this.job);
         return false;
       }
       var img = this.sex == "m" ? cls["sprite-male"] : cls["sprite-female"];
