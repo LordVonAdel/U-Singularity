@@ -90,25 +90,30 @@ World.prototype.setSpawn = function(x, y){
 
 //saves the world to a file
 World.prototype.save = function(filename){
+  this.saveRegion(0, 0, this.width, this.height, filename);
+}
+
+World.prototype.saveRegion = function(x, y, width, height, filename){
   var obj = {};
   var ret = false;
-  obj.grid = this.grid.save();
-  //obj.spawnX = this.spawnX;
-  //obj.spawnY = this.spawnY;
-  obj.worldWidth = this.width;
-  obj.worldHeight = this.height;
+  obj.grid = this.grid.saveRegion(x, y, width, height);
+  obj.worldWidth = width;
+  obj.worldHeight = height;
   obj.nextEntId = nextEntId;
   obj.spawnX = this.spawnX;
   obj.spawnY = this.spawnY;
   var ents = {}
   for (var key in this.ents){
-    ents[key] = {
-      x: this.ents[key].x,
-      y: this.ents[key].y,
-      tx: this.ents[key].tx,
-      ty: this.ents[key].ty,
-      type: this.ents[key].type,
-      sync: this.ents[key].sync
+    var ent = this.ents[key];
+    if (ent.tx >= x && ent.ty >= y && ent.tx < x + width && ent.ty < y + height){
+      ents[key] = {
+        x: this.ents[key].x,
+        y: this.ents[key].y,
+        tx: this.ents[key].tx,
+        ty: this.ents[key].ty,
+        type: this.ents[key].type,
+        sync: this.ents[key].sync
+      }
     }
   }
   obj.ents = ents;
