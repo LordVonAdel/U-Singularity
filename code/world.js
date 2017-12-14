@@ -93,6 +93,7 @@ World.prototype.save = function(filename){
   this.saveRegion(0, 0, this.width, this.height, filename);
 }
 
+//saves a region of the world
 World.prototype.saveRegion = function(x, y, width, height, filename){
   var obj = {};
   var ret = false;
