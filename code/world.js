@@ -132,6 +132,38 @@ World.prototype.saveRegion = function(x, y, width, height, filename){
   return ret;
 }
 
+//loads a region into the world from a file
+World.prototype.loadRegion = function(filename, x, y){
+  var that = this;
+  fs.readFile(filename,function(err, data){
+    if (err){
+      that.broadcast('chat',{msg: "Failed to load map: "+filename});
+    }else{
+      var obj = JSON.parse(data);
+      that.resize(obj.worldWidth, obj.worldHeight);
+      that.grid.loadRegion(obj.grid, x, y, obj.width);
+      var ents = obj.ents;
+      for (var k in ents) {
+        var spwn = ents[k];
+        var ent = that.spawnEntity(spwn.type, spwn.tx, spwn.ty);
+        ent.x = spwn.x;
+        ent.y = spwn.y;
+        if (!ent.ent){
+          console.error("There are things in this map, which we don't know what they are! ("+spwn.type+")");
+        }else{
+          if (spwn.sync == undefined){
+            
+          }else{
+            Object.assign(ent.sync, spwn.sync);
+          }
+          ent.update();
+        }
+      }
+      //that.broadcast('world',{w:that.width,h:that.height,str:that.grid.save()});
+    }
+  });
+}
+
 //clears the world
 World.prototype.clear = function(){
   this.broadcast('clear',{});
