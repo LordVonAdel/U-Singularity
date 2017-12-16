@@ -90,34 +90,7 @@ World.prototype.setSpawn = function(x, y){
 
 //saves the world to a file
 World.prototype.save = function(filename){
-  this.saveRegion(0, 0, this.width, this.height, filename);
-}
-
-//saves a region of the world
-World.prototype.saveRegion = function(x, y, width, height, filename){
-  var obj = {};
-  var ret = false;
-  obj.grid = this.grid.saveRegion(x, y, width, height);
-  obj.worldWidth = width;
-  obj.worldHeight = height;
-  obj.nextEntId = nextEntId;
-  obj.spawnX = this.spawnX;
-  obj.spawnY = this.spawnY;
-  var ents = {}
-  for (var key in this.ents){
-    var ent = this.ents[key];
-    if (ent.tx >= x && ent.ty >= y && ent.tx < x + width && ent.ty < y + height){
-      ents[key] = {
-        x: this.ents[key].x,
-        y: this.ents[key].y,
-        tx: this.ents[key].tx,
-        ty: this.ents[key].ty,
-        type: this.ents[key].type,
-        sync: this.ents[key].sync
-      }
-    }
-  }
-  obj.ents = ents;
+  var sav = this.saveRegion(0, 0, this.width, this.height);
   str = JSON.stringify(obj);
   var that = this;
   fs.writeFile(filename,str,"utf8",function(err){
@@ -132,34 +105,77 @@ World.prototype.saveRegion = function(x, y, width, height, filename){
   return ret;
 }
 
+//saves a region of the world. Returns it as ragion object
+World.prototype.saveRegion = function(x, y, width, height, anchorX, anchorY){
+
+  if (!anchorY){
+    var ax = x;
+    var ay = y;
+  }else{
+    var ax = anchorX;
+    var ay = anchorY;
+  }
+
+  var obj = {};
+  var ret = false;
+  obj.grid = this.grid.saveRegion(x, y, width, height);
+  obj.width = width;
+  obj.height = height;
+  obj.nextEntId = nextEntId;
+  obj.spawnX = this.spawnX;
+  obj.spawnY = this.spawnY;
+  obj.ax = ax;
+  obj.ay = ay;
+  var ents = {}
+
+  for (var key in this.ents){
+    var ent = this.ents[key];
+    if (ent.tx >= x && ent.ty >= y && ent.tx < x + width && ent.ty < y + height){
+      ents[key] = {
+        x: this.ents[key].x - ax,
+        y: this.ents[key].y - ay,
+        tx: this.ents[key].tx - ax * 32,
+        ty: this.ents[key].ty - ay * 32,
+        type: this.ents[key].type,
+        sync: this.ents[key].sync
+      }
+    }
+  }
+  obj.ents = ents;
+
+  return obj;
+}
+
+//loads a region into the world from an world object
+World.prototype.loadRegion = function(region, x, y){
+  this.grid.loadRegion(region.grid, x, y, region.width);
+  var ents = region.ents;
+  for (var k in ents) {
+    var spwn = ents[k];
+    var ent = this.spawnEntity(spwn.type, spwn.tx + region.ax, spwn.ty + region.ay);
+    ent.x = spwn.x + x*32;
+    ent.y = spwn.y + y*32;
+    if (!ent.ent){
+      console.error("There are things in this map, which we don't know what they are! ("+spwn.type+")");
+    }else{
+      if (spwn.sync){
+        Object.assign(ent.sync, spwn.sync);
+      }
+      ent.update();
+    }
+  }
+  this.resendRegion(x, y, region.width, region.height);
+}
+
 //loads a region into the world from a file
-World.prototype.loadRegion = function(filename, x, y){
+World.prototype.loadRegionFromFile = function(filename, x, y){
   var that = this;
   fs.readFile(filename,function(err, data){
     if (err){
       that.broadcast('chat',{msg: "Failed to load map: "+filename});
     }else{
       var obj = JSON.parse(data);
-      that.resize(obj.worldWidth, obj.worldHeight);
-      that.grid.loadRegion(obj.grid, x, y, obj.width);
-      var ents = obj.ents;
-      for (var k in ents) {
-        var spwn = ents[k];
-        var ent = that.spawnEntity(spwn.type, spwn.tx, spwn.ty);
-        ent.x = spwn.x;
-        ent.y = spwn.y;
-        if (!ent.ent){
-          console.error("There are things in this map, which we don't know what they are! ("+spwn.type+")");
-        }else{
-          if (spwn.sync == undefined){
-            
-          }else{
-            Object.assign(ent.sync, spwn.sync);
-          }
-          ent.update();
-        }
-      }
-      //that.broadcast('world',{w:that.width,h:that.height,str:that.grid.save()});
+      that.loadRegion(obj, x, y);
     }
   });
 }
@@ -198,7 +214,7 @@ World.prototype.load = function(filename){
     }else{
       that.clear();
       var obj = JSON.parse(data);
-      that.resize(obj.worldWidth, obj.worldHeight);
+      that.resize(obj.width, obj.height);
       that.grid.load(obj.grid);
       that.spawnX = +obj.spawnX || 0;
       that.spawnY = +obj.spawnY || 0;
@@ -304,6 +320,24 @@ World.prototype.broadcast = function(event, data){
     var player = this.game.clients[i];
     if (player.world == this){
       player.socket.emit(event, data);
+    }
+  }
+}
+
+//resends a region to the clients in there
+World.prototype.resendRegion = function(x, y, width, height){
+  var w = width / config.bucket.width;
+  var h = height / config.bucket.height;
+
+  var xx = Math.floor(x / config.bucket.width);
+  var yy = Math.floor(y / config.bucket.height);
+
+  for (var i = -1; i <= w; i++){
+    for (var j = -1; j <= h; j++){
+      var bucket = this.buckets.cellGet(xx + i, yy + j);
+      if (bucket){
+        bucket.resendRegion();
+      }
     }
   }
 }

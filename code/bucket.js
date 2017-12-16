@@ -82,5 +82,12 @@ Bucket.prototype.getClients = function(){
   return this.players;
 }
 
+//sends the full region again for the case of big changes
+Bucket.prototype.resendRegion = function(){
+  for (k in this.players){
+    this.sendMegaPacket(this.players[k].socket);
+  }
+}
+
 //and make it so requires can be used to get the bucket. Basic node.js stuff
 module.exports = Bucket;

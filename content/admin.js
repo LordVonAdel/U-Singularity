@@ -13,16 +13,10 @@ module.exports = {
       onUseEnt: "admin_locktoggle",
       actions:["admin_locktoggle"],
       range: 10
-    },
-    world_edit: {
-      name:"World Edit",
-      onUseFloor:"worldEdit",
-      image:"items/item_world_edit.png",
-      sync:{mode:0}
     }
   },
   actions: {
-    admin_locktoggle: function(ent, item){
+    admin_locktoggle(ent, item){
       if (ent.sync.isLocked != undefined){
         ent.sync.isLocked = !ent.sync.isLocked;
       }
@@ -32,7 +26,7 @@ module.exports = {
     give: {
       permission: "master.player.give",
       argNum: 1,
-      fun: function(sender,args){
+      fun(sender,args){
         if (loader.res.items[args[1]] != undefined) {
           var itm = item.create(args[1]);
           sender.give(itm);
@@ -43,7 +37,7 @@ module.exports = {
     },
     items: {
       permissions: "master.list.items",
-      fun: function(sender){
+      fun(sender){
         var msg = "List of items<br>Name | ID<br>";
         for (k in loader.res.items){
           var item = loader.res.items[k];
@@ -54,7 +48,7 @@ module.exports = {
     },
     reload: {
       permission: "admin.reload",
-      fun: function(sender,args){
+      fun(sender,args){
         loader.loadConfig();
         loader.loadClasses();
 
@@ -75,7 +69,7 @@ module.exports = {
     },
     mode: {
       permission: "admin.mode",
-      fun: function(sender, args){
+      fun(sender, args){
         var modelist = {0:"player", 1:"spectator" ,"player": "player", "spectator":"spectator"};
         var m = modelist[args[1]];
         if (m)

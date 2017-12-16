@@ -16,6 +16,7 @@ function Grid(width,height){
 
 //gets the content of the cell at a specific location
 Grid.prototype.cellGet = function(x,y){
+  if (x < 0 || y < 0){return null}
   if (this.grid[x] instanceof Array){
     return this.grid[x][y];
   }
@@ -23,6 +24,7 @@ Grid.prototype.cellGet = function(x,y){
 
 //sets the content of the cell at a specific location
 Grid.prototype.cellSet = function(x,y,value){
+  if (x < 0 || y < 0){return null}
   if (this.grid[x] instanceof Array){
     this.grid[x][y] = value;
   }
