@@ -14,7 +14,7 @@ function Grid(width,height){
   }
 }
 
-//gets the content of the cell at a specific location
+//gets the content of a cell at a specific position
 Grid.prototype.cellGet = function(x,y){
   if (x < 0 || y < 0){return null}
   if (this.grid[x] instanceof Array){
@@ -22,7 +22,7 @@ Grid.prototype.cellGet = function(x,y){
   }
 }
 
-//sets the content of the cell at a specific location
+//sets the content of a cell at a specific position
 Grid.prototype.cellSet = function(x,y,value){
   if (x < 0 || y < 0){return null}
   if (this.grid[x] instanceof Array){

@@ -44,6 +44,11 @@ module.exports = {
           <br>Entities: ${entnum}
           `);
       }
+    },
+    position: {
+      fun: function(sender, args){
+        sender.msg("You are standing at: "+sender.ent.tx+", "+sender.ent.ty);
+      }
     }
   }
 }

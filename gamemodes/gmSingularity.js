@@ -11,6 +11,7 @@ var GM  = function(game, gmConfig){
   this.second = 0; //Used to send things only every second and not every tick!
   this.elevatorRemainTime = gmConfig.elevatorTime || 30;
   this.timerHasSendThisInterval = true;
+  this.gmConfig = gmConfig;
 }
 
 //will be executed when the game starts. Currently only executable via "/start" command
@@ -28,7 +29,7 @@ GM.prototype.step = function(delta){
   if (this.stage == "countdown"){
     this.countdown -= delta/1000;
     if (this.countdown <= 0){
-      this.stage = "ingame";
+      this.stage = "survive";
       this.roundStartTime = Date.now();
       this.game.showGlobalPopup("countdown", "");
       this.game.sendChatMessage("Experiment starts!");
@@ -49,7 +50,7 @@ GM.prototype.step = function(delta){
       }
     }
   }
-  if (this.stage == "ingame"){
+  if (this.stage == "survive"){
     this.elevatorRemainTime -= delta/1000;
     if (Math.floor(this.elevatorRemainTime) % 30 == 0){
       if (this.timerHasSendThisInterval == false){
@@ -59,6 +60,14 @@ GM.prototype.step = function(delta){
     }else{
       this.timerHasSendThisInterval = false;
     }
+    if (this.elevatorRemainTime <= 0){
+      this.stage = "escape";
+      this.game.worlds[0].swapRegion(this.gmConfig.world1LiftX, this.gmConfig.world1LiftY, this.gmConfig.liftWidth, this.gmConfig.liftHeight, this.game.worlds[1], this.gmConfig.world2LiftX, this.gmConfig.world2LiftY);
+      this.game.sendChatMessage("The elevatore has arrived!");
+    }
+  }
+  if (this.stage == "escape"){
+
   }
   this.second %= 1;
 }

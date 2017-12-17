@@ -433,7 +433,7 @@ Entity.prototype.processImpulse = function(){
 
 //Hides an entity, so no one can see it
 Entity.prototype.setHidden = function(isHidden){
-  if (this.isHidden == isHidden){return false}
+  //if (this.isHidden == isHidden){return false}
   this.isHidden = isHidden;
   if (isHidden){
     this.world.broadcast('ent_destroy',{id: this.id});

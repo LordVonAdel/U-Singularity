@@ -29,13 +29,13 @@ module.exports = {
   commands: {  //-------------------------Commands-------------------------
     ping: {
       permission: "cmd.ping",
-      fun: function(sender,args){
+      fun(sender,args){
         sender.msg("pong!");
       }
     },
     noclip: {
       permission: "master.player.noclip",
-      fun: function(sender, args){
+      fun(sender, args){
         sender.ent.noclip = !sender.ent.noclip;
         if (sender.ent.noclip){
           sender.msg("Noclip enabled!");
@@ -47,7 +47,7 @@ module.exports = {
     world_save: {
       permission: "world.save",
       argNum: 1,
-      fun: function(sender,args){
+      fun(sender,args){
         if (args.length>=1){
           var filename = "./maps/"+args[1]+".json";
           sender.world.save(filename);
@@ -57,7 +57,7 @@ module.exports = {
     world_load: {
       permission: "world.load",
       argNum: 1,
-      fun: function(sender, args){
+      fun(sender, args){
         if (args.length>=1){
           var filename = "./maps/"+args[1]+".json";
           sender.world.load(filename);
@@ -66,13 +66,13 @@ module.exports = {
     },
     world_clear: {
       permission: "world.clear",
-      fun: function(sender, args){
+      fun(sender, args){
         sender.world.clear();
       }
     },
     spawn_set: {
       permission: "world.edit.spawn",
-      fun: function(sender,args){
+      fun(sender,args){
         sender.world.spawnX = sender.ent.tx;
         sender.world.spawnY = sender.ent.ty;
         sender.msg("Spawnpoint set to "+sender.ent.tx+", "+sender.ent.ty+" !");
@@ -80,17 +80,24 @@ module.exports = {
     },
     spawn: {
       permission: "master.player.spawn",
-      fun: function(sender, args){
+      fun(sender, args){
         sender.teleport(sender.world.spawnX, sender.world.spawnY);
       }
     },
     tp: {
       permission: "master.player.teleport",
       argNum: 2,
-      fun: function(sender,args){
+      fun(sender, args){
         if (args.length > 2){
           sender.teleport(+args[1], +args[2]);
         }
+      }
+    },
+    world: {
+      permission: "master.player.teleportWorld",
+      argNum: 1,
+      fun(sender, args){
+        sender.game.changeWorld(sender, args[1]);
       }
     },
     start: {

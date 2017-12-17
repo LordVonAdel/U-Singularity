@@ -8,7 +8,7 @@ const PowerSystem = require('./systems/power.js');
 const Atmos = require('./systems/atmos.js');
 
 //The constructor for a world instance
-function World(game){
+function World(game, index){
   this.width = 100;
   this.height = 100;
   this.ents = {};
@@ -16,6 +16,7 @@ function World(game){
   this.grid = new Grid(this.width, this.height);
   this.gridEntities = new Grid(this.width, this.height);
   this.nextEntId = 0;
+  this.index = index;
   this.gridEntities.forEach(function(tileX,tileY){
     return [];
   });
@@ -28,7 +29,7 @@ function World(game){
   }, this);
   this.game = game;
 
-  this.consolePrefix = "[Game:"+game.index+"-World:0]";
+  this.consolePrefix = "[Game:"+game.index+"-World:"+index+"]";
 
   console.log(this.consolePrefix+"Initialized World");
   console.log(this.consolePrefix+"Using "+this.buckets.width+"x"+this.buckets.height+" ("+this.buckets.width*this.buckets.height+") buckets");
@@ -58,7 +59,7 @@ World.prototype.resize = function(width, height){
 
 //sets the content of a cell in the world
 World.prototype.cellSet = function(tileX,tileY,id){
-  var bucket = this.buckets.cellGet(Math.floor(tileX/config.bucket.width),Math.floor(tileY/config.bucket.height))
+  var bucket = this.buckets.cellGet(Math.floor(tileX/config.bucket.width), Math.floor(tileY/config.bucket.height))
   bucket.broadcastArea('change_tile',{x:tileX, y:tileY, id:id});
   this.grid.cellSet(tileX,tileY,id);
   var ents = this.gridEntities.cellGet(tileX, tileY);
@@ -91,7 +92,7 @@ World.prototype.setSpawn = function(x, y){
 //saves the world to a file
 World.prototype.save = function(filename){
   var sav = this.saveRegion(0, 0, this.width, this.height);
-  str = JSON.stringify(obj);
+  str = JSON.stringify(sav);
   var that = this;
   fs.writeFile(filename,str,"utf8",function(err){
     if (err){
@@ -102,7 +103,6 @@ World.prototype.save = function(filename){
       that.game.sendChatMessage("World Saved in "+filename);
     }
   });
-  return ret;
 }
 
 //saves a region of the world. Returns it as ragion object
@@ -156,7 +156,7 @@ World.prototype.loadRegion = function(region, x, y){
     ent.x = spwn.x + x*32;
     ent.y = spwn.y + y*32;
     if (!ent.ent){
-      console.error("There are things in this map, which we don't know what they are! ("+spwn.type+")");
+      console.error("There are things in this map, of which we don't know what they are! ("+spwn.type+")");
     }else{
       if (spwn.sync){
         Object.assign(ent.sync, spwn.sync);
@@ -165,6 +165,15 @@ World.prototype.loadRegion = function(region, x, y){
     }
   }
   this.resendRegion(x, y, region.width, region.height);
+}
+
+//swaps two regions from different worlds
+World.prototype.swapRegion = function(thisX, thisY, w, h, otherWorld, otherX, otherY){
+  var reg1 = this.saveRegion(thisX, thisY, w, h, thisX, thisY);
+  var reg2 = otherWorld.saveRegion(otherX, otherY, w, h, otherX, otherY);
+
+  otherWorld.loadRegion(reg1, otherX, otherY);
+  this.loadRegion(reg2, thisX, thisY);
 }
 
 //loads a region into the world from a file
@@ -210,6 +219,7 @@ World.prototype.load = function(filename){
   var that = this;
   fs.readFile(filename,function(err, data){
     if (err){
+      console.error(that.consolePrefix+"Failed to load map: "+filename, err);
       that.broadcast('chat',{msg: "Failed to load map: "+filename});
     }else{
       that.clear();

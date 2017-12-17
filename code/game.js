@@ -11,7 +11,7 @@ function Game(maps, gamemode, gameConfig, index){
 
   //Load a map
   for (var i = 0; i < maps.length; i++){
-    world = new World(this);
+    world = new World(this, i);
     world.load("maps/"+maps[i]+".json");
     this.worlds[i] = world;
   }
@@ -68,6 +68,7 @@ Game.prototype.changeWorld = function(player, index){
   if (player.ent != null){
     player.ent.destroy();
     player.ent = null;
+    player.socket.emit('clear');
   }
   var world = this.worlds[index];
   var ent = world.spawnEntity("player", world.spawnX, world.spawnY);

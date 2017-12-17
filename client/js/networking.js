@@ -89,7 +89,10 @@ function initNetworking(){
   });
 
   socket.on('clear',function(data){
-    ents = {};
+    for (k in ents){
+      ents[k].destroy();
+      delete ents[k];
+    }
   });
 
   socket.on('pong', function(latency){

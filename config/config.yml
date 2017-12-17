@@ -31,8 +31,15 @@ player:
 games:
   - name: "Default Game"
     maps:
-    - "lab"
+    - "lab/lab"
+    - "lab/lift"
     playerLimit: 20
     gamemode: "gmSingularity"
     gamemodeConfig:
       elevatorTime: 300
+      world1LiftX: 0
+      world1LiftY: 0
+      world2LiftX: 0
+      world2LiftY: 0
+      liftWidth: 5
+      liftHeight: 5

@@ -151,7 +151,7 @@ module.exports = {
       },
       onUpdate(){
         if (this.sync.u){
-          var tile = world.cellGet(this.tx, this.ty);
+          var tile = this.world.cellGet(this.tx, this.ty);
           if (tile == 10){
             this.setHidden(false);
           }else{
@@ -190,7 +190,7 @@ module.exports = {
       },
       actions: {
         cable(user, item){
-
+          
           var a = null;
           switch (user.direction){
             case 0: a = "w"; break;
