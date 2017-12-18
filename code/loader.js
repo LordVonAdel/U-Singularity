@@ -17,7 +17,7 @@ var res = { //object with every dynamic loaded content, excepts maps and command
     "item":{ //the item entity
       "sync":{item: null},
       "image":[{layer: 2, source: "items/item_crowbar.png", width:32, height: 32}],
-      "onClick":function(user, _item){
+      onClick(user, _item){
         if(_item.type == "hand"){
           user.ent.sync.inventory[user.ent.sync.inventoryActive] = this.sync.item;
           user.shareSelf();
@@ -29,7 +29,7 @@ var res = { //object with every dynamic loaded content, excepts maps and command
           this.update();
         }
       },
-      "onUpdate":function(){
+      onUpdate(){
         if (this.sync.item == null){
           this.destroy();
         }else{
@@ -54,7 +54,9 @@ var res = { //object with every dynamic loaded content, excepts maps and command
         dmgBrute: 0,
         dmgToxin: 0,
         dmgBurn: 0,
-        dmgGenetic: 0
+        dmgGenetic: 0,
+        direction: 0,
+        job: null
       },
       "layer": 3,
       "image":[
@@ -78,7 +80,7 @@ var res = { //object with every dynamic loaded content, excepts maps and command
         }
       ],
       "actions": {
-        "stab": function(){
+        stab(){
           if (this.client){
             this.sync.dmgBrute += 5;
             this.client.msg("Ouch!");
@@ -86,11 +88,11 @@ var res = { //object with every dynamic loaded content, excepts maps and command
           }
         }
       },
-      "onInit": function(){
+      onInit(){
         this.sync.inventory = {};
         this.setLight(0, {color: 0xffffff, radius: 128, intensity: 1});
       },
-      "onStep": function(delta){
+      onStep(delta){
         if (this.getState("burning")){
           this.sync.dmgBurn += delta/1000;
           this.update();
@@ -101,10 +103,14 @@ var res = { //object with every dynamic loaded content, excepts maps and command
           this.client.alive = false;
         }
       },
-      "onUpdate": function(){
+      onUpdate(){
         if (this.client == undefined){
           this.destroy();
         }
+
+        this.changeSprite(0, {source: this.sync.img});
+        this.changeImageIndex(0, this.sync.direction);
+
         var hand = this.sync.inventory[this.sync.inventoryActive];
         if (hand != null){
           if (hand.sprite.length > 0){
@@ -117,6 +123,11 @@ var res = { //object with every dynamic loaded content, excepts maps and command
         this.sync.hp = 100 - this.sync.dmgBrute - this.sync.dmgBurn - this.sync.dmgGenetic - this.sync.dmgSuffocation - this.sync.dmgToxin;
         if (this.client){
           this.client.shareSelf({"hp" : Math.ceil(this.sync.hp)});
+        }
+      },
+      onDestroy(){
+        if (this.client){
+          this.client.ent = null;
         }
       }
     }

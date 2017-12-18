@@ -24,13 +24,13 @@ module.exports = {
         var xmin = Math.min(p1.x, p2.x);
         var ymin = Math.min(p1.y, p2.y);
         p1 = {x: xmin, y: ymin};
-        p2 = {x: xmax, y: ymax};
+        p2 = {x: xmax + 1, y: ymax + 1};
         var w = p2.x - p1.x;
         var h = p2.y - p1.y;
 
         switch (args[1]){
           case "copy": //copy a region to the users clipboard
-            sender.worldEditClipboard = sender.world.saveRegion(p1.x, p1.y, w, h, sender.ent.tx, sender.ent.ty);
+            sender.worldEditClipboard = sender.world.saveRegion(p1.x, p1.y, w, h, sender.ent.tx - p1.x, sender.ent.ty - p1.y);
             sender.msg(`Copied ${w}x${h} (${w*h}) tiles and ${Object.keys(sender.worldEditClipboard.ents).length} entities to clipboard!`);
           break;
           case "paste": //paste a region from the users clipboard

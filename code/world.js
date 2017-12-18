@@ -109,8 +109,8 @@ World.prototype.save = function(filename){
 World.prototype.saveRegion = function(x, y, width, height, anchorX, anchorY){
 
   if (!anchorY){
-    var ax = x;
-    var ay = y;
+    var ax = 0;
+    var ay = 0;
   }else{
     var ax = anchorX;
     var ay = anchorY;
@@ -132,10 +132,8 @@ World.prototype.saveRegion = function(x, y, width, height, anchorX, anchorY){
     var ent = this.ents[key];
     if (ent.tx >= x && ent.ty >= y && ent.tx < x + width && ent.ty < y + height){
       ents[key] = {
-        x: this.ents[key].x - ax,
-        y: this.ents[key].y - ay,
-        tx: this.ents[key].tx - ax * 32,
-        ty: this.ents[key].ty - ay * 32,
+        tx: this.ents[key].tx - x,
+        ty: this.ents[key].ty - y,
         type: this.ents[key].type,
         sync: this.ents[key].sync
       }
@@ -148,13 +146,11 @@ World.prototype.saveRegion = function(x, y, width, height, anchorX, anchorY){
 
 //loads a region into the world from an world object
 World.prototype.loadRegion = function(region, x, y){
-  this.grid.loadRegion(region.grid, x, y, region.width);
+  this.grid.loadRegion(region.grid, x - region.ax, y - region.ay, region.width);
   var ents = region.ents;
   for (var k in ents) {
     var spwn = ents[k];
-    var ent = this.spawnEntity(spwn.type, spwn.tx + region.ax, spwn.ty + region.ay);
-    ent.x = spwn.x + x*32;
-    ent.y = spwn.y + y*32;
+    var ent = this.spawnEntity(spwn.type, spwn.tx - region.ax + x, spwn.ty - region.ay + y);
     if (!ent.ent){
       console.error("There are things in this map, of which we don't know what they are! ("+spwn.type+")");
     }else{
@@ -169,11 +165,30 @@ World.prototype.loadRegion = function(region, x, y){
 
 //swaps two regions from different worlds
 World.prototype.swapRegion = function(thisX, thisY, w, h, otherWorld, otherX, otherY){
-  var reg1 = this.saveRegion(thisX, thisY, w, h, thisX, thisY);
-  var reg2 = otherWorld.saveRegion(otherX, otherY, w, h, otherX, otherY);
+  var reg1 = this.saveRegion(thisX, thisY, w, h, 0, 0);
+  var reg2 = otherWorld.saveRegion(otherX, otherY, w, h, 0, 0);
+
+  var clients1 = this.getEntsByRegion(thisX, thisY, w, h)
+  .filter(function(ent){return ent.client != undefined})
+  .map(function(ent){return {c: ent.client, xof: ent.tx - thisX, yof: ent.ty - thisY, sync: ent.sync}});
+  var clients2 = otherWorld.getEntsByRegion(otherX, otherY, w, h)
+  .filter(function(ent){return ent.client != undefined})
+  .map(function(ent){return {c: ent.client, xof: ent.tx - otherX, yof: ent.ty - otherY, sync: ent.sync}});;
+
+  this.clearRegion(thisX, thisY, w, h);
+  otherWorld.clearRegion(otherX, otherY, w, h);
 
   otherWorld.loadRegion(reg1, otherX, otherY);
   this.loadRegion(reg2, thisX, thisY);
+
+  for (var i = 0; i < clients1.length; i++){
+    var c = clients1[i];
+    this.game.changeWorld(c.c, otherWorld.index, otherX + c.xof, otherY + c.yof, {sync: c.sync});
+  }
+  for (var i = 0; i < clients2.length; i++){
+    var c = clients2[i];
+    this.game.changeWorld(c.c, this.index, thisX + c.xof, thisY + c.yof, {sync: c.sync});
+  }
 }
 
 //loads a region into the world from a file
@@ -201,17 +216,23 @@ World.prototype.clear = function(){
   this.spawnX = 0;
   this.spawnY = 0;
   this.resize(100,100);
-  /*
-  this.buckets.forEach(function(tileX,tileY){
-    var bucket = that.buckets.cellGet(tileX,tileY);
-    if (bucket){
-      console.log("Clear bucket!")
-      bucket.clear();
-    }
-  });
-  */
   this.ents = {};
   this.broadcast('world',{w:this.width,h:this.height,str:this.grid.save()});
+}
+
+//clears a region in the world
+World.prototype.clearRegion = function(x, y, width, height){
+  for (var i = 0; i < width; i++){
+    for (var j = 0; j < height; j++){
+      var xx = x + i;
+      var yy = y + j;
+      this.cellSet(xx, yy, 0);
+      var ents = this.getEntsByPosition(xx, yy);
+      for (var k = 0; k < ents.length; k++){
+        ents[k].destroy();
+      }
+    }
+  }
 }
 
 //loads the world from a file
@@ -377,6 +398,17 @@ World.prototype.getEntsByType = function(type){
 //gets a list of entities from this world based on the position
 World.prototype.getEntsByPosition = function(tileX, tileY){
   return this.gridEntities.cellGet(tileX, tileY);
+}
+
+//gets a list of entities from this world bases in an area it is
+World.prototype.getEntsByRegion = function(x, y, w, h){
+  var ents = [];
+  for (var i = x; i < w + x; i++){
+    for (var j = 0; j < h + y; j++){
+      ents = ents.concat(this.getEntsByPosition(i, j));
+    }
+  }
+  return ents;
 }
 
 //Spawn an entity somewhere in the world

@@ -13,9 +13,9 @@ module.exports = {
     },
     cellGet: {
       fun: function(sender, args){
-        var index = sender.world.grid.cellGet(sender.tileX,sender.tileY);
+        var index = sender.world.grid.cellGet(sender.ent.tx,sender.ent.ty);
         sender.msg("TileID: "+index);
-        sender.msg("Collisions: "+sender.world.collisionsGet(sender.tileX, sender.tileY).length);
+        sender.msg("Collisions: "+sender.world.collisionsGet(sender.ent.tx, sender.ent.ty).length);
       }
     },
     help: {

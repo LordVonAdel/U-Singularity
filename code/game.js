@@ -64,22 +64,36 @@ Game.prototype.step = function(delta){
 }
 
 //Change the world for one player
-Game.prototype.changeWorld = function(player, index){
-  if (player.ent != null){
-    player.ent.destroy();
-    player.ent = null;
+Game.prototype.changeWorld = function(player, index, spawnX, spawnY, extraData){
+  if (index < 0 || index >= this.worlds.length){return false;}
+
+  if (player.world){
+    console.log("[Game:"+this.index+"]Move "+player.name+" from world "+player.world.index+" to "+index);
     player.socket.emit('clear');
   }
+
+  var sync = {};
+  if (player.ent != null){
+    sync = player.ent.sync;
+    player.ent.destroy();
+    player.ent = null;
+  }
   var world = this.worlds[index];
-  var ent = world.spawnEntity("player", world.spawnX, world.spawnY);
+
+  if (!spawnX){spawnX = world.spawnX}
+  if (!spawnY){spawnY = world.spawnY}
+
+  var ent = world.spawnEntity("player", spawnX, spawnY, extraData);
   player.world = world;
   player.ent = ent;
+  Object.assign(player.ent.sync, sync);
   ent.client = player;
   player.updateBucket();
   if (player.ent.bucket != null){
     player.ent.bucket.sendMegaPacket(player.socket);
   }
   player.socket.emit('cam', player.ent.id);
+  ent.update();
 }
 
 //shows a html popup at every player in the game

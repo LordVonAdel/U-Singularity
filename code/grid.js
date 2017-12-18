@@ -62,10 +62,12 @@ Grid.prototype.saveRegion = function(x,y,width,height){
   var i;
   var str = "";
   var last = 0;
-  var now = 0;
+  var now = this.cellGet(x, y);
   var len = 0;
   for(i = 0; i<width*height; i++){
-    now = this.cellGet(i % width+x,Math.floor(i / height)+y)//grid[i % width+x][Math.floor(i / height)+y];
+    var xx = (i % width)+x;
+    var yy = Math.floor(i / (width))+y
+    now = this.cellGet(xx, yy);
     if (now == last){
       len ++;
     }else{

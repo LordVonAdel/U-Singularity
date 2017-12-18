@@ -8,8 +8,8 @@ nw = {
     if (this.game != null && this.config && this.ent.sync.alive){
       if (!this.ent.isMoving) {
         this.ent.moveDir(data.dir, this.speed);
-        this.direction = data.dir;
-        this.ent.changeImageIndex(0, data.dir);
+        this.ent.sync.direction = data.dir;
+        this.ent.update();
         this.updateBucket();
       }
     }
@@ -28,23 +28,25 @@ nw = {
     if (!this.config) {
       this.name = this.stringSave(data.name);
       if (this.name == "" && !config.player.allowEmptyName){this.popup("config","./html/login.html", {error: "You need a name to play this great game!"}); return false;}
-      this.sex = data.sex;
-      this.job = data.job;
-      var cls = loader.res.classes[this.job];
+      this.ent.sync.sex = data.sex;
+      this.ent.sync.job = data.job;
+      var cls = loader.res.classes[data.job];
       if (!cls){
-        console.error("Unkown class: "+this.job);
+        console.error("Unkown class: "+data.job);
         return false;
       }
-      var img = this.sex == "m" ? cls["sprite-male"] : cls["sprite-female"];
+      var img = data.sex == "m" ? cls["sprite-male"] : cls["sprite-female"];
       if (cls.inventory){
         for (var i = 0; i < Math.min(this.hands, cls.inventory.length); i++){
           this.ent.sync.inventory[i] = item.create(cls.inventory[i]);
         }
       }
-      this.shareSelf();
-      this.update();
       if (img != undefined) {
-        this.ent.changeSprite(0, {source: img});
+        this.ent.sync.img = img;
+
+        this.ent.update();
+        this.shareSelf();
+        this.update();
       } else {
         //Config was not correct!
       }
@@ -130,12 +132,12 @@ nw = {
       if (item == null){return false}
       if (distance < (this.handRange + 1)){ //Put
         if (!this.world.collisionCheck(data.x, data.y)) {
-          world.spawnItem(data.x, data.y, itm);
+          this.world.spawnItem(data.x, data.y, itm);
           inventory[active] = null;
           this.shareSelf();
         }
       }else{ //else throw the item.
-        var itemEnt = world.spawnItem(this.ent.tx, this.ent.ty, itm);
+        var itemEnt = this.world.spawnItem(this.ent.tx, this.ent.ty, itm);
         itemEnt.impulse(data.x - this.ent.tx, data.y - this.ent.ty, config.player.throwSpeed);
         inventory[active] = null;
         this.shareSelf();
@@ -402,9 +404,8 @@ Client.prototype.lookAt = function(tileX, tileY){
 
   var angle = Math.atan2(-(tileY - this.ent.ty), (tileX - this.ent.tx));
   //Thanks to Mario for the next line of code
-  this.direction = Math.floor(2*angle / Math.PI + 4.5) % 4;
-
-  this.ent.changeImageIndex(0, this.direction);
+  this.ent.sync.direction = Math.floor(2*angle / Math.PI + 4.5) % 4;
+  this.ent.update();
 
   return this.direction;
 }

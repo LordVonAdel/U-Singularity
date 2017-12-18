@@ -33,13 +33,18 @@ games:
     maps:
     - "lab/lab"
     - "lab/lift"
+    - "lab/end"
     playerLimit: 20
     gamemode: "gmSingularity"
     gamemodeConfig:
-      elevatorTime: 300
-      world1LiftX: 0
-      world1LiftY: 0
-      world2LiftX: 0
-      world2LiftY: 0
+      elevatorTime: 30
+      elevatorDepartTime: 30
+      elevatorEscapeTime: 30
+      world1LiftX: 43
+      world1LiftY: 34
+      world2LiftX: 18
+      world2LiftY: 18
+      world3LiftX: 17
+      world3LiftY: 12
       liftWidth: 5
-      liftHeight: 5
+      liftHeight: 4

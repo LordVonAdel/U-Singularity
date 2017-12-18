@@ -82,8 +82,12 @@ function Entity(world, type, tx, ty, extraData){
 
   Object.assign(this.sync, this.ent.sync);
   Object.assign(this, extraData);
+
+  this.updateBucket();
+
   this.fire("onInit");
-  this.fire("onUpdate");
+  if (this.type != "player")
+    this.fire("onUpdate");
 
   this.world.ents[this.world.nextEntId] = this;
   this.world.nextEntId ++;
@@ -92,7 +96,6 @@ function Entity(world, type, tx, ty, extraData){
 
   this.world.gridEntAdd(this.tx, this.ty, this);
 
-  this.updateBucket();
 }
 
 //Clear the thing that is dragging this thing
@@ -321,6 +324,8 @@ Entity.prototype.spawn = function(){
 //are you in same bucket as before or somewhere else? 
 Entity.prototype.updateBucket = function(){
   this.changeBucket(this.world.buckets.cellGet(Math.floor(this.tx/config.bucket.width),Math.floor(this.ty/config.bucket.height)));
+  if (this.bucket == null)
+    console.error("We have someone without bucket! "+ this.type +": "+ this.id);
 }
 
 //this bucket is shit. Go anywhere else where you think you belong more to

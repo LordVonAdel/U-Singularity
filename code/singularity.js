@@ -17,9 +17,9 @@ var http = require("http").createServer(function( req, res){
       var playersOnline = 0;
       for (var i = 0; i < games.length; i++){
         var game = games[i];
-        playersOnline += game.players.length;
+        playersOnline += game.clients.length;
         gameList.push(Object.assign({
-          playersOnline: game.players.length,
+          playersOnline: game.clients.length,
           gamemode: game.gamemode.name,
           playerLimit: game.config.playerLimit,
           name: game.name

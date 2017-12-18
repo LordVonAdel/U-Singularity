@@ -67,10 +67,10 @@ module.exports = {
   },
   actions: {
     cable_red(world, tileX, tileY, user, item){
-      var cables = this.world.getEntsByPosition(tileX, tileY).filter(function(ent){return (ent.type == "cable_red")});
+      var cables = world.getEntsByPosition(tileX, tileY).filter(function(ent){return (ent.type == "cable_red")});
       var cable = cables.length > 0 ? cables[0] : world.spawnEntity("cable_red", tileX, tileY);
 
-      switch (user.direction){
+      switch (user.ent.sync.direction){
         case 0: a = "w"; break;
         case 1: a = "s"; break;
         case 2: a = "e"; break;
@@ -144,7 +144,7 @@ module.exports = {
         if (power){
           this.power_nw = power.createNetwork(this);
         }
-        var tile = world.cellGet(this.tx, this.ty);
+        var tile = this.world.cellGet(this.tx, this.ty);
         if (tile == 10){
           this.sync.u = true;
         }
@@ -192,7 +192,7 @@ module.exports = {
         cable(user, item){
           
           var a = null;
-          switch (user.direction){
+          switch (user.ent.sync.direction){
             case 0: a = "w"; break;
             case 1: a = "s"; break;
             case 2: a = "e"; break;
@@ -210,7 +210,7 @@ module.exports = {
         },
         cut(user, item){
           var a = null;
-          switch (user.direction){
+          switch (user.ent.sync.direction){
             case 0: a = "w"; break;
             case 1: a = "s"; break;
             case 2: a = "e"; break;
