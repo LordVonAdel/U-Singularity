@@ -41,16 +41,17 @@ nw = {
           this.ent.sync.inventory[i] = item.create(cls.inventory[i]);
         }
       }
-      if (img != undefined) {
-        this.ent.sync.img = img;
+      if (cls) {
+        this.ent.sync.job = data.job;
+        this.ent.sync.isMale = data.sex;
 
         this.ent.update();
         this.shareSelf();
         this.update();
+        this.config = true;
       } else {
         //Config was not correct!
       }
-      this.config = true;
     }
   },
   invActive(data){

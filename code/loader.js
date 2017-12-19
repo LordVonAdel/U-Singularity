@@ -107,9 +107,11 @@ var res = { //object with every dynamic loaded content, excepts maps and command
         if (this.client == undefined){
           this.destroy();
         }
-
-        this.changeSprite(0, {source: this.sync.img});
-        this.changeImageIndex(0, this.sync.direction);
+        
+        if (this.sync.job){
+          this.changeSprite(0, {source: res.classes[this.sync.job]["sprite-"+(this.isMale ? "male" : "female")]});
+          this.changeImageIndex(0, this.sync.direction);
+        }
 
         var hand = this.sync.inventory[this.sync.inventoryActive];
         if (hand != null){

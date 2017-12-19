@@ -78,6 +78,10 @@ Game.prototype.changeWorld = function(player, index, spawnX, spawnY, extraData){
     player.ent.destroy();
     player.ent = null;
   }
+  if (extraData && extraData.sync){
+    sync = extraData;
+  }
+
   var world = this.worlds[index];
 
   if (!spawnX){spawnX = world.spawnX}
