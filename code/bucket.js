@@ -85,7 +85,7 @@ Bucket.prototype.getClients = function(){
 //sends the full region again for the case of big changes
 Bucket.prototype.resendRegion = function(){
   for (k in this.players){
-    this.sendMegaPacket(this.players[k].socket);
+    this.sendMegaPacketArea(this.players[k].socket);
   }
 }
 

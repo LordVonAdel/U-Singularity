@@ -79,7 +79,7 @@ Game.prototype.changeWorld = function(player, index, spawnX, spawnY, extraData){
     player.ent = null;
   }
   if (extraData && extraData.sync){
-    sync = extraData;
+    sync = extraData.sync;
   }
 
   var world = this.worlds[index];

@@ -35,7 +35,6 @@ nw = {
         console.error("Unkown class: "+data.job);
         return false;
       }
-      var img = data.sex == "m" ? cls["sprite-male"] : cls["sprite-female"];
       if (cls.inventory){
         for (var i = 0; i < Math.min(this.hands, cls.inventory.length); i++){
           this.ent.sync.inventory[i] = item.create(cls.inventory[i]);
@@ -43,7 +42,7 @@ nw = {
       }
       if (cls) {
         this.ent.sync.job = data.job;
-        this.ent.sync.isMale = data.sex;
+        this.ent.sync.gender = data.sex;
 
         this.ent.update();
         this.shareSelf();

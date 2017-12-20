@@ -1,6 +1,6 @@
 Mixture = function(content,temperature){
   this.content = content || {}; //{o2: 40, co2: 60}
-  this.temperature = temperature || 0; //kelvin (273,15°C)
+  this.temperature = temperature || 0; //kelvin (-273,15°C)
   //pressure = sum of content. (kPa)
 }
 Mixture.prototype.getPressure = function(){

@@ -109,7 +109,7 @@ var res = { //object with every dynamic loaded content, excepts maps and command
         }
         
         if (this.sync.job){
-          this.changeSprite(0, {source: res.classes[this.sync.job]["sprite-"+(this.isMale ? "male" : "female")]});
+          this.changeSprite(0, {source: res.classes[this.sync.job]["sprite-"+(this.sync.gender == "m" ? "male" : "female")]});
           this.changeImageIndex(0, this.sync.direction);
         }
 
