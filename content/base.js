@@ -204,6 +204,11 @@ module.exports = {
       sync: {open: 0, frame: 0, isLocked: true},
       image:[{"number":8,"source":"objects/door_control_room.png", "width": 32, "height": 32}]
     },
+    door_lift: {
+      extends: "door_default",
+      sync: {open: 0, frame: 0, isLocked: true},
+      image:[{"number":4,"source":"objects/door_lift.png", "width": 32, "height": 32}]
+    },
     detail: {
       image:"detail/exit_signs.png",
       imageNumber:1,

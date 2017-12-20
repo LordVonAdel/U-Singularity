@@ -1,4 +1,4 @@
-var GM  = function(game, gmConfig){
+var GM = function(game, gmConfig){
   this.game = game;
   this.name = "Singularity";
   this.apiData = {};
@@ -69,6 +69,10 @@ GM.prototype.step = function(delta){
         this.game.sendChatMessage("The lift has arrived!");
         this.game.sendChatMessage("It will depart in "+this.elevatorDepartRemainTime+"seconds!");
         this.game.showGlobalPopupFromFile("info", "./html/info.html", {info: "Get into the lift!"});
+        var liftDoors = this.game.worlds[0].getEntsByType("door_lift");
+        liftDoors.forEach(function(door){
+          door.sync.open = 1;
+        });
       }
     break;
     case "lift":
@@ -79,6 +83,10 @@ GM.prototype.step = function(delta){
         this.stage = "escape";
         this.game.worlds[0].swapRegion(this.gmConfig.world1LiftX, this.gmConfig.world1LiftY, this.gmConfig.liftWidth, this.gmConfig.liftHeight, this.game.worlds[1], this.gmConfig.world2LiftX, this.gmConfig.world2LiftY);
         this.elevatorRemainTime = this.gmConfig.elevatorEscapeTime;
+        var liftDoors = this.game.worlds[0].getEntsByType("door_lift");
+        liftDoors.forEach(function(door){
+          door.sync.open = 0;
+        });
       }
     break;
     case "escape":
@@ -92,6 +100,10 @@ GM.prototype.step = function(delta){
 
         var names = this.game.worlds[1].getEntsByRegion().filter((ent)=>{return ent.type == "player"}).map((ent)=>{return ent.client.name});
         this.game.sendChatMessage("Following players survived the game: "+names.join(', '));
+        var liftDoors = this.game.worlds[2].getEntsByType("door_lift");
+        liftDoors.forEach(function(door){
+          door.sync.open = 1;
+        });
       }
     break;
     case "won":
