@@ -71,7 +71,7 @@ GM.prototype.step = function(delta){
         this.game.showGlobalPopupFromFile("info", "./html/info.html", {info: "Get into the lift!"});
         var liftDoors = this.game.worlds[0].getEntsByType("door_lift");
         liftDoors.forEach(function(door){
-          door.sync.open = 1;
+          door.fire("toggleOpen");
         });
       }
     break;
@@ -85,7 +85,7 @@ GM.prototype.step = function(delta){
         this.elevatorRemainTime = this.gmConfig.elevatorEscapeTime;
         var liftDoors = this.game.worlds[0].getEntsByType("door_lift");
         liftDoors.forEach(function(door){
-          door.sync.open = 0;
+          door.fire("toggleOpen");
         });
       }
     break;
@@ -102,7 +102,7 @@ GM.prototype.step = function(delta){
         this.game.sendChatMessage("Following players survived the game: "+names.join(', '));
         var liftDoors = this.game.worlds[2].getEntsByType("door_lift");
         liftDoors.forEach(function(door){
-          door.sync.open = 1;
+          door.fire("toggleOpen");
         });
       }
     break;

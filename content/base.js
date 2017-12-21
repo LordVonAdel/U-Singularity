@@ -177,17 +177,18 @@ module.exports = {
       image:[{"number":8,"source":"objects/door_default.png", "width": 32, "height": 32}],
       collision:true, 
       sync:{open: 0, frame: 0, isLocked: false},
-      onInit:function(){this.sync.open = 0; this.sync.frame = 0;},
-      onClick:function(user){
+      onInit(){this.sync.open = 0; this.sync.frame = 0;},
+      onClick(user){
         if (!this.sync.isLocked){
-          this.sync.open = 1-this.sync.open;
-          this.share();
-          this.update();
-          this.animation = true;
-          this.checkToStepList();
+          this.fire("toggleOpen");
         }
       },
-      onAnimation:function(delta){this.sync.frame = utils.transition(this.sync.frame, this.sync.open, delta/100, 0); this.sprites[0].index = Math.floor(this.sync.frame*(this.sprites[0].number-1)); this.collision = (Math.floor(this.sync.frame)==0);this.update(); this.share(); if(this.sync.frame == this.sync.open){this.animation = false}},
+      onAnimation(delta){
+        this.sync.frame = utils.transition(this.sync.frame, this.sync.open, delta/100, 0);
+        this.sprites[0].index = Math.floor(this.sync.frame*(this.sprites[0].number-1)); 
+        this.collision = (Math.floor(this.sync.frame)==0);this.update(); this.share(); 
+        if(this.sync.frame == this.sync.open){this.animation = false}
+      },
       onPush:function(pusher){
         if (!this.sync.isLocked){
           this.sync.open = 1;
@@ -195,7 +196,14 @@ module.exports = {
           this.checkToStepList();
         }
       },
-      onUpdate:function(){this.changeImageIndex(0, Math.floor(this.sync.frame*(this.sprites[0].number-1)));this.collision = (Math.floor(this.sync.frame)==0);},
+      onUpdate(){this.changeImageIndex(0, Math.floor(this.sync.frame*(this.sprites[0].number-1)));this.collision = (Math.floor(this.sync.frame)==0);},
+      toggleOpen(){
+        this.sync.open = 1-this.sync.open;
+        this.share();
+        this.update();
+        this.animation = true;
+        this.checkToStepList();
+      },
       actions:{},
       tile:{"connectionGroup":"walls"},
     },
