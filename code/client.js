@@ -153,7 +153,7 @@ nw = {
           ent.clearDragger();
         } else {
           if (ent.ent.draggable) {
-            if (Math.hypot(ent.x - this.ent.x, ent.y - this.ent.y) < (this.handRange + 1) * 32) {
+            if (Math.hypot(ent.tx - this.ent.tx, ent.ty - this.ent.ty) < (this.handRange + 1)) {
               this.ent.drag = ent;
               ent.setDragger(this.ent);
             }
