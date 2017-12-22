@@ -2,6 +2,7 @@
 const World = require("./world.js");
 const Entity = require("./entity.js");
 const fs = require("fs");
+const path = require("path");
 
 function Game(maps, gamemode, gameConfig, index){
   this.clients = [];
@@ -16,9 +17,9 @@ function Game(maps, gamemode, gameConfig, index){
     this.worlds[i] = world;
   }
   this.gamemode = null;
-  var path = __dirname + "./../gamemodes/"+gamemode+".js"
-  if (fs.existsSync(path)){
-    var GM = require(path);
+  var pth = path.resolve(__dirname, "./../gamemodes/"+gamemode+".js");
+  if (fs.existsSync(pth)){
+    var GM = require(pth);
     this.gamemode = new GM(this, gameConfig.gamemodeConfig || {});
     console.log("[Game:"+this.index+"]Started and using gamemode "+this.gamemode.name);
   }else{
