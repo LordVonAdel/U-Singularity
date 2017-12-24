@@ -28,3 +28,7 @@ View.prototype.setZoom = function(zoom){
     console.error("View can't zoom to 0")
   }
 }
+
+View.prototype.isInView = function(x, y){
+  return (x > this.x && y > this.y && y < this.y + this.height && x < this.x + this.width);
+}
