@@ -7,9 +7,29 @@ function World(){
 }
 
 World.prototype.tileGet = function (tileX, tileY) {
-  var tile = res.tiles[this.grid.cellGet(tileX, tileY)];
-  var overwrite = this.gridOverwrite.cellGet(tileX, tileY);
-  return Object.assign({}, tile, overwrite);
+  var chunk = this.getChunkAtTile(tileX, tileY);
+  if (chunk){
+    var tile = res.tiles[chunk.grid.cellGet(tileX % this.chunkSize, tileY % this.chunkSize)];
+    var overwrite = chunk.gridOverwrite.cellGet(tileX % this.chunkSize, tileY % this.chunkSize);
+    return Object.assign({}, tile, overwrite);
+  }
+  return {};
+}
+
+World.prototype.tileSet = function (tileX, tileY, id){
+  var chunk = this.getChunkAtTile(tileX, tileY);
+  if (chunk){
+    chunk.grid.cellSet(tileX % this.chunkSize, tileY % this.chunkSize, data);
+  }
+}
+
+World.prototype.resize = function(width, height){
+  this.width = width;
+  this.height = height;
+}
+
+World.prototype.loadRegion = function(data, x, y, width){
+
 }
 
 World.prototype.draw = function(){
@@ -39,6 +59,34 @@ World.prototype.unloadChunk = function(chunk){
   chunk.unload();
   var index = this.loadedChunks.indexOf(chunk);
   this.loadedChunks.splice(index, 1);
+}
+
+World.prototype.loadChunk = function(x, y){
+  for (var i = 0; i < this.loadedChunks.length; i++){
+    var chunk = this.loadedChunks[i];
+    if (chunk.x == x && chunk.y == y){
+      return chunk;
+    }
+  }
+  var chunk = new WChunk(this, x, y);
+  this.loadedChunks.push(chunk);
+  return chunk;
+}
+
+World.prototype.loadChunksForView = function(view){
+  var chunkstoload = [];
+  for (var i = Math.floor(view.x / this.chunkSize); i <= (view.width / this.chunkSize); i++){
+    for (var j = Math.floor(view.y / this.chunkSize); j <= (view.height / this.chunkSize); j++){
+      chunkstoload.push({x: i, y: j});
+    }
+  }
+  for (var i = 0; i < chunkstoload.length; i++){
+    this.loadChunk(chunkstoload[i].x, chunkstoload[i].y);
+  }
+}
+
+World.prototype.updateView = function(view){
+  this.loadChunksForView(view);
 }
 
 function WChunk(world, x, y){

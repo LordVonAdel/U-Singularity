@@ -34,7 +34,8 @@ function initNetworking(){
   });
 
   socket.on('change_tile',function(data){
-    world.grid.cellSet(data.x,data.y,data.id);
+    world.tileSet(data.x, data.y, data.id);
+    //world.grid.cellSet(data.x,data.y,data.id);
   })
 
   socket.on('world',function(data){
@@ -43,7 +44,7 @@ function initNetworking(){
   });
 
   socket.on('world_region',function(data){
-    world.grid.loadRegion(data.str,data.x,data.y,data.w);
+    world.loadRegion(data.str,data.x,data.y,data.w);
   });
 
   socket.on('ent_spawn',function(data){
