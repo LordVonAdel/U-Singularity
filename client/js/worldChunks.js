@@ -98,8 +98,19 @@ function WChunk(world, x, y){
   this.gridOverwrite = new Grid(this.world.chunkSize, this.world.chunkSize);
 
   this.sprites = [];
+  this.load();
+}
+
+WChunk.prototype.load = function(){
+  for (var i = 0; i < this.world.chunkSize; i++){
+    for (var j = 0; j < this.world.chunkSize; j++){
+      this.sprites.push(new THREE.Sprite());
+    }
+  }
 }
 
 WChunk.prototype.unload = function(){
-
+  for (var i = 0; i < this.sprites.length; i++){
+    this.sprites[i].destroy();
+  }
 }
