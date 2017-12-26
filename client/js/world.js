@@ -93,6 +93,6 @@ World.prototype.updateView = function(view){
 
 World.prototype.updateCell = function(x, y){
   if (view.isInView(x*32, y*32)){
-    
+
   }
 }

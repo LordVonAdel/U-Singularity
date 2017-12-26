@@ -29,7 +29,21 @@ World.prototype.resize = function(width, height){
 }
 
 World.prototype.loadRegion = function(data, x, y, width){
-
+  var res = str.split("x");
+  var cx = 0;
+  var cy = 0;
+  for (i = 0; i < res.length; i += 2) {
+    for (j = 0; j < parseInt(res[i], 10); j++) {
+      if (cx == width) {
+        cx = 0;
+        cy += 1;
+      }
+      if (cx + x < this.width && cy + y < this.height) {
+        this.tileSet(cx + x, cy + y, res[i + 1]);
+      }
+      cx++
+    }
+  }
 }
 
 World.prototype.draw = function(){
