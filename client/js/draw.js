@@ -71,6 +71,10 @@ function renderLoop(){
 textures = {};
 
 function getTexture(source){
+  if (source.split('/').pop() == "undefined"){
+    console.error("Tries to get undefined sprite");
+    return PIXI.Texture.EMPTY;
+  }
   if (textures[source] != undefined){
     return textures[source];
   }
@@ -83,6 +87,10 @@ function getTexture(source){
 }
 
 function getTextureFrame(source,index,width,height){
+  if (source.split('/').pop() == "undefined"){
+    console.error("Tries to get undefined sprite");
+    return PIXI.Texture.EMPTY;
+  }
   if (textures[source+":"+index] != undefined){
     return textures[source+":"+index];
   }

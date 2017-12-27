@@ -19,7 +19,8 @@ World.prototype.tileGet = function (tileX, tileY) {
 World.prototype.tileSet = function (tileX, tileY, id){
   var chunk = this.getChunkAtTile(tileX, tileY);
   if (chunk){
-    chunk.grid.cellSet(tileX % this.chunkSize, tileY % this.chunkSize, data);
+    chunk.grid.cellSet(tileX % this.chunkSize, tileY % this.chunkSize, id);
+    chunk.updateCell(tileX % this.chunkSize, tileY % this.chunkSize);
   }
 }
 
@@ -29,7 +30,7 @@ World.prototype.resize = function(width, height){
 }
 
 World.prototype.loadRegion = function(data, x, y, width){
-  var res = str.split("x");
+  var res = data.split("x");
   var cx = 0;
   var cy = 0;
   for (i = 0; i < res.length; i += 2) {
@@ -89,8 +90,8 @@ World.prototype.loadChunk = function(x, y){
 
 World.prototype.loadChunksForView = function(view){
   var chunkstoload = [];
-  for (var i = Math.floor(view.x / this.chunkSize); i <= (view.width / this.chunkSize); i++){
-    for (var j = Math.floor(view.y / this.chunkSize); j <= (view.height / this.chunkSize); j++){
+  for (var i = Math.floor(view.x / (this.chunkSize * 32)); i <= (view.width / (this.chunkSize * 32)); i++){
+    for (var j = Math.floor(view.y / (this.chunkSize * 32)); j <= (view.height / (this.chunkSize * 32)); j++){
       chunkstoload.push({x: i, y: j});
     }
   }
@@ -112,13 +113,23 @@ function WChunk(world, x, y){
   this.gridOverwrite = new Grid(this.world.chunkSize, this.world.chunkSize);
 
   this.sprites = [];
+  this.pixiContainer = new PIXI.Container();
+  this.pixiContainer.x = 32 * this.world.chunkSize * x;
+  this.pixiContainer.y = 32 * this.world.chunkSize * y;
+  stageTiles.addChild(this.pixiContainer);
+
   this.load();
 }
 
 WChunk.prototype.load = function(){
   for (var i = 0; i < this.world.chunkSize; i++){
     for (var j = 0; j < this.world.chunkSize; j++){
-      this.sprites.push(new THREE.Sprite());
+      var sprite = new PIXI.Sprite();
+      sprite.x = i * 32;
+      sprite.y = j * 32;
+      this.sprites.push(sprite);
+      this.pixiContainer.addChild(sprite);
+      this.updateCell(i, j);
     }
   }
 }
@@ -127,4 +138,71 @@ WChunk.prototype.unload = function(){
   for (var i = 0; i < this.sprites.length; i++){
     this.sprites[i].destroy();
   }
+  this.pixiContainer.destroy();
+}
+
+WChunk.prototype.cellSet = function(x, y, content){
+  this.grid.cellSet(x, y, content);
+}
+
+WChunk.prototype.updateCell = function(x, y){
+  var sprite = this.sprites[y * this.world.chunkSize + x];
+  var tile = res.tiles[this.grid.cellGet(x, y)];
+
+  var cx = x;
+  var cy = y;
+
+  if (tile && sprite){
+    var imageIndex = 0;
+    switch (tile.connectionType){
+      case "simple":
+        var tile_top = (this.world.tileGet(cx, cy - 1).connectionGroup != tile.connectionGroup);
+        var tile_left = (this.world.tileGet(cx - 1, cy).connectionGroup != tile.connectionGroup);
+        var tile_right = (this.world.tileGet(cx + 1,cy).connectionGroup != tile.connectionGroup);
+        var tile_bottom = (this.world.tileGet(cx, cy + 1).connectionGroup != tile.connectionGroup);
+        if (tile_top != undefined && tile_bottom != undefined && tile_right != undefined && tile_left != undefined) {
+          if (tile_top) { //top lane
+            if (tile_left) {
+              imageIndex = 0;
+            } else if (tile_right) {
+              imageIndex = 2;
+            } else {
+              imageIndex = 1;
+            }
+          } else if (tile_bottom) { //bottom lane
+            if (tile_left) {
+              imageIndex = 6;
+            } else if (tile_right) {
+              imageIndex = 8;
+            } else {
+              imageIndex = 7;
+            }
+          } else { //middle lane
+            if (tile_left) {
+              imageIndex = 3;
+            } else if (tile_right) {
+              imageIndex = 5;
+            } else {
+              imageIndex = 4;
+            }
+          }
+        }
+      break;
+      case "wall":
+        var tile_top = (this.world.tileGet(cx, cy - 1).connectionGroup == tile.connectionGroup);
+        var tile_left = (this.world.tileGet(cx - 1, cy).connectionGroup == tile.connectionGroup);
+        var tile_right = (this.world.tileGet(cx + 1,cy).connectionGroup == tile.connectionGroup);
+        var tile_bottom = (this.world.tileGet(cx, cy + 1).connectionGroup == tile.connectionGroup);
+        image_index = 0;
+        if (tile_top || tile_bottom){
+          imageIndex = 1;
+        }
+        if (tile_right || tile_left){
+          imageIndex = 0;
+        }
+      break;
+    }
+    sprite.setTexture(getTextureFrame(subfolder+"sprites/"+tile.sprite,imageIndex,32,32));
+  }
+
 }

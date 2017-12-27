@@ -90,25 +90,27 @@ Entity.prototype.step = function(delta){
   for (var i = 0; i < this.spriteData.length; i++){
     var data = this.spriteData[i];
     var sprite = this.sprites[i];
-    var path = subfolder+"sprites/"+data.source;
-    sprite.x = data.x || 0;
-    sprite.y = data.y || 0;
-    sprite.setTexture(getTextureFrame(path, data.index || 0, data.width || 32, data.height || 32));
-    if (data.angle){
-      sprite.rotation = data.angle * Math.PI / 180;
-      sprite.x = 32;
-      sprite.y = 16;
-    }
-    if (data.animation == "jump"){
-      var f = ((this.x % 32)/32)+((this.y % 32)/32);
-      sprite.y = -(Math.sin(f*Math.PI)*4) + data.y;
-    }
-    if (data.visible != undefined){
-      sprite.visible = data.visible;
-    }
-    if (data.scale){
-      sprite.scale.x = data.scale;
-      sprite.scale.y = data.scale;
+    if(!data.source == ""){
+      var path = subfolder+"sprites/"+data.source;
+      sprite.x = data.x || 0;
+      sprite.y = data.y || 0;
+      sprite.setTexture(getTextureFrame(path, data.index || 0, data.width || 32, data.height || 32));
+      if (data.angle){
+        sprite.rotation = data.angle * Math.PI / 180;
+        sprite.x = 32;
+        sprite.y = 16;
+      }
+      if (data.animation == "jump"){
+        var f = ((this.x % 32)/32)+((this.y % 32)/32);
+        sprite.y = -(Math.sin(f*Math.PI)*4) + data.y;
+      }
+      if (data.visible != undefined){
+        sprite.visible = data.visible;
+      }
+      if (data.scale){
+        sprite.scale.x = data.scale;
+        sprite.scale.y = data.scale;
+      }
     }
   }
 
