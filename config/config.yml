@@ -9,8 +9,8 @@ port: 5000
 
 #A bucket is like a chunk in minecraft
 bucket:
-  width: 16
-  height: 16
+  width: 8
+  height: 8
 
 #How many ticks per second should happen
 tickRate: 60

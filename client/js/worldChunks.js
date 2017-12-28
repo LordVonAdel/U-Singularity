@@ -39,9 +39,7 @@ World.prototype.loadRegion = function(data, x, y, width){
         cx = 0;
         cy += 1;
       }
-      if (cx + x < this.width && cy + y < this.height) {
-        this.tileSet(cx + x, cy + y, res[i + 1]);
-      }
+      this.tileSet(cx + x, cy + y, res[i + 1]);
       cx++
     }
   }
@@ -71,6 +69,7 @@ World.prototype.cellSetOverwrite = function (tileX, tileY, data) {
 }
 
 World.prototype.unloadChunk = function(chunk){
+  //console.log(`Unload Chunk ${chunk.x},${chunk.y}`);
   chunk.unload();
   var index = this.loadedChunks.indexOf(chunk);
   this.loadedChunks.splice(index, 1);
@@ -83,18 +82,36 @@ World.prototype.loadChunk = function(x, y){
       return chunk;
     }
   }
+  if (x < 0 || y < 0){
+    return null;
+  }
   var chunk = new WChunk(this, x, y);
   this.loadedChunks.push(chunk);
+  console.log(`Load Chunk ${x},${y}`, chunk);
   return chunk;
 }
 
 World.prototype.loadChunksForView = function(view){
   var chunkstoload = [];
-  for (var i = Math.floor(view.x / (this.chunkSize * 32)); i <= (view.width / (this.chunkSize * 32)); i++){
-    for (var j = Math.floor(view.y / (this.chunkSize * 32)); j <= (view.height / (this.chunkSize * 32)); j++){
+
+  //to load region (in chunk coordinates)
+  var x1 = Math.floor(view.x / (this.chunkSize * 32));
+  var y1 = Math.floor(view.y / (this.chunkSize * 32));
+  var x2 = x1 + Math.floor(view.width / (this.chunkSize * 32)) + 1;
+  var y2 = y1 + Math.floor(view.height / (this.chunkSize * 32)) + 1;
+
+  for (var i = x1; i <= x2; i++){
+    for (var j = y1; j <= y2; j++){
       chunkstoload.push({x: i, y: j});
     }
   }
+  for (var i = 0; i < this.loadedChunks.length; i++){
+    var chunk = this.loadedChunks[i];
+    if (chunk.x < x1 || chunk.y < y1 || chunk.x > x2 || chunk.y > y2){
+      this.unloadChunk(chunk);
+    }
+  }
+
   for (var i = 0; i < chunkstoload.length; i++){
     this.loadChunk(chunkstoload[i].x, chunkstoload[i].y);
   }
@@ -125,8 +142,8 @@ WChunk.prototype.load = function(){
   for (var i = 0; i < this.world.chunkSize; i++){
     for (var j = 0; j < this.world.chunkSize; j++){
       var sprite = new PIXI.Sprite();
-      sprite.x = i * 32;
-      sprite.y = j * 32;
+      sprite.x = j * 32;
+      sprite.y = i * 32;
       this.sprites.push(sprite);
       this.pixiContainer.addChild(sprite);
       this.updateCell(i, j);

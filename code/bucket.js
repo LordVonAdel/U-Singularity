@@ -67,7 +67,10 @@ Bucket.prototype.sendMegaPacketArea = function(socket){
   for(var i = 0; i<rad*rad; i++){
     var x = Math.max(Math.min((i % rad + this.x) - Math.floor(rad/2),this.world.buckets.width),0);
     var y = Math.max(Math.min((Math.floor(i/rad) + this.y) - Math.floor(rad/2),this.world.buckets.height),0);
-    this.world.buckets.cellGet(x,y).sendMegaPacket(socket)
+    var bucket = this.world.buckets.cellGet(x,y);
+    if (bucket){
+      bucket.sendMegaPacket(socket);
+    }
   }
 }
 

@@ -16,7 +16,7 @@ config = {
 };
 
 useFOV = false;
-useLight = true;
+useLight = false;
 
 server_ip = getParam('ip');
 
