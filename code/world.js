@@ -217,7 +217,6 @@ World.prototype.clear = function(){
   this.spawnY = 0;
   this.resize(100,100);
   this.ents = {};
-  this.broadcast('world',{w:this.width,h:this.height,str:this.grid.save()});
 }
 
 //clears a region in the world
@@ -267,7 +266,6 @@ World.prototype.load = function(filename){
           ent.update();
         }
       }
-      that.broadcast('world',{w:that.width,h:that.height,str:that.grid.save()});
     }
   });
 }

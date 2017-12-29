@@ -1,9 +1,8 @@
 //Alternative world
 function World(){
-  this.width = 100;
-  this.height = 100;
   this.loadedChunks = [];
-  this.chunkSize = 8;
+  this.chunks = [];
+  this.chunkSize = 16;
 }
 
 World.prototype.tileGet = function (tileX, tileY) {
@@ -52,13 +51,13 @@ World.prototype.draw = function(){
 World.prototype.getChunkAtTile = function(x, y){
   var cx = Math.floor(x / this.chunkSize);
   var cy = Math.floor(y / this.chunkSize);
-  for (var i = 0; i < this.loadedChunks.length; i++){
-    var chunk = this.loadedChunks[i];
+  for (var i = 0; i < this.chunks.length; i++){
+    var chunk = this.chunks[i];
     if (chunk.x == cx && chunk.y == cy){
       return chunk;
     }
   }
-  return null;
+  return this.createChunk(cx, cy);
 }
 
 World.prototype.cellSetOverwrite = function (tileX, tileY, data) {
@@ -76,18 +75,25 @@ World.prototype.unloadChunk = function(chunk){
 }
 
 World.prototype.loadChunk = function(x, y){
-  for (var i = 0; i < this.loadedChunks.length; i++){
-    var chunk = this.loadedChunks[i];
+  for (var i = 0; i < this.chunks.length; i++){
+    var chunk = this.chunks[i];
     if (chunk.x == x && chunk.y == y){
+      chunk.load();
       return chunk;
     }
   }
   if (x < 0 || y < 0){
     return null;
   }
+  var chunk = this.createChunk(x, y);
+  chunk.load();
+  return chunk;
+
+}
+
+World.prototype.createChunk = function(x, y){
   var chunk = new WChunk(this, x, y);
-  this.loadedChunks.push(chunk);
-  console.log(`Load Chunk ${x},${y}`, chunk);
+  this.chunks.push(chunk);
   return chunk;
 }
 
@@ -136,26 +142,34 @@ function WChunk(world, x, y){
   stageTiles.addChild(this.pixiContainer);
 
   this.load();
+  this.isLoaded = false;
 }
 
 WChunk.prototype.load = function(){
-  for (var i = 0; i < this.world.chunkSize; i++){
-    for (var j = 0; j < this.world.chunkSize; j++){
-      var sprite = new PIXI.Sprite();
-      sprite.x = j * 32;
-      sprite.y = i * 32;
-      this.sprites.push(sprite);
-      this.pixiContainer.addChild(sprite);
-      this.updateCell(i, j);
+  if (!this.isLoaded){
+    for (var i = 0; i < this.world.chunkSize; i++){
+      for (var j = 0; j < this.world.chunkSize; j++){
+        var sprite = new PIXI.Sprite();
+        sprite.x = j * 32;
+        sprite.y = i * 32;
+        this.sprites.push(sprite);
+        this.pixiContainer.addChild(sprite);
+        this.updateCell(j, i);
+      }
     }
+    this.world.loadedChunks.push(this);
+    this.isLoaded = true;
   }
 }
 
 WChunk.prototype.unload = function(){
-  for (var i = 0; i < this.sprites.length; i++){
-    this.sprites[i].destroy();
+  if (this.isLoaded){
+    for (var i = 0; i < this.sprites.length; i++){
+      this.sprites[i].destroy();
+    }
+    this.sprites = [];
+    this.isLoaded = false;
   }
-  this.pixiContainer.destroy();
 }
 
 WChunk.prototype.cellSet = function(x, y, content){
@@ -166,8 +180,8 @@ WChunk.prototype.updateCell = function(x, y){
   var sprite = this.sprites[y * this.world.chunkSize + x];
   var tile = res.tiles[this.grid.cellGet(x, y)];
 
-  var cx = x;
-  var cy = y;
+  var cx = x + this.x * this.world.chunkSize;
+  var cy = y + this.y * this.world.chunkSize;
 
   if (tile && sprite){
     var imageIndex = 0;
@@ -221,5 +235,4 @@ WChunk.prototype.updateCell = function(x, y){
     }
     sprite.setTexture(getTextureFrame(subfolder+"sprites/"+tile.sprite,imageIndex,32,32));
   }
-
 }

@@ -38,11 +38,6 @@ function initNetworking(){
     //world.grid.cellSet(data.x,data.y,data.id);
   })
 
-  socket.on('world',function(data){
-    world.resize(data.w,data.h);
-    world.grid.load(data.str);
-  });
-
   socket.on('world_region',function(data){
     world.loadRegion(data.str,data.x,data.y,data.w);
   });
