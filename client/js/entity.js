@@ -48,9 +48,15 @@ Entity.prototype.update = function(data){
   }
   if (data.x != undefined){
     this.tx = Math.floor(data.x/32);
+    if (data.teleport){
+      this.x = this.tx * 32;
+    }
   }
   if (data.y != undefined){
     this.ty = Math.floor(data.y/32);
+    if (data.teleport){
+      this.y = this.ty * 32;
+    }
   }
   if (data.spriteData != undefined){
     for (var i=0; i<this.spriteData.length; i++){

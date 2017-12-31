@@ -343,12 +343,14 @@ Entity.prototype.changeBucket = function(bucket){
 
 //Teleport this entity
 Entity.prototype.teleport = function(tileX, tileY){
+  this.world.gridEntFree(this.tx, this.ty, this);
+  this.world.gridEntAdd(tileX, tileY, this);
   this.tx = tileX;
   this.ty = tileY;
   this.x = tileX*32;
   this.y = tileY*32;
   this.updateBucket();
-  this.share({tx: this.tx, ty: this.ty, x: this.x, y: this.y});
+  this.share({tx: this.tx, ty: this.ty, x: this.x, y: this.y, teleport: true});
 }
 
 //Fires an event
