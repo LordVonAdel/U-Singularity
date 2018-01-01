@@ -9,6 +9,7 @@ function Game(maps, gamemode, gameConfig, index){
   this.worlds = [];
   this.config = gameConfig;
   this.index = index;
+  this.consolePrefix = "[Game:"+this.index+"]";
 
   //Load a map
   for (var i = 0; i < maps.length; i++){
@@ -21,9 +22,9 @@ function Game(maps, gamemode, gameConfig, index){
   if (fs.existsSync(pth)){
     var GM = require(pth);
     this.gamemode = new GM(this, gameConfig.gamemodeConfig || {});
-    console.log("[Game:"+this.index+"]Started and using gamemode "+this.gamemode.name);
+    console.log(this.consolePrefix+"Started and using gamemode "+this.gamemode.name);
   }else{
-    console.error("[Game:"+this.index+"]Gamemode not found: "+gamemode);
+    console.error(this.consolePrefix+"Gamemode not found: "+gamemode);
   }
 }
 
@@ -38,7 +39,7 @@ Game.prototype.broadcast = function(event, data){
 Game.prototype.addPlayer = function(player){
   if (this.config.playerLimit <= this.clients.length){
     player.kick("Sorry", "The player limit of this server have been already reached! Sorry... Try again later");
-    console.log("[Game:"+this.index+"]Player can't connect because the lobby is full!");
+    console.log(this.consolePrefix+"Player can't connect because the lobby is full!");
     return false;
   }
   player.game = this;
@@ -69,7 +70,7 @@ Game.prototype.changeWorld = function(player, index, spawnX, spawnY, extraData){
   if (index < 0 || index >= this.worlds.length){return false;}
 
   if (player.world){
-    console.log("[Game:"+this.index+"]Move "+player.name+" from world "+player.world.index+" to "+index);
+    console.log(this.consolePrefix+"Move "+player.name+" from world "+player.world.index+" to "+index);
     player.socket.emit('clear');
   }
 
