@@ -228,11 +228,35 @@ module.exports = {
       imageNumber:2,
       collision:false,
       sync:{item: null},
-      onInit:function(){this.sync.item = item.create("fire_ext")},
-      onClick:function(user){if (this.sync.item != null && user.inventory[user.inventoryActive]==null){user.inventory[user.inventoryActive] = this.sync.item;this.sync.item = null; this.sprites[0].index = 1; this.share(); user.shareSelf();}},
-      onUpdate:function(){if(this.sync.item == null){this.sprites[0].index = 1}else{this.sprites[0].index = 0; item.check(this.sync.item)}; this.share()},
+      onInit(){this.sync.item = item.create("fire_ext")},
+      onClick(user){
+        if (this.sync.item != null && user.inventory[user.ent.inventoryActive]==null){
+          user.ent.sync.inventory[user.ent.sync.inventoryActive] = this.sync.item;
+          this.sync.item = null;
+          this.sprites[0].index = 1; 
+          this.share(); 
+          user.shareSelf();
+        }
+      },
+      onUpdate(){
+        if(this.sync.item == null){
+          this.sprites[0].index = 1
+        }else{
+          this.sprites[0].index = 0; 
+          item.check(this.sync.item)
+        };
+        this.share()
+      },
       actions:{
-        fire_ext_box:function(user,item){if (this.sync.item == null){this.sync.item = user.inventory[user.inventoryActive]; user.inventory[user.inventoryActive] = null; this.sprites[0].index = 0; this.share(); user.shareSelf()}}
+        fire_ext_box(user,item){
+          if (this.sync.item == null){
+            this.sync.item = user.ent.sync.inventory[user.ent.sync.inventoryActive]; 
+            user.ent.sync.inventory[user.ent.sync.inventoryActive] = null; 
+            this.sprites[0].index = 0; 
+            this.share(); 
+            user.shareSelf();
+          }
+        }
       }
     },
     lamp_standing: {

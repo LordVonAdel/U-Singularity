@@ -95,7 +95,7 @@ nw = {
       var itemMaster = item.getMaster(itm);
       if (ent) {
         this.lookAt(ent.tx, ent.ty);
-        if (Math.hypot(ent.x - this.ent.x, ent.y - this.ent.y) < (Math.max(this.handRange, itemMaster.range || 1) + 1) * 32) {
+        if (Math.hypot(ent.tx - this.ent.tx, ent.ty - this.ent.ty) < (Math.max(this.handRange, itemMaster.range || 1) + 1)) {
           ent.use(this, itm);
 
           var master = item.getMaster(itm);
