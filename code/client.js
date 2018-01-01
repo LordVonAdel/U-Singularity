@@ -16,7 +16,7 @@ nw = {
   },
   chat(data){
     data.msg = this.stringSave(data.msg);
-    console.log(this.name + ": " + data.msg);
+    console.log(this.game.consolePrefix+this.name + ": " + data.msg);
     if (data.msg.charAt(0) == "/") { //if the message is a command
       var args = data.msg.slice(1).split(" ");
       this.executeCommand(args);
