@@ -168,8 +168,8 @@ Entity.prototype.destroy = function(){
 
 Entity.prototype.changeLayer = function(layer){
   if (layer != this.layer){
-    stageEntities.children[layer].removeChild(this.container);
+    stageEntities.children[this.layer].removeChild(this.container);
     this.layer = layer;
-    stageEntities.children[layer].addChild(this.container);
+    stageEntities.children[this.layer].addChild(this.container);
   }
 }
