@@ -23,8 +23,8 @@ function Entity(world, type, tx, ty, extraData){
         x: img.x || 0,
         y: img.y || 0,
         animation: img.animation || "none",
-        width: 32,
-        height: 32,
+        width: img.width || 32,
+        height: img.height || 32,
         visible: img.visible,
         scale: img.scale
       };
