@@ -13,6 +13,8 @@ var GM = function(game, gmConfig){
   this.elevatorDepartRemainTime = gmConfig.elevatorDepartTime || 30;
   this.timerHasSendThisInterval = true;
   this.gmConfig = gmConfig;
+
+  this.singularity = null;
 }
 
 //will be executed when the game starts. Currently only executable via "/start" command
@@ -21,6 +23,12 @@ GM.prototype.start = function(){
     this.countdown = 5;
     this.stage = "countdown";
     this.game.sendChatMessage("Starting countdown...");
+
+    this.singularity = this.game.worlds[0].spawnEntity("singularity", this.gmConfig.singularityX, this.gmConfig.singularityY);
+
+    this.game.clients.forEach(function(client){
+      client.camSet(this.singularity);
+    }, this);
   }
 }
 
@@ -49,11 +57,9 @@ GM.prototype.step = function(delta){
         controlDoors.forEach(function(door){
           door.sync.isLocked = false;
         });
-
-        var singularity = this.game.worlds[0].spawnEntity("singularity", this.gmConfig.singularityX, this.gmConfig.singularityY);
-
+        
         this.game.clients.forEach(function(client){
-          client.camSet(singularity);
+          client.camReset();
         }, this);
       }else{
         if (this.second >= 1){
