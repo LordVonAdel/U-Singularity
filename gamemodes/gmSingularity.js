@@ -38,15 +38,23 @@ GM.prototype.step = function(delta){
         this.game.sendChatMessage("Experiment starts!");
         this.game.sendChatMessage("Emergency elevator arrives in "+this.elevatorRemainTime+" seconds");
         this.game.showGlobalPopupFromFile("info", "./html/info.html", {info: "Wait for the lift!"});
+
         var lamps = this.game.worlds[0].getEntsByType("wall_lamp_warning");
         lamps.forEach(function(lamp){
           lamp.sync.isOn = true;
           lamp.update();
         });
+
         var controlDoors = this.game.worlds[0].getEntsByType("door_control_room");
         controlDoors.forEach(function(door){
           door.sync.isLocked = false;
         });
+
+        var singularity = this.game.worlds[0].spawnEntity("singularity", this.gmConfig.singularityX, this.gmConfig.singularityY);
+
+        this.game.clients.forEach(function(client){
+          client.camSet(singularity);
+        }, this);
       }else{
         if (this.second >= 1){
           this.game.showGlobalPopupFromFile("countdown", "./html/countdown.html", {time: Math.floor(this.countdown)});

@@ -423,4 +423,14 @@ Client.prototype.changeMode = function(mode){
   }
 }
 
+//sets the camera of the client
+Client.prototype.camSet = function(entity){
+  this.socket.emit('cam', entity.id);
+}
+
+//resets the camera of the client to its entity
+Client.prototype.camReset = function(){
+  this.socket.emit('cam', this.ent.id);
+}
+
 module.exports = Client;

@@ -8,6 +8,7 @@ function initNetworking(){
   });
 
   socket.on('cam',function(data){
+    console.log("Change cam to entity with id "+data);
     camId = data;
     var ent = ents[data];
     if (ent != undefined){

@@ -48,3 +48,5 @@ games:
       world3LiftY: 12
       liftWidth: 5
       liftHeight: 4
+      singularityX: 26
+      singularityY: 10
