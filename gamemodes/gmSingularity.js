@@ -61,6 +61,8 @@ GM.prototype.step = function(delta){
         this.game.clients.forEach(function(client){
           client.camReset();
         }, this);
+
+        this.singularity.fire("start");
       }else{
         if (this.second >= 1){
           this.game.showGlobalPopupFromFile("countdown", "./html/countdown.html", {time: Math.floor(this.countdown)});
