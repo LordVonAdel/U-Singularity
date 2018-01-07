@@ -3,7 +3,7 @@ var path = require("path");
 var yaml = require("js-yaml");
 var item = require("./item.js");
 
-var commands = {}; //object with a list of commands
+var commands = {}; //object with a list of commands. Every key is a command
 //default loaded things, which make no sense to move in external files
 var res = { //object with every dynamic loaded content, excepts maps and commands
   tiles: {},
