@@ -150,14 +150,16 @@ World.prototype.loadRegion = function(region, x, y){
   var ents = region.ents;
   for (var k in ents) {
     var spwn = ents[k];
-    var ent = this.spawnEntity(spwn.type, spwn.tx - region.ax + x, spwn.ty - region.ay + y);
-    if (!ent.ent){
-      console.error("There are things in this map, of which we don't know what they are! ("+spwn.type+")");
-    }else{
-      if (spwn.sync){
-        Object.assign(ent.sync, spwn.sync);
+    if (spwn.type != "player"){
+      var ent = this.spawnEntity(spwn.type, spwn.tx - region.ax + x, spwn.ty - region.ay + y);
+      if (!ent.ent){
+        console.error("There are things in this map, of which we don't know what they are! ("+spwn.type+")");
+      }else{
+        if (spwn.sync){
+          Object.assign(ent.sync, spwn.sync);
+        }
+        ent.update();
       }
-      ent.update();
     }
   }
   this.resendRegion(x, y, region.width, region.height);
