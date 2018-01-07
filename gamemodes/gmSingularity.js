@@ -114,7 +114,7 @@ GM.prototype.step = function(delta){
 
         this.game.worlds[1].swapRegion(this.gmConfig.world2LiftX, this.gmConfig.world2LiftY, this.gmConfig.liftWidth, this.gmConfig.liftHeight, this.game.worlds[2], this.gmConfig.world3LiftX, this.gmConfig.world3LiftY);
 
-        var names = this.game.worlds[1].getEntsByRegion().filter((ent)=>{return ent.type == "player"}).map((ent)=>{return ent.client.name});
+        var names = this.game.worlds[2].getEntsByRegion().filter((ent)=>{return ent.type == "player"}).map((ent)=>{return ent.client.name});
         this.game.sendChatMessage("Following players survived the game: "+names.join(', '));
         var liftDoors = this.game.worlds[2].getEntsByType("door_lift");
         liftDoors.forEach(function(door){
