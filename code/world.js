@@ -160,6 +160,8 @@ World.prototype.loadRegion = function(region, x, y){
         }
         ent.update();
       }
+    }else{
+      console.warn("There is a player entity saved in this world! We will not load it!");
     }
   }
   this.resendRegion(x, y, region.width, region.height);
@@ -244,6 +246,8 @@ World.prototype.load = function(filename){
       console.error(that.consolePrefix+"Failed to load map: "+filename, err);
       that.broadcast('chat',{msg: "Failed to load map: "+filename});
     }else{
+      //This method is redundant! It overlaps with "World.prototype.loadRegion"
+      //ToDo: fix the issue mentioned in the line above
       that.clear();
       var obj = JSON.parse(data);
       that.resize(obj.width, obj.height);
@@ -254,11 +258,15 @@ World.prototype.load = function(filename){
       var ents = obj.ents;
       for (var k in ents) {
         var spwn = ents[k];
+        if (spwn.type == "player"){
+          console.warn("Tried to load a player!");
+          continue;
+        }
         var ent = that.spawnEntity(spwn.type, spwn.tx, spwn.ty);
         ent.x = spwn.x;
         ent.y = spwn.y;
         if (!ent.ent){
-          console.error("There are things in this map, which we don't know what they are! ("+spwn.type+")");
+          console.error("There are things in this map, of which we don't know what they are! ("+spwn.type+")");
         }else{
           if (spwn.sync == undefined){
             
