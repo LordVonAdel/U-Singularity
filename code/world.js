@@ -240,6 +240,7 @@ World.prototype.clearRegion = function(x, y, width, height){
 
 //loads the world from a file
 World.prototype.load = function(filename){
+  console.log(this.consolePrefix + "Loading world from file "+filename);
   var that = this;
   fs.readFile(filename,function(err, data){
     if (err){
@@ -250,32 +251,11 @@ World.prototype.load = function(filename){
       //ToDo: fix the issue mentioned in the line above
       that.clear();
       var obj = JSON.parse(data);
-      that.resize(obj.width, obj.height);
-      that.grid.load(obj.grid);
+      that.resize(obj.width, obj.height);     
       that.spawnX = +obj.spawnX || 0;
       that.spawnY = +obj.spawnY || 0;
       that.nextEntId = obj.nextEntId || 100;
-      var ents = obj.ents;
-      for (var k in ents) {
-        var spwn = ents[k];
-        if (spwn.type == "player"){
-          console.warn("Tried to load a player!");
-          continue;
-        }
-        var ent = that.spawnEntity(spwn.type, spwn.tx, spwn.ty);
-        ent.x = spwn.x;
-        ent.y = spwn.y;
-        if (!ent.ent){
-          console.error("There are things in this map, of which we don't know what they are! ("+spwn.type+")");
-        }else{
-          if (spwn.sync == undefined){
-            
-          }else{
-            Object.assign(ent.sync, spwn.sync);
-          }
-          ent.update();
-        }
-      }
+      that.loadRegion(obj, 0, 0);
     }
   });
 }

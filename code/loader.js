@@ -39,7 +39,7 @@ var res = { //object with every dynamic loaded content, excepts maps and command
           this.share();
         }
       },
-        "actions":{}
+      "actions":{}
     },
     "player":{
       "draggable": true,
