@@ -67,11 +67,12 @@ Game.prototype.step = function(delta){
 
 //Change the world for one player
 Game.prototype.changeWorld = function(player, index, spawnX, spawnY, extraData){
-  if (index < 0 || index >= this.worlds.length){return false;}
+  if (index < 0 || index >= this.worlds.length) {return false;}
+  
+  player.socket.emit('clear');
 
   if (player.world){
     console.log(this.consolePrefix+"Move "+player.name+" from world "+player.world.index+" to "+index);
-    player.socket.emit('clear');
   }
 
   var sync = {};

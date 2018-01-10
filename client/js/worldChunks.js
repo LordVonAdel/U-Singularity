@@ -62,7 +62,7 @@ World.prototype.getChunkAtTile = function(x, y){
 
 World.prototype.cellSetOverwrite = function (tileX, tileY, data) {
   var chunk = this.getChunkAtTile(tileX, tileY);
-  if (chunk){
+  if (chunk) {
     chunk.gridOverwrite.cellSet(tileX % this.chunkSize, tileY % this.chunkSize, data);
   }
 }
@@ -70,31 +70,44 @@ World.prototype.cellSetOverwrite = function (tileX, tileY, data) {
 World.prototype.unloadChunk = function(chunk){
   //console.log(`Unload Chunk ${chunk.x},${chunk.y}`);
   chunk.unload();
-  var index = this.loadedChunks.indexOf(chunk);
-  this.loadedChunks.splice(index, 1);
 }
 
 World.prototype.loadChunk = function(x, y){
+  if (x < 0 || y < 0) { return null; }
+
   for (var i = 0; i < this.chunks.length; i++){
     var chunk = this.chunks[i];
     if (chunk.x == x && chunk.y == y){
-      chunk.load();
+      if (chunk.load()){
+        this.loadedChunks.push(chunk);
+      }
       return chunk;
     }
   }
-  if (x < 0 || y < 0){
-    return null;
-  }
+
   var chunk = this.createChunk(x, y);
   chunk.load();
-  return chunk;
+  this.loadedChunks.push(chunk);
 
+  return chunk;
 }
 
 World.prototype.createChunk = function(x, y){
   var chunk = new WChunk(this, x, y);
   this.chunks.push(chunk);
   return chunk;
+}
+
+World.prototype.destroyChunk = function(x, y){
+  var chunk = this.chunks.filter((chunk) => {return (chunk.x == x && chunk.y == y)})[0];
+  if (!chunk) {return false}
+
+  this.chunks.splice(this.chunks.indexOf(chunk), 1);
+
+  this.unloadChunk(chunk);
+  chunk.destroy();
+
+  delete chunk;
 }
 
 World.prototype.loadChunksForView = function(view){
@@ -146,34 +159,51 @@ function WChunk(world, x, y){
 }
 
 WChunk.prototype.load = function(){
-  if (!this.isLoaded){
-    for (var i = 0; i < this.world.chunkSize; i++){
-      for (var j = 0; j < this.world.chunkSize; j++){
-        var sprite = new PIXI.Sprite();
-        sprite.x = j * 32;
-        sprite.y = i * 32;
-        this.sprites.push(sprite);
-        this.pixiContainer.addChild(sprite);
-        this.updateCell(j, i);
-      }
+  if (this.isLoaded) return false;
+
+  this.isLoaded = true;
+
+  for (var i = 0; i < this.world.chunkSize; i++){
+    for (var j = 0; j < this.world.chunkSize; j++){
+      var sprite = new PIXI.Sprite();
+      sprite.x = j * 32;
+      sprite.y = i * 32;
+      this.sprites.push(sprite);
+      this.pixiContainer.addChild(sprite);
+      this.updateCell(j, i);
     }
-    this.world.loadedChunks.push(this);
-    this.isLoaded = true;
   }
+
+  return true;
+}
+
+WChunk.prototype.destroy = function(){
+  this.unload();
+  this.pixiContainer.destroy();
 }
 
 WChunk.prototype.unload = function(){
-  if (this.isLoaded){
-    for (var i = 0; i < this.sprites.length; i++){
-      this.sprites[i].destroy();
-    }
-    this.sprites = [];
-    this.isLoaded = false;
+  if (!this.isLoaded) {return false;}
+
+  for (var i = 0; i < this.sprites.length; i++){
+    this.sprites[i].destroy();
   }
+  this.sprites = [];
+  this.isLoaded = false;
+
+  this.world.loadedChunks.splice(this.world.loadedChunks.indexOf(this), 1)
 }
 
 WChunk.prototype.cellSet = function(x, y, content){
   this.grid.cellSet(x, y, content);
+}
+
+WChunk.prototype.update = function(){
+  for (var i = 0; i < this.world.chunkSize; i++){
+    for (var j = 0; j < this.world.chunkSize; j++){
+      this.updateCell(i, j);
+    }
+  }
 }
 
 WChunk.prototype.updateCell = function(x, y){

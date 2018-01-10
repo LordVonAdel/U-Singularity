@@ -41,6 +41,7 @@ function initNetworking(){
 
   socket.on('world_region',function(data){
     world.loadRegion(data.str,data.x,data.y,data.w);
+    console.log("Received world region data!");
   });
 
   socket.on('ent_spawn',function(data){
@@ -90,6 +91,11 @@ function initNetworking(){
       ents[k].destroy();
       delete ents[k];
     }
+    for (var i = 0; i < world.chunks.length; i++){
+      var chunk = world.chunks[i];
+      world.destroyChunk(chunk.x, chunk.y);
+    }
+    console.log("World Cleared!");
   });
 
   socket.on('pong', function(latency){

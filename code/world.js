@@ -247,11 +247,9 @@ World.prototype.load = function(filename){
       console.error(that.consolePrefix+"Failed to load map: "+filename, err);
       that.broadcast('chat',{msg: "Failed to load map: "+filename});
     }else{
-      //This method is redundant! It overlaps with "World.prototype.loadRegion"
-      //ToDo: fix the issue mentioned in the line above
       that.clear();
       var obj = JSON.parse(data);
-      that.resize(obj.width, obj.height);     
+      that.resize(obj.width, obj.height);
       that.spawnX = +obj.spawnX || 0;
       that.spawnY = +obj.spawnY || 0;
       that.nextEntId = obj.nextEntId || 100;
