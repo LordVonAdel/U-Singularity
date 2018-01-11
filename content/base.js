@@ -102,13 +102,13 @@ module.exports = {
     },
     start: {
       permission: "master.start",
-      fun: function(sender, args){
+      fun(sender, args){
         sender.game.gamemode.start();
       }
     }
   },
   actions: { //----------------------------Actions-----------------------------
-    build_metal: function(world, tileX, tileY){
+    build_metal(world, tileX, tileY){
       var index = world.cellGet(tileX,tileY);
       switch(index){
         case 0:
@@ -122,7 +122,7 @@ module.exports = {
         break;
       }
     },
-    buildArmor: function(world, tileX, tileY){
+    buildArmor(world, tileX, tileY){
       var index = world.cellGet(tileX,tileY);
       if (index == 2){
         world.cellSet(tileX,tileY,7);
@@ -131,7 +131,7 @@ module.exports = {
         world.cellSet(tileX,tileY,8);
       }
     },
-    buildGlass: function(world, tileX,tileY){
+    buildGlass(world, tileX,tileY){
       var index = world.cellGet(tileX,tileY);
       if (index == 5){
         world.cellSet(tileX,tileY,4);
@@ -140,10 +140,10 @@ module.exports = {
         world.cellSet(tileX,tileY,3);
       }
     },
-    buildWall: function(world, tileX, tileY){
+    buildWall(world, tileX, tileY){
       world.cellSet(tileX,tileY,5);
     },
-    crowbar: function(world, tileX, tileY){
+    crowbar(world, tileX, tileY){
       var index = world.cellGet(tileX,tileY);
       switch(index){
         case 6:
@@ -154,13 +154,13 @@ module.exports = {
         break;
       }
     },
-    extinguish: function(world, tileX,tileY){
+    extinguish(world, tileX,tileY){
       var index = world.cellGet(tileX,tileY);
       if (!res.tiles[index].collision){
         //world.spawnEntity("gas_argon",tileX,tileY);
       }
     },
-    scanAtmo: function(world, tileX,tileY, user){
+    scanAtmo(world, tileX,tileY, user){
       var str = "---Atmosphere---"
       var tile = world.gridAtmos.cellGet(tileX,tileY);
       if (tile){
@@ -264,7 +264,7 @@ module.exports = {
       sync: {isOn: true},
       draggable: true,
       collision: true,
-      onUpdate: function(){
+      onUpdate(){
         if (this.sync.isOn){
           this.setLight(0, {radius: 512, color: 0xfffee8});
         }else{
@@ -272,7 +272,7 @@ module.exports = {
         }
       },
       actions:{ 
-        hand: function(){
+        hand(){
           this.sync.isOn = !this.sync.isOn;
           this.update();
         }
@@ -306,7 +306,7 @@ module.exports = {
       image: [{number: 8, source: "objects/wall_lamp_warning.png", width:32, height: 32}],
       collision: false,
       sync: {isOn: false},
-      onUpdate: function(){
+      onUpdate(){
         if (this.sync.isOn){
           this.setLight(0, {radius: 128, color: 0xff0000, pattern: "0138XXXX0", patternTime: 2000, intensity: 0.6});
         }else{
