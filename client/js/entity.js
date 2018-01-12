@@ -15,25 +15,6 @@ function Entity(id, x, y, data){
   this.container = new PIXI.Container();
   this.container.x = this.x;
   this.container.y = this.y;
-  /*
-  for (var i=0; i < this.spriteData.length; i++){
-    var sData = this.spriteData[i];
-    var spr = {
-      source: sData.source,
-      x: sData.x || 0,
-      y: sData.y || 0,
-      index: sData.index || 0
-    }
-    var imagePath = subfolder+"sprites/"+spr.source;
-    var tex = getTextureFrame(imagePath,spr.index,32,32);
-    var sprite = new PIXI.Sprite(tex);
-    this.container.addChild(sprite);
-    this.sprites[i] = sprite;
-
-    sprite.x = spr.x;
-    sprite.y = spr.y;
-  }
-  */
 
   stageEntities.children[this.layer].addChild(this.container);
 

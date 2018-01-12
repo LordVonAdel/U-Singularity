@@ -19,13 +19,11 @@ function initNetworking(){
   });
 
   socket.on('chat',function(data){
-    //console.log('chat: '+data.msg);
     $("#chat_msg").append("<br>"+data.msg);
     $("#chat_msg").scrollTop($("#chat_msg").prop("scrollHeight"));
   });
 
   socket.on('resource',function(data){
-    //console.log(data);
     load(data);
   });
 
@@ -36,7 +34,6 @@ function initNetworking(){
 
   socket.on('change_tile',function(data){
     world.tileSet(data.x, data.y, data.id);
-    //world.grid.cellSet(data.x,data.y,data.id);
   })
 
   socket.on('world_region',function(data){

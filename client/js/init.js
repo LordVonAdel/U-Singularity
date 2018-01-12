@@ -22,7 +22,7 @@ server_ip = getParam('ip');
 
 var lastTime = Date.now();
 
-$(document).ready(function(){
+$(function(){
 
   mouseX_ui = 0;
   mouseY_ui = 0;
