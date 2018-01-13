@@ -52,4 +52,11 @@ $(function(){
   initNetworking();
 
   gameLoop();
+
+  //becuause the world is not shown directly after joining
+  setTimeout(function(){
+    for (var i = 0; i < world.loadedChunks.length; i++){
+      world.loadedChunks[i].update();
+    }
+  }, 500);
 });

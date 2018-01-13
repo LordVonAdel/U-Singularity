@@ -236,11 +236,6 @@ function Client(socket) {
   socket.on('entRequest', nw.entRequest.bind(this));
   socket.on('invCombine', nw.inventoryCombine.bind(this));
   socket.on('spectatePosition', nw.spectatePosition.bind(this));
-
-  if (this.bucket != null) {
-    this.bucket.sendMegaPacketArea(this.socket);
-  }
-
 }
 
 //Executes a command as the player
