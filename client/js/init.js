@@ -53,7 +53,7 @@ $(function(){
 
   gameLoop();
 
-  //becuause the world is not shown directly after joining
+  //because the world is not shown directly after joining
   setTimeout(function(){
     for (var i = 0; i < world.loadedChunks.length; i++){
       world.loadedChunks[i].update();
