@@ -5,6 +5,16 @@ function initNetworking(){
     player.id = data.id;
     console.log("Connected to Server!");
     socket.emit('welcome',{});
+    
+    for (k in ents){
+      ents[k].destroy();
+      delete ents[k];
+    }
+    for (var i = 0; i < world.chunks.length; i++){
+      var chunk = world.chunks[i];
+      world.destroyChunk(chunk.x, chunk.y);
+    }
+    console.log("World Cleared!");
   });
 
   socket.on('cam',function(data){
