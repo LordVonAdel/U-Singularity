@@ -236,7 +236,7 @@ Entity.prototype.destroy = function(){
 }
 
 //Move in an direction with a specific speed. The distance is one tile
-Entity.prototype.moveDir = function(direction,speed){
+Entity.prototype.moveDir = function(direction, speed){
   var x = this.tx;
   var y = this.ty;
   switch (direction){
