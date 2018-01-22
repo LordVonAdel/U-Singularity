@@ -33,6 +33,18 @@ module.exports = {
               }
             }
           }
+
+          for (var i = 0; i < 9; i++){
+            for (var j = 0; j < 9; j++){
+              var x = this.tx + i - 4;
+              var y = this.ty + j - 4;
+              var colls = this.world.collisionsGet(x, y);
+              for (var k = 0; k < colls.length; k++){
+                colls[k].impulse(this.tx - colls[k].tx, this.ty - colls[k].ty);
+              }
+            }
+          }
+
         }
       }
     }
