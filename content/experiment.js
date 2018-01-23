@@ -2,6 +2,7 @@ module.exports = {
   objects: {
     singularity: {
       image: [{number: 1, source: "objects/singularity.png", width: 96, x: -32, y: -32, height: 96, visible: false}],
+      layer: 7,
       sync: {
         active: false,
         nextMoveIn: 1000
