@@ -41,7 +41,7 @@ module.exports = {
               var y = this.ty + j - 4;
               var colls = this.world.collisionsGet(x, y);
               for (var k = 0; k < colls.length; k++){
-                colls[k].impulse(this.tx - colls[k].tx, this.ty - colls[k].ty);
+                colls[k].impulse(this.tx - colls[k].tx, this.ty - colls[k].ty, 2 / this.world.dist(this.tx, this.ty, colls[k].tx, colls[k].ty));
               }
             }
           }
