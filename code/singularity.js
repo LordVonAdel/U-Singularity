@@ -63,11 +63,9 @@ loader.auto(function(){ //load all things from the modules directory
     var cGame = config.games[i];
     games[i] = new Game(cGame.maps, cGame.gamemode, cGame, i);
   }
-  require("./startup.js");
   
   update();
 });
-
 
 playerlist = [];
 games = [];
