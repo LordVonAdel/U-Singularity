@@ -192,10 +192,9 @@ nw = {
   }
 }
 
-function Client(socket) {
+function Client(socket, id) {
   this.socket = socket;
-  this.id = nextEntId;
-  nextEntId += 1;
+  this.id = id;
   this.name = "unnamed(" + this.id + ")";
 
   this.mode = "player";
@@ -291,8 +290,7 @@ Client.prototype.disconnect = function () {
     this.game.broadcast('disc', { id: this.id });
     this.game.clients.splice(this.game.clients.indexOf(this), 1);
   }
-  var i = playerlist.indexOf(this);
-  playerlist.splice(i, 1);
+  lc.removePlayer(this);
 }
 
 //Teleports the player to a specific position

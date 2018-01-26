@@ -5,7 +5,7 @@ loader = require("./loader.js");
 config = null;
 loader.loadConfig();
 loader.loadClasses();
-const Game = require("./game.js");
+const LobbyController = require("./lobbyController.js");
 
 var http = require("http").createServer(function( req, res){
   url = req.url;
@@ -53,8 +53,13 @@ var http = require("http").createServer(function( req, res){
 io = require("socket.io")(http);
 require("./networking.js");
 
+lc = null;
+
 loader.auto(function(){ //load all things from the modules directory
+  lc = new LobbyController(config);
   res = loader.res;
+
+  /*
   nextPlayerId = 0;
   nextEntId = 0;
   if (!config.games || config.games.length == 0){console.error("No Games defined!")}
@@ -63,22 +68,26 @@ loader.auto(function(){ //load all things from the modules directory
     var cGame = config.games[i];
     games[i] = new Game(cGame.maps, cGame.gamemode, cGame, i);
   }
+  */
   
   update();
 });
 
+/*
 playerlist = [];
 games = [];
+*/
 
-frameCount = 0;
 lasttime = Date.now();
 var update = function() {
   setTimeout(update, 1000/config.tickRate);
   delta = Date.now() - lasttime;
   lasttime = Date.now();
-  for (var i = 0; i < games.length; i++) {
+  /*for (var i = 0; i < games.length; i++) {
     games[i].step(delta);
-  }
+  }*/
+
+  lc.step(delta);
   
   if (Date.now() - lasttime > (1000/config.tickRate) * 1.5){ //50% tolerance
     console.log("The server is overloaded or the system time changed! Delta: " + delta);
