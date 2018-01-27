@@ -11,7 +11,7 @@ function LobbyController(config){
   if (!config.games || config.games.length == 0){console.error("No Games defined!")}
   for(var i = 0; i < config.games.length; i++){
     var cGame = config.games[i];
-    this.games[i] = new Game(cGame.maps, cGame.gamemode, cGame, i);
+    this.games[i] = new Game(this, cGame.gamemode, cGame, i);
   }
 
 }
@@ -33,6 +33,13 @@ LobbyController.prototype.createPlayer = function(socket){
 LobbyController.prototype.removePlayer = function(player){
   var index = this.clients.indexOf(player);
   this.clients.splice(index, 1);
+}
+
+LobbyController.prototype.restartGame = function(index){
+  var game = this.games[index];
+  if (!game){return; }
+  game.end();
+  this.games.splice(index, 1);
 }
 
 module.exports = LobbyController;

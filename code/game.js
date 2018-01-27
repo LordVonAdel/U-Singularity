@@ -4,17 +4,18 @@ const Entity = require("./entity.js");
 const fs = require("fs");
 const path = require("path");
 
-function Game(maps, gamemode, gameConfig, index){
+function Game(lobbyController, gamemode, gameConfig, index){
   this.clients = [];
   this.worlds = [];
   this.config = gameConfig;
   this.index = index;
+  this.controller = lobbyController;
   this.consolePrefix = "[Game:"+this.index+"]";
 
   //Load a map
-  for (var i = 0; i < maps.length; i++){
+  for (var i = 0; i < gameConfig.maps.length; i++){
     world = new World(this, i);
-    world.load("maps/"+maps[i]+".json");
+    world.load("maps/"+gameConfig.maps[i]+".json");
     this.worlds[i] = world;
   }
   this.gamemode = null;
@@ -130,10 +131,17 @@ Game.prototype.sendChatMessage = function(message){
   }
 }
 
+//Closes the game
+Game.prototype.end = function(){
+  for (let i = 0; i < this.clients.length; i++) {
+    const element = this.clients[i];
+    element.kick("Game Closed", "The game closed. Reload the page to get into a new one!");
+  }
+}
 //Restarts the game
 //ToDo: Write function
-Game.prototype.restart = function(){
-
+Game.prototype.restartGame = function(){
+  this.controller.restart(this.index);
 }
 
 module.exports = Game;
