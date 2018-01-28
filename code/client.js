@@ -382,6 +382,7 @@ Client.prototype.changeBucket = function (bucket) {
 
 //Kick the player from the server
 Client.prototype.kick = function (title, message) {
+  console.log(this.game.consolePrefix + `Kicked player: "${this.name}". reason: "${title}", "${message}"`);
   this.popup("kicked", "html/kicked.html", {title: title || "", msg:message});
   var that = this;
   setTimeout(function(){

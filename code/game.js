@@ -133,6 +133,7 @@ Game.prototype.sendChatMessage = function(message){
 
 //Closes the game
 Game.prototype.end = function(){
+  console.log(this.consolePrefix + "End game");
   for (let i = 0; i < this.clients.length; i++) {
     const element = this.clients[i];
     element.kick("Game Closed", "The game closed. Reload the page to get into a new one!");
@@ -140,8 +141,9 @@ Game.prototype.end = function(){
 }
 //Restarts the game
 //ToDo: Write function
-Game.prototype.restartGame = function(){
-  this.controller.restart(this.index);
+Game.prototype.restart = function(){
+  console.log(this.consolePrefix + "Restart game");
+  this.controller.restartGame(this.index);
 }
 
 module.exports = Game;

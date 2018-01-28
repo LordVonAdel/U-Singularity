@@ -7,6 +7,7 @@ function LobbyController(config){
   this.games = [];
   this.nextPlayerId = 1;
   this.clients = [];
+  this.config = config;
 
   if (!config.games || config.games.length == 0){console.error("No Games defined!")}
   for(var i = 0; i < config.games.length; i++){
@@ -40,6 +41,10 @@ LobbyController.prototype.restartGame = function(index){
   if (!game){return; }
   game.end();
   this.games.splice(index, 1);
+  delete game;
+
+  var cGame = this.config.games[index];
+  this.games[index] = new Game(this, cGame.gamemode, cGame, index);
 }
 
 module.exports = LobbyController;

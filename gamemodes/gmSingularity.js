@@ -10,7 +10,7 @@ var GM = function(game, gmConfig){
   ]
   this.second = 0; //Used to send things only every second and not every tick!
   this.elevatorRemainTime = gmConfig.elevatorTime || 30;
-  this.elevatorDepartRemainTime = gmConfig.elevatorDepartTime || 30;
+  this.elevatorDepartRemainTime = gmConfig.elevatorDepartTime || 10;
   this.timerHasSendThisInterval = true;
   this.gmConfig = gmConfig;
 
@@ -83,7 +83,7 @@ GM.prototype.step = function(delta){
         this.stage = "lift";
         this.game.worlds[0].swapRegion(this.gmConfig.world1LiftX, this.gmConfig.world1LiftY, this.gmConfig.liftWidth, this.gmConfig.liftHeight, this.game.worlds[1], this.gmConfig.world2LiftX, this.gmConfig.world2LiftY);
         this.game.sendChatMessage("The lift has arrived!");
-        this.game.sendChatMessage("It will depart in "+this.elevatorDepartRemainTime+"seconds!");
+        this.game.sendChatMessage("It will depart in "+this.elevatorDepartRemainTime+" seconds!");
         this.game.showGlobalPopupFromFile("info", "./html/info.html", {info: "Get into the lift!"});
         var liftDoors = this.game.worlds[0].getEntsByType("door_lift");
         liftDoors.forEach(function(door){
@@ -92,7 +92,7 @@ GM.prototype.step = function(delta){
       }
     break;
     case "lift":
-      this.elevatorDepartRemainTime -= 1 / delta;
+      this.elevatorDepartRemainTime -= delta/1000;
       if (this.elevatorDepartRemainTime <= 0){
         this.game.sendChatMessage("Going up!");
         this.game.showGlobalPopupFromFile("info", "./html/info.html", {info: "Wait in the lift!"});
@@ -106,8 +106,9 @@ GM.prototype.step = function(delta){
       }
     break;
     case "escape":
-      this.elevatorRemainTime -= 1/delta;
+      this.elevatorRemainTime -= delta/1000;
       if (this.elevatorRemainTime <= 0){
+        this.roundEndTime = 10;
         this.stage = "won";
         this.game.sendChatMessage("End of round!");
         this.game.showGlobalPopupFromFile("info", "./html/info.html", {info: "Round end"});
@@ -123,7 +124,10 @@ GM.prototype.step = function(delta){
       }
     break;
     case "won":
-
+      this.roundEndTime -= delta/1000;
+      if (this.roundEndTime <= 0){
+        this.game.restart();
+      }
     break;
   }
   this.second %= 1;
