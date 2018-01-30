@@ -146,6 +146,20 @@ GM.prototype.playerJoined = function(player){
   }
 }
 
+GM.prototype.renderReadyList = function(){
+  if (this.stage == "lobby"){
+    var li = "";
+    for (var i = 0; i < this.game.clients; i++){
+      var client = this.game.clients[i];
+
+      li += `<li>${client.name}</li>`
+    }
+    this.game.showGlobalPopupFromFile("readylist", "./html/readylist.html", {li: li});
+  }else{
+    this.game.showGlobalPopup("readylist", "");
+  }
+}
+
 //return data for the API
 GM.prototype.getAPIData = function(){
   return {
