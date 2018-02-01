@@ -20,6 +20,7 @@ var GM = function(game, gmConfig){
 //will be executed when the game starts. Currently only executable via "/start" command
 GM.prototype.start = function(){
   if (this.stage == "lobby"){
+    this.game.showGlobalPopup("readylist", "");
     this.countdown = 5;
     this.stage = "countdown";
     this.game.sendChatMessage("Starting countdown...");
@@ -144,6 +145,8 @@ GM.prototype.playerJoined = function(player){
   }else if(this.stage == "won"){
     player.popup("info", "./html/info.html", {info: "Round end"});
   }
+
+  this.renderReadyList();
 }
 
 GM.prototype.renderReadyList = function(){

@@ -20,6 +20,13 @@ World.prototype.tileSet = function (tileX, tileY, id){
   if (chunk){
     chunk.grid.cellSet(tileX % this.chunkSize, tileY % this.chunkSize, id);
     chunk.updateCell(tileX % this.chunkSize, tileY % this.chunkSize);
+    for (var i = tileX-1; i <= tileX+1; i++){
+      for (var j = tileY-1; j <= tileY+1; j++){
+        //ToDo: check if tile is in world
+        var chunk = this.getChunkAtTile(i, j);
+        chunk.updateCell(i % this.chunkSize, j % this.chunkSize);
+      }
+    }
   }
 }
 

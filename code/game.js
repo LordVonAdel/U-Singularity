@@ -140,7 +140,6 @@ Game.prototype.end = function(){
   }
 }
 //Restarts the game
-//ToDo: Write function
 Game.prototype.restart = function(){
   console.log(this.consolePrefix + "Restart game");
   this.controller.restartGame(this.index);
