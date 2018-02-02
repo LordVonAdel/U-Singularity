@@ -139,6 +139,7 @@ Game.prototype.end = function(){
     element.kick("Game Closed", "The game closed. Reload the page to get into a new one!");
   }
 }
+
 //Restarts the game
 Game.prototype.restart = function(){
   console.log(this.consolePrefix + "Restart game");

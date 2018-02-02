@@ -149,10 +149,11 @@ GM.prototype.playerJoined = function(player){
   this.renderReadyList();
 }
 
+//Shows the list of who is ready in the lobby
 GM.prototype.renderReadyList = function(){
   if (this.stage == "lobby"){
     var li = "";
-    for (var i = 0; i < this.game.clients; i++){
+    for (var i = 0; i < this.game.clients.length; i++){
       var client = this.game.clients[i];
 
       li += `<li>${client.name}</li>`
