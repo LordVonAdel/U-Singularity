@@ -136,6 +136,8 @@ GM.prototype.step = function(delta){
 
 //Will be executed when a player joins
 GM.prototype.playerJoined = function(player){
+  player.ready = false;
+
   if (this.stage == "survive"){
     player.popup("info", "./html/info.html", {info: "Wait for the lift!"});
   }else if(this.stage == "lift"){
@@ -156,7 +158,7 @@ GM.prototype.renderReadyList = function(){
     for (var i = 0; i < this.game.clients.length; i++){
       var client = this.game.clients[i];
 
-      li += `<li>${client.name}</li>`
+      li += `<li>${client.name} - ${client.ready ? "ready" : "not ready"}</li>`
     }
     this.game.showGlobalPopupFromFile("readylist", "./html/readylist.html", {li: li});
   }else{
