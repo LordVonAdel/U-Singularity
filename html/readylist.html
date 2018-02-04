@@ -3,5 +3,10 @@
   <ul>
     {li}
   </ul>
-  <button>Toggle Ready</button>
+  <button id="readylist-ready-toggler">Toggle Ready</button>
+  <script>
+    $("#readylist-ready-toggler").click((e)=>{
+      socket.emit('gamemode', {type: "toggleready"});
+    });
+  </script>
 </div>

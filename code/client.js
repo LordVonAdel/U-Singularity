@@ -189,6 +189,9 @@ nw = {
         this.updateBucket();
       }
     }
+  },
+  gamemode(data){ //for gamemode specific actions
+    this.game.gamemode.network(this, data)
   }
 }
 
@@ -235,6 +238,7 @@ function Client(socket, id) {
   socket.on('entRequest', nw.entRequest.bind(this));
   socket.on('invCombine', nw.inventoryCombine.bind(this));
   socket.on('spectatePosition', nw.spectatePosition.bind(this));
+  socket.on('gamemode', nw.gamemode.bind(this));
 }
 
 //Executes a command as the player

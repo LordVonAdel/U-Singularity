@@ -155,14 +155,28 @@ GM.prototype.playerJoined = function(player){
 GM.prototype.renderReadyList = function(){
   if (this.stage == "lobby"){
     var li = "";
+    var number = 0;
     for (var i = 0; i < this.game.clients.length; i++){
       var client = this.game.clients[i];
-
+      if (client.ready) number ++;
       li += `<li>${client.name} - ${client.ready ? "ready" : "not ready"}</li>`
     }
     this.game.showGlobalPopupFromFile("readylist", "./html/readylist.html", {li: li});
+    if (number / this.game.clients.length > 0.5){ //If more than 50 percent of players are ready, start
+      this.start();
+    }
   }else{
-    this.game.showGlobalPopup("readylist", "");
+    this.game.showGlobalPopup("readylist", null);
+  }
+}
+
+//custom things that the player can send to this gamemode
+GM.prototype.network = function(client, data){
+  switch (data.type){
+    case "toggleready": 
+      client.ready = !client.ready; 
+      this.renderReadyList();
+    break;
   }
 }
 
