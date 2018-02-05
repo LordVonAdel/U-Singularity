@@ -153,7 +153,7 @@ GM.prototype.playerJoined = function(player){
 
 //Shows the list of who is ready in the lobby
 GM.prototype.renderReadyList = function(){
-  if (this.stage == "lobby"){
+  if (this.stage == "lobby" && this.game.clients.length > 0){
     var li = "";
     var number = 0;
     for (var i = 0; i < this.game.clients.length; i++){
