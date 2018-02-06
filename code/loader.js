@@ -108,8 +108,8 @@ var res = { //object with every dynamic loaded content, excepts maps and command
           this.destroy();
         }
         
-        if (this.sync.job){
-          this.changeSprite(0, {source: res.classes[this.sync.job]["sprite-"+(this.sync.gender == "m" ? "male" : "female")]});
+        if (this.sync.class){
+          this.changeSprite(0, {source: res.classes[this.sync.class]["sprite-"+(this.sync.gender == "m" ? "male" : "female")]});
           this.changeImageIndex(0, this.sync.direction);
         }
 

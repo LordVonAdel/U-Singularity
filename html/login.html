@@ -34,7 +34,8 @@
       var name = $('#config_name').val();
       var sex = $('input[name=sex]:checked').val();
       var job = $('input[name=job]:checked').val();
-      socket.emit('config', { 'name': name, 'sex': sex, 'job': job });
+      socket.emit('gamemode', {type: "setup", name: name, sex: sex, class: job});
+      //socket.emit('config', { 'name': name, 'sex': sex, 'job': job });
       contentRemove("config");
     }
   //widget_radio($("#radio_job"),["che","phy"]);

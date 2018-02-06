@@ -26,7 +26,7 @@ LobbyController.prototype.step = function(delta){
 LobbyController.prototype.createPlayer = function(socket){
   var pl = new Client(socket, this.nextPlayerId++);
   if (this.games[0].addPlayer(pl)){ //return false if the player can't join the game
-    pl.popup("config","./html/login.html", {error: ""});
+    //pl.popup("config","./html/login.html", {error: ""});
     this.games[0].broadcast('player_joined',{id: pl.id});
   }
 }

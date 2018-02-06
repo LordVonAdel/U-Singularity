@@ -137,6 +137,7 @@ GM.prototype.step = function(delta){
 //Will be executed when a player joins
 GM.prototype.playerJoined = function(player){
   player.ready = false;
+  player.setup = false;
 
   if (this.stage == "survive"){
     player.popup("info", "./html/info.html", {info: "Wait for the lift!"});
@@ -149,6 +150,7 @@ GM.prototype.playerJoined = function(player){
   }
 
   this.renderReadyList();
+  player.popup("config","./html/login.html", {error: ""});
 }
 
 //Shows the list of who is ready in the lobby
@@ -175,6 +177,36 @@ GM.prototype.network = function(client, data){
   switch (data.type){
     case "toggleready": 
       client.ready = !client.ready; 
+      this.renderReadyList();
+    break;
+    case "setup":
+      if (client.setup){return false;}
+      
+      client.name = client.stringSave(data.name);
+      if (client.name == "" && !config.player.allowEmptyName){this.popup("config","./html/login.html", {error: "You need a name to play this great game!"}); return false;}
+
+      var cls = loader.res.classes[data.class];
+      if (!cls){
+        console.error("Unkown class: "+data.class);
+        return false;
+      }
+      if (cls.inventory){
+        for (var i = 0; i < Math.min(client.hands, cls.inventory.length); i++){
+          client.ent.sync.inventory[i] = item.create(cls.inventory[i]);
+        }
+      }
+      if (cls) {
+        client.ent.sync.class = data.class;
+        client.ent.sync.gender = data.sex;
+
+        client.ent.update();
+        client.shareSelf();
+        client.update();
+        client.setup = true;
+      } else {
+        //Config was not correct!
+      }
+
       this.renderReadyList();
     break;
   }

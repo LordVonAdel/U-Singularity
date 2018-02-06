@@ -5,7 +5,7 @@ var item = require('./item.js');
 //all handler for incoming data
 nw = {
   move(data){
-    if (this.game != null && this.config && this.ent.sync.alive){
+    if (this.game != null && this.ent.sync.alive){
       if (!this.ent.isMoving) {
         this.ent.moveDir(data.dir, this.speed);
         this.ent.sync.direction = data.dir;
@@ -25,6 +25,7 @@ nw = {
     }
   },
   config(data){
+    /*
     if (!this.config) {
       this.name = this.stringSave(data.name);
       if (this.name == "" && !config.player.allowEmptyName){this.popup("config","./html/login.html", {error: "You need a name to play this great game!"}); return false;}
@@ -52,6 +53,7 @@ nw = {
         //Config was not correct!
       }
     }
+    */
   },
   invActive(data){
     if (this.game){
@@ -62,7 +64,7 @@ nw = {
     }
   },
   useOnFloor(data){
-    if (this.config && this.ent.sync.alive) {
+    if (this.ent.sync.alive) {
       var xx = data.x;
       var yy = data.y;
       var itm = this.ent.sync.inventory[this.ent.sync.inventoryActive];
@@ -203,7 +205,7 @@ function Client(socket, id) {
   this.mode = "player";
 
   this.speed = config.player.walkSpeed;//3.2;
-  this.config = false;
+  //this.config = false;
   this.inventory = {};
   this.direction = 0;
   this.sex = "m";
@@ -228,7 +230,7 @@ function Client(socket, id) {
 
   socket.on('move', nw.move.bind(this));
   socket.on('chat', nw.chat.bind(this));
-  socket.on('config', nw.config.bind(this));
+  //socket.on('config', nw.config.bind(this));
   socket.on('invActive', nw.invActive.bind(this));
   socket.on('useOnFloor', nw.useOnFloor.bind(this));
   socket.on('entClick', nw.onUseEnt.bind(this));
