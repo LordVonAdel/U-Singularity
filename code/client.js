@@ -24,37 +24,6 @@ nw = {
       this.game.broadcast('chat', { msg: '<span class="name">' + this.name + ":</span> " + data.msg, player: this.id, raw: data.msg });
     }
   },
-  config(data){
-    /*
-    if (!this.config) {
-      this.name = this.stringSave(data.name);
-      if (this.name == "" && !config.player.allowEmptyName){this.popup("config","./html/login.html", {error: "You need a name to play this great game!"}); return false;}
-      this.ent.sync.sex = data.sex;
-      this.ent.sync.job = data.job;
-      var cls = loader.res.classes[data.job];
-      if (!cls){
-        console.error("Unkown class: "+data.job);
-        return false;
-      }
-      if (cls.inventory){
-        for (var i = 0; i < Math.min(this.hands, cls.inventory.length); i++){
-          this.ent.sync.inventory[i] = item.create(cls.inventory[i]);
-        }
-      }
-      if (cls) {
-        this.ent.sync.job = data.job;
-        this.ent.sync.gender = data.sex;
-
-        this.ent.update();
-        this.shareSelf();
-        this.update();
-        this.config = true;
-      } else {
-        //Config was not correct!
-      }
-    }
-    */
-  },
   invActive(data){
     if (this.game){
       if (data.slot < this.hands) {

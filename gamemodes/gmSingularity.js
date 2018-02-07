@@ -66,7 +66,7 @@ GM.prototype.step = function(delta){
         this.singularity.fire("start");
       }else{
         if (this.second >= 1){
-          this.game.showGlobalPopupFromFile("countdown", "./html/countdown.html", {time: Math.floor(this.countdown)});
+          this.game.showGlobalPopupFromFile("countdown", "./gamemodes/singularity/countdown.html", {time: Math.floor(this.countdown)});
         }
       }
     break;
@@ -150,7 +150,7 @@ GM.prototype.playerJoined = function(player){
   }
 
   this.renderReadyList();
-  player.popup("config","./html/login.html", {error: ""});
+  player.popup("config","./gamemodes/singularity/config.html", {error: ""});
 }
 
 //Shows the list of who is ready in the lobby
@@ -163,7 +163,7 @@ GM.prototype.renderReadyList = function(){
       if (client.ready) number ++;
       li += `<li>${client.name} - ${client.ready ? "ready" : "not ready"}</li>`
     }
-    this.game.showGlobalPopupFromFile("readylist", "./html/readylist.html", {li: li});
+    this.game.showGlobalPopupFromFile("readylist", "./gamemodes/singularity/readylist.html", {li: li});
     if (number / this.game.clients.length > 0.5){ //If more than 50 percent of players are ready, start
       this.start();
     }
@@ -183,7 +183,7 @@ GM.prototype.network = function(client, data){
       if (client.setup){return false;}
       
       client.name = client.stringSave(data.name);
-      if (client.name == "" && !config.player.allowEmptyName){this.popup("config","./html/login.html", {error: "You need a name to play this great game!"}); return false;}
+      if (client.name == "" && !config.player.allowEmptyName){this.popup("config","./gamemodes/singularity/config.html", {error: "You need a name to play this great game!"}); return false;}
 
       var cls = loader.res.classes[data.class];
       if (!cls){
