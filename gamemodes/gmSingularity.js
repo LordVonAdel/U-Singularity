@@ -20,11 +20,11 @@ var GM = function(game, gmConfig){
 //will be executed when the game starts. Currently only executable via "/start" command
 GM.prototype.start = function(){
   if (this.stage == "lobby"){
-    this.game.showGlobalPopup("readylist", "");
     this.countdown = 5;
     this.stage = "countdown";
     this.game.sendChatMessage("Starting countdown...");
-
+    this.game.showGlobalPopup("readylist", null);
+    
     this.singularity = this.game.worlds[0].spawnEntity("singularity", this.gmConfig.singularityX, this.gmConfig.singularityY);
 
     this.game.clients.forEach(function(client){
@@ -45,7 +45,7 @@ GM.prototype.step = function(delta){
         this.roundStartTime = Date.now();
         this.game.showGlobalPopup("countdown", "");
         this.game.sendChatMessage("Experiment starts!");
-        this.game.sendChatMessage("Emergency elevator arrives in "+this.elevatorRemainTime+" seconds");
+        this.game.sendChatMessage("Emergency elevator arrives in " + this.elevatorRemainTime + " seconds");
         this.game.showGlobalPopupFromFile("info", "./html/info.html", {info: "Wait for the lift!"});
 
         var lamps = this.game.worlds[0].getEntsByType("wall_lamp_warning");
@@ -166,6 +166,7 @@ GM.prototype.renderReadyList = function(){
     this.game.showGlobalPopupFromFile("readylist", "./gamemodes/singularity/readylist.html", {li: li});
     if (number / this.game.clients.length > 0.5){ //If more than 50 percent of players are ready, start
       this.start();
+      this.game.showGlobalPopup("readylist", null);
     }
   }else{
     this.game.showGlobalPopup("readylist", null);
