@@ -55,7 +55,9 @@ function gameLoop(){
     var item = hoverlist[i];
     if (item == "tile"){
       list.append(`<li id="hover-index-${i}"><img src="${subfolder + "sprites/" + tile.sprite}"></img></li>`);
-    }else{
+    } else {
+      if (!item.isVisible()){continue;}
+
       var pixels = renderer.extract.pixels(item.container);
       var image = renderer.extract.image(item.container);
       if (pixels[pixel*4+3] > 0){

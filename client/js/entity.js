@@ -21,6 +21,13 @@ function Entity(id, x, y, data){
   this.update(data);
 }
 
+Entity.prototype.isVisible = function(){
+  for (var i = 0; i < this.spriteData; i ++){
+    if (this.spriteData[i].visible) return true;
+  } 
+  return false;
+}
+
 Entity.prototype.update = function(data){
   //world.cellSetOverwrite(this.tx,this.ty,{})
   Object.assign(this,data);
