@@ -40,6 +40,7 @@ games:
       elevatorTime: 30
       elevatorDepartTime: 30
       elevatorEscapeTime: 30
+      readyPercentage: 51
       world1LiftX: 43
       world1LiftY: 34
       world2LiftX: 18

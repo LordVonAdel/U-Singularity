@@ -163,10 +163,11 @@ GM.prototype.renderReadyList = function(){
       if (client.ready) number ++;
       li += `<li>${client.name} - ${client.ready ? "ready" : "not ready"}</li>`
     }
-    this.game.showGlobalPopupFromFile("readylist", "./gamemodes/singularity/readylist.html", {li: li});
-    if (number / this.game.clients.length > 0.5){ //If more than 50 percent of players are ready, start
+    if (number / this.game.clients.length >= (this.gmConfig.readyPercentage / 100)) {
       this.start();
       this.game.showGlobalPopup("readylist", null);
+    } else {
+      this.game.showGlobalPopupFromFile("readylist", "./gamemodes/singularity/readylist.html", {li: li});
     }
   }else{
     this.game.showGlobalPopup("readylist", null);
