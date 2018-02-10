@@ -22,8 +22,8 @@ function Entity(id, x, y, data){
 }
 
 Entity.prototype.isVisible = function(){
-  for (var i = 0; i < this.spriteData; i ++){
-    if (this.spriteData[i].visible) return true;
+  for (var i = 0; i < this.spriteData.length; i ++){
+    if (this.spriteData[i].visible || this.spriteData[i].visible == undefined) return true;
   } 
   return false;
 }

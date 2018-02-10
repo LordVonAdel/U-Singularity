@@ -127,6 +127,7 @@ GM.prototype.step = function(delta){
     case "won":
       this.roundEndTime -= delta/1000;
       if (this.roundEndTime <= 0){
+        this.game.showGlobalPopupFromFile("info", null);
         this.game.restart();
       }
     break;
