@@ -23,7 +23,7 @@ function World(game, index){
   
   this.spawnX = 0;
   this.spawnY = 0;
-  this.buckets = new Grid(this.width/config.bucket.width,this.height/config.bucket.height);
+  this.buckets = new Grid(this.width/loader.config.bucket.width,this.height/loader.config.bucket.height);
   this.buckets.forEach(function(tileX,tileY){
     return new Bucket(tileX,tileY,this);
   }, this);
@@ -51,7 +51,7 @@ World.prototype.resize = function(width, height){
   this.height = height;
   this.grid.resize(width, height);
   this.gridEntities.resize(width,height);
-  this.buckets.resize(Math.floor(width/config.bucket.width), Math.floor(height/config.bucket.height))
+  this.buckets.resize(Math.floor(width/loader.config.bucket.width), Math.floor(height/loader.config.bucket.height))
   this.buckets.forEach(function(tileX,tileY){
     this.buckets.cellSet(tileX,tileY,new Bucket(tileX,tileY,this));
   }, this);
@@ -59,7 +59,7 @@ World.prototype.resize = function(width, height){
 
 //sets the content of a cell in the world
 World.prototype.cellSet = function(tileX,tileY,id){
-  var bucket = this.buckets.cellGet(Math.floor(tileX/config.bucket.width), Math.floor(tileY/config.bucket.height))
+  var bucket = this.buckets.cellGet(Math.floor(tileX/loader.config.bucket.width), Math.floor(tileY/loader.config.bucket.height))
   bucket.broadcastArea('change_tile',{x:tileX, y:tileY, id:id});
   this.grid.cellSet(tileX,tileY,id);
   var ents = this.gridEntities.cellGet(tileX, tileY);
@@ -283,7 +283,7 @@ World.prototype.gridEntFree = function(tileX,tileY,obj){
 World.prototype.collisionCheck = function(tileX,tileY){
   var col = 0;
   var tile_id = this.grid.cellGet(tileX,tileY);
-  var tile = global.res.tiles[tile_id];
+  var tile = loader.res.tiles[tile_id];
   if (tile != undefined){
     col = tile.collision;
   }
@@ -343,11 +343,11 @@ World.prototype.broadcast = function(event, data){
 
 //resends a region to the clients in there
 World.prototype.resendRegion = function(x, y, width, height){
-  var w = width / config.bucket.width;
-  var h = height / config.bucket.height;
+  var w = width / loader.config.bucket.width;
+  var h = height / loader.config.bucket.height;
 
-  var xx = Math.floor(x / config.bucket.width);
-  var yy = Math.floor(y / config.bucket.height);
+  var xx = Math.floor(x / loader.config.bucket.width);
+  var yy = Math.floor(y / loader.config.bucket.height);
 
   for (var i = -1; i <= w; i++){
     for (var j = -1; j <= h; j++){

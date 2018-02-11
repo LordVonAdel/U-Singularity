@@ -3,7 +3,7 @@ utils = require('./utils.js');
 
 function Entity(world, type, tx, ty, extraData){
   this.id = world.nextEntId;
-  this.ent = res.objects[type];
+  this.ent = loader.res.objects[type];
 
   if (this.ent == undefined){
     console.log("Unknown ent-type: " + type);
@@ -140,7 +140,7 @@ Entity.prototype.animate = function(delta){
 //So you can interact with entitys. This happens if somebody dares to interact!
 Entity.prototype.use = function(user, item){
   this.fire("onClick", user, item);
-  var itemType = res.items[item.type];
+  var itemType = loader.res.items[item.type];
   if (itemType != undefined){
     if (itemType.actions != undefined && this.ent != undefined){
       itemType.actions.forEach(function(value){
@@ -323,7 +323,7 @@ Entity.prototype.spawn = function(){
 
 //are you in same bucket as before or somewhere else? 
 Entity.prototype.updateBucket = function(){
-  this.changeBucket(this.world.buckets.cellGet(Math.floor(this.tx/config.bucket.width),Math.floor(this.ty/config.bucket.height)));
+  this.changeBucket(this.world.buckets.cellGet(Math.floor(this.tx/loader.config.bucket.width),Math.floor(this.ty/loader.config.bucket.height)));
   if (this.bucket == null)
     console.error("We have someone without bucket! "+ this.type +": "+ this.id);
 }

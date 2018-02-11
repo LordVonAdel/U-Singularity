@@ -43,7 +43,7 @@ nw = {
 
       if (itm != null) {
         var master = item.getMaster(itm);
-        var fun = res.actions[master.onUseFloor];
+        var fun = loader.res.actions[master.onUseFloor];
         if (distance < Math.max(this.handRange, master.range || 1) + 1) {
           if (fun != undefined) {
             fun(this.world, xx, yy, this, itm);
@@ -109,7 +109,7 @@ nw = {
         }
       }else{ //else throw the item.
         var itemEnt = this.world.spawnItem(this.ent.tx, this.ent.ty, itm);
-        itemEnt.impulse(data.x - this.ent.tx, data.y - this.ent.ty, config.player.throwSpeed);
+        itemEnt.impulse(data.x - this.ent.tx, data.y - this.ent.ty, loader.config.player.throwSpeed);
         inventory[active] = null;
         this.shareSelf();
       }
@@ -173,7 +173,7 @@ function Client(socket, id) {
 
   this.mode = "player";
 
-  this.speed = config.player.walkSpeed;//3.2;
+  this.speed = loader.config.player.walkSpeed;//3.2;
   //this.config = false;
   this.inventory = {};
   this.direction = 0;
@@ -182,11 +182,12 @@ function Client(socket, id) {
   this.hands = 9;
   this.inventoryActive = 0;
   this.handRange = 1; //in tiles
-  this.permissions = ['master.*', 'world.*','admin.*'];
+  this.permissionGroups = ["default"];
   this.drag = null;
   this.bucket = null;
 
   this.ent = null;
+  this.cam = null;
   this.world = null;
   this.game = null;
 
@@ -199,7 +200,6 @@ function Client(socket, id) {
 
   socket.on('move', nw.move.bind(this));
   socket.on('chat', nw.chat.bind(this));
-  //socket.on('config', nw.config.bind(this));
   socket.on('invActive', nw.invActive.bind(this));
   socket.on('useOnFloor', nw.useOnFloor.bind(this));
   socket.on('entClick', nw.onUseEnt.bind(this));
@@ -214,7 +214,7 @@ function Client(socket, id) {
 
 //Executes a command as the player
 Client.prototype.executeCommand = function (args) {
-  var cmd = loader.commands[args[0]];
+  var cmd = loader.res.commands[args[0]];
   if (cmd != undefined) {
     var allowed = true;
     if (cmd.permission) {
@@ -316,17 +316,20 @@ Client.prototype.give = function (itemData) {
 
 //Checks if the player have a permission to do something
 Client.prototype.getPermission = function (permission) {
-  if (this.permissions.includes("*.*")){
-    return true;
+  var permissions = [];
+  for (var i = 0; i < this.permissionGroups.length; i++){
+    var grpPerm = loader.permissionGroups[this.permissionGroups[i]];
+    if (!grpPerm) continue;
+    permissions = permissions.concat(grpPerm);
   }
-  if (this.permissions.includes(permission)){
-    return true;
-  }
+
+  if (permissions.includes("*.*")) return true; 
+  if (permissions.includes(permission)) return true;
 
   var tree = permission.split(".");
   var perm = tree[0];
   for (var i = 1; i < tree.length; i++){
-    if (this.permissions.includes(perm+".*")){
+    if (permissions.includes(perm+".*")){
       return true;
     }
     perm += "." + tree[i];
@@ -337,7 +340,7 @@ Client.prototype.getPermission = function (permission) {
 
 //Updates the bucket the player is in
 Client.prototype.updateBucket = function () {
-  var tbucket = this.world.buckets.cellGet(Math.floor(this.ent.tx / config.bucket.width), Math.floor(this.ent.ty / config.bucket.height));
+  var tbucket = this.world.buckets.cellGet(Math.floor(this.cam.tx / loader.config.bucket.width), Math.floor(this.cam.ty / loader.config.bucket.height));
   this.changeBucket(tbucket);
 }
 
@@ -394,12 +397,14 @@ Client.prototype.changeMode = function(mode){
 
 //sets the camera of the client
 Client.prototype.camSet = function(entity){
+  this.cam = entity;
   this.socket.emit('cam', entity.id);
 }
 
 //resets the camera of the client to its entity
 Client.prototype.camReset = function(){
   this.socket.emit('cam', this.ent.id);
+  this.cam = this.ent;
 }
 
 module.exports = Client;

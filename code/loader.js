@@ -3,141 +3,60 @@ var path = require("path");
 var yaml = require("js-yaml");
 var item = require("./item.js");
 
-var commands = {}; //object with a list of commands. Every key is a command
-//default loaded things, which make no sense to move in external files
-var res = { //object with every dynamic loaded content, excepts maps and commands
-  tiles: {},
-  items: {
-    "hand":{
-      "actions":["hand"]
-    }
-  },
-  actions: {},
-  objects: {
-    "item":{ //the item entity
-      "sync":{item: null},
-      "image":[{layer: 2, source: "items/item_crowbar.png", width:32, height: 32}],
-      onClick(user, _item){
-        if(_item.type == "hand"){
-          user.ent.sync.inventory[user.ent.sync.inventoryActive] = this.sync.item;
-          user.shareSelf();
-          user.update();
-          this.destroy();
-        }else{
-          item.combine(this.sync.item, _item);
-          this.sync.item = item.update(this.sync.item);
-          this.update();
-        }
-      },
-      onUpdate(){
-        if (this.sync.item == null){
-          this.destroy();
-        }else{
-          for (var i = 0; i < this.sync.item.sprite.length; i++){
-            this.sprites[i] = Object.assign({}, this.sync.item.sprite[i]);
-          }
-          this.share();
-        }
-      },
-      "actions":{}
-    },
-    "player":{
-      "draggable": true,
-      "collision":true,
-      "sync":{
-        client: null, 
-        hp: 100, 
-        alive: true, 
-        inventory: null, //will be replaced with an object in init event
-        inventoryActive: 0,
-        dmgSuffocation: 0,
-        dmgBrute: 0,
-        dmgToxin: 0,
-        dmgBurn: 0,
-        dmgGenetic: 0,
-        direction: 0,
-        job: null
-      },
-      "layer": 3,
-      "image":[
-        {
-          source: "chars/char_chemist_f.png",
-          image: 0,
-          width: 32,
-          height: 32,
-          animation: "jump"
-        },
-        {
-          visible: false,
-          source: "", //makes errors
-          width: 32,
-          height: 32,
-          scale: 0.5,
-          image: 0,
-          animation: "jump",
-          x: 8,
-          y: 8
-        }
-      ],
-      "actions": {
-        stab(){
-          if (this.client){
-            this.sync.dmgBrute += 5;
-            this.client.msg("Ouch!");
-            this.update();
-          }
-        }
-      },
-      onInit(){
-        this.sync.inventory = {};
-        this.setLight(0, {color: 0xffffff, radius: 128, intensity: 1});
-      },
-      onStep(delta){
-        if (this.getState("burning")){
-          this.sync.dmgBurn += delta/1000;
-          this.update();
-        }
+function Loader(){
+  this.res = {
+    tiles: {},
+    commands: {},
+    items: {},
+    objects: {},
+    actions: {},
+    classes: {}
+  }
+  this.permissionGroups = {};
+  this.config = {};
+}
 
-        if (this.sync.hp <= 0){
-          this.changeSprite(0, {angle: 90, animation: "none"});
-          this.client.alive = false;
-        }
-      },
-      onUpdate(){
-        if (this.client == undefined){
-          this.destroy();
-        }
-        
-        if (this.sync.class){
-          this.changeSprite(0, {source: res.classes[this.sync.class]["sprite-"+(this.sync.gender == "m" ? "male" : "female")]});
-          this.changeImageIndex(0, this.sync.direction);
-        }
-
-        var hand = this.sync.inventory[this.sync.inventoryActive];
-        if (hand != null){
-          if (hand.sprite.length > 0){
-            this.changeSprite(1, {source: hand.sprite[0].source, visible: true});
-          }
-        }else{
-          this.changeSprite(1, {visible: false});
-        }
-
-        this.sync.hp = 100 - this.sync.dmgBrute - this.sync.dmgBurn - this.sync.dmgGenetic - this.sync.dmgSuffocation - this.sync.dmgToxin;
-        if (this.client){
-          this.client.shareSelf({"hp" : Math.ceil(this.sync.hp)});
-        }
-      },
-      onDestroy(){
-        if (this.client){
-          this.client.ent = null;
-        }
-      }
-    }
+//Loads the classes from config/classes.yml
+Loader.prototype.loadClasses = function(){
+  console.log("[Loader]Reading classes from file...");
+  try {
+    var doc = yaml.safeLoad(fs.readFileSync('./config/classes.yml', 'utf8'));
+    this.res.classes = doc;
+    var keys = Object.keys(res.classes);
+    console.log("[Loader]Loaded "+keys.length+" classes: "+keys.join(", "));
+  } catch (e) {
+    console.error("[Loader]Classes: ", e);
   }
 }
 
-//this thing loads all content found in one file
-function load(filename,callback){
+//Loads the permission groups from config/permissions.yml
+Loader.prototype.loadPermissions = function(){
+  console.log("[Loader]Reading permission groups from file...");
+  try {
+    var doc = yaml.safeLoad(fs.readFileSync('./config/permissions.yml', 'utf8'));
+    this.permissionGroups = doc;
+    console.log("[Loader]Loaded permission Groups");
+  } catch (e) {
+    console.error("[Loader]Permissions: ", e);
+  }
+}
+
+//Loads the config from config/config.yml
+Loader.prototype.loadConfig = function(){
+  console.log("[Loader]Reading config from file...");
+  try {
+    var doc = yaml.safeLoad(fs.readFileSync('./config/config.yml', 'utf8'));
+    this.config = doc;
+    console.log("[Loader]Loaded config");
+    console.log("[Loader]Found "+config.games.length+" game configurations");
+  } catch (e) {
+    console.error("[Loader]Config: ", e);
+  }
+}
+
+//Loads all objects from a file
+Loader.prototype.loadFile = function(filename, callback){
+  var res = this.res;
 
   function logLoad(num, key, filename){
     if (num[key] > 0){
@@ -204,11 +123,11 @@ function load(filename,callback){
         exp.items[k].id = k;
         exp.items[k] = checkItem(exp.items[k]);
       }
-      Object.assign(res.items,exp.items);
+      Object.assign(res.items, exp.items);
       num.items = Object.keys(exp.items).length;
     }
     if (exp.commands != undefined){
-      Object.assign(commands,exp.commands);
+      Object.assign(res.commands, exp.commands);
       num.commands = Object.keys(exp.commands).length;
     }
     if (exp.actions != undefined){
@@ -233,8 +152,11 @@ function load(filename,callback){
   if(callback){callback();}
 }
 
-//loads all the things of the modules directory
-function auto(callback){
+//loads all the things from the content directory
+Loader.prototype.auto = function(callback){
+  var res = this.res;
+  var that = this;
+
   console.log("[Loader]---Start auto load!---");
   var starttime = Date.now();
   fs.readdir( "./content", function( err, files ){
@@ -246,14 +168,14 @@ function auto(callback){
     var ind = 0;
     for (var i = 0; i < files.length; i++) {
       var file = files[i];
-      load(file, function(){
+      that.loadFile(file, function(){
         ind++
         if (ind >= num){
           console.log("[Loader]---Finished auto load!---");
           console.log("[Loader]Registered tiles: "+Object.keys(res.tiles).length);
           console.log("[Loader]Registered items: "+Object.keys(res.items).length);
           console.log("[Loader]Registered actions: "+Object.keys(res.actions).length);
-          console.log("[Loader]Registered commands: "+Object.keys(commands).length);
+          console.log("[Loader]Registered commands: "+Object.keys(res.commands).length);
           console.log("[Loader]Registered objects: "+Object.keys(res.objects).length);
           console.log("[Loader]Loaded all content in " + (Date.now() - starttime) + "ms");
           if(callback){
@@ -265,33 +187,4 @@ function auto(callback){
   });
 }
 
-function loadClasses(){
-  console.log("[Loader]Reading classes from file...");
-  try {
-    var doc = yaml.safeLoad(fs.readFileSync('./config/classes.yml', 'utf8'));
-    res.classes = doc;
-    var keys = Object.keys(res.classes);
-    console.log("[Loader]Loaded "+keys.length+" classes: "+keys.join(", "));
-  } catch (e) {
-    console.error("[Loader]Classes: ", e);
-  }
-}
-
-function loadConfig(){
-  console.log("[Loader]Reading config from file...");
-  try {
-    var doc = yaml.safeLoad(fs.readFileSync('./config/config.yml', 'utf8'));
-    config = doc;
-    console.log("[Loader]Loaded config");
-    console.log("[Loader]Found "+config.games.length+" game configurations");
-  } catch (e) {
-    console.error("[Loader]Config: ", e);
-  }
-}
-
-module.exports.auto = auto;
-module.exports.load = load;
-module.exports.res = res;
-module.exports.commands = commands;
-module.exports.loadConfig = loadConfig;
-module.exports.loadClasses = loadClasses;
+module.exports = Loader;

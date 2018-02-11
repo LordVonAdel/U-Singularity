@@ -94,13 +94,13 @@ Game.prototype.changeWorld = function(player, index, spawnX, spawnY, extraData){
   var ent = world.spawnEntity("player", spawnX, spawnY, extraData);
   player.world = world;
   player.ent = ent;
+  player.camSet(ent);
   Object.assign(player.ent.sync, sync);
   ent.client = player;
   player.updateBucket();
   if (player.ent.bucket != null){
     player.ent.bucket.sendMegaPacket(player.socket);
   }
-  player.socket.emit('cam', player.ent.id);
   ent.update();
 }
 
@@ -118,6 +118,11 @@ Game.prototype.showGlobalPopup = function(id, str, data){
 //loads a file and shows it as popup at every player in the game
 Game.prototype.showGlobalPopupFromFile = function(id, filename, data){
   var game = this;
+  if (filename == null){
+    game.showGlobalPopup(id, null, data);
+    return;
+  }
+  
   fs.readFile(filename, "utf-8", function (err, str) {
     if (err){return err;}
     game.showGlobalPopup(id, str, data);

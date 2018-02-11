@@ -29,14 +29,14 @@ player:
 
 #A server can host multiple rounds at the same time
 games:
-  - name: "Default Game"
-    maps:
+  - name: "Default Game" #Name of the game which is displayed in the api
+    maps: #Maps to be loaded for the game. 
     - "lab/lab"
     - "lab/lift"
     - "lab/end"
     playerLimit: 20
     gamemode: "gmSingularity"
-    gamemodeConfig:
+    gamemodeConfig: #Gamemode specific configuration
       elevatorTime: 30
       elevatorDepartTime: 30
       elevatorEscapeTime: 30

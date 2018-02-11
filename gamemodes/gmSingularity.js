@@ -186,7 +186,7 @@ GM.prototype.network = function(client, data){
       if (client.setup){return false;}
       
       client.name = client.stringSave(data.name);
-      if (client.name == "" && !config.player.allowEmptyName){this.popup("config","./gamemodes/singularity/config.html", {error: "You need a name to play this great game!"}); return false;}
+      if (client.name == "" && !loader.config.player.allowEmptyName){this.popup("config","./gamemodes/singularity/config.html", {error: "You need a name to play this great game!"}); return false;}
 
       var cls = loader.res.classes[data.class];
       if (!cls){

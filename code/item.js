@@ -3,7 +3,7 @@
 function createItem(type){
   var exp = {};
 
-  var itm = res.items[type];
+  var itm = loader.res.items[type];
   if (itm){
     exp.type = type;
     exp.name = itm.name;
@@ -18,7 +18,7 @@ function createItem(type){
 function check(item){
   if (!item){return null;}
   if (item.type){
-    var mother = res.items[item.type];
+    var mother = loader.res.items[item.type];
     item.name = item.name || mother.name;
     item.sprite = item.sprite || mother.image;
     item.sync = item.sync || mother.sync;
@@ -30,7 +30,7 @@ function check(item){
 
 //Changes the type of an item
 function transform(item, type){
-  var itm = res.items[type];
+  var itm = loader.res.items[type];
   if (itm){
     item.type = type;
     item.name = itm.name;
@@ -41,8 +41,8 @@ function transform(item, type){
 //Combines to items if possible
 function combine(item1, item2){
   if (!item1 || !item2){return false;}
-  var type1 = res.items[item1.type];
-  var type2 = res.items[item2.type];
+  var type1 = loader.res.items[item1.type];
+  var type2 = loader.res.items[item2.type];
   if (type1 && type2 && type1.on && type2.actions){
     for (var k in type1.on){
       var fun = type1.on[k];
@@ -54,7 +54,7 @@ function combine(item1, item2){
 }
 
 function getMaster(item){
-  var master = res.items[item.type];
+  var master = loader.res.items[item.type];
   return master ? master : null;
 }
 
@@ -66,7 +66,7 @@ function update(item){
   if (item == null || item.type == null){
     return null;
   }else{
-    var master = res.items[item.type];
+    var master = loader.res.items[item.type];
     if (master.onUpdate){
       master.onUpdate.call(item);
     }

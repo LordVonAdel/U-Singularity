@@ -1,11 +1,14 @@
 //Entrance point
 
 const fs = require("fs");
-loader = require("./loader.js");
-config = null;
+const Loader = require("./loader.js");
+const LobbyController = require("./lobbyController.js");
+
+loader = new Loader();
 loader.loadConfig();
 loader.loadClasses();
-const LobbyController = require("./lobbyController.js");
+loader.loadPermissions();
+var config = loader.config;
 
 var http = require("http").createServer(function( req, res){
   url = req.url;
@@ -48,7 +51,7 @@ var http = require("http").createServer(function( req, res){
     res.writeHead(200);
     res.end(data);
   });
-}).listen(config.port,function(){console.log("[Server]Listening on port "+config.port)});
+}).listen(loader.config.port,function(){console.log("[Server]Listening on port "+loader.config.port)});
 
 io = require("socket.io")(http);
 require("./networking.js");
@@ -57,35 +60,14 @@ lc = null;
 
 loader.auto(function(){ //load all things from the modules directory
   lc = new LobbyController(config);
-  res = loader.res;
-
-  /*
-  nextPlayerId = 0;
-  nextEntId = 0;
-  if (!config.games || config.games.length == 0){console.error("No Games defined!")}
-
-  for(var i = 0; i < config.games.length; i++){
-    var cGame = config.games[i];
-    games[i] = new Game(cGame.maps, cGame.gamemode, cGame, i);
-  }
-  */
-  
-  update();
+  step();
 });
 
-/*
-playerlist = [];
-games = [];
-*/
-
 lasttime = Date.now();
-var update = function() {
-  setTimeout(update, 1000/config.tickRate);
+var step = function() {
+  setTimeout(step, 1000/config.tickRate);
   delta = Date.now() - lasttime;
   lasttime = Date.now();
-  /*for (var i = 0; i < games.length; i++) {
-    games[i].step(delta);
-  }*/
 
   lc.step(delta);
   

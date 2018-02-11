@@ -7,8 +7,8 @@ function Bucket(x,y,world){
   this.x = x;
   this.y = y;
   this.world = world;
-  this.width = config.bucket.width;
-  this.height = config.bucket.height;
+  this.width = loader.config.bucket.width;
+  this.height = loader.config.bucket.height;
 }
 
 //adds an entity to the bucket. Mostly when it moves in there
