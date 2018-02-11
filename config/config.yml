@@ -1,8 +1,8 @@
 #Display name
-servername: "Offical Test Server!"
+servername: "Singularity Server!"
 
 #Message of the day
-motd: "This is a test server!"
+motd: "I am a Server!"
 
 #The port the http and socket server will use
 port: 5000
