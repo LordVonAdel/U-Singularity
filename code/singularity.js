@@ -3,6 +3,7 @@
 const fs = require("fs");
 const Loader = require("./loader.js");
 const LobbyController = require("./lobbyController.js");
+const api = require("./api.js");
 
 loader = new Loader();
 loader.loadConfig();
@@ -10,36 +11,12 @@ loader.loadClasses();
 loader.loadPermissions();
 var config = loader.config;
 
-var http = require("http").createServer(function( req, res){
+var http = require("http").createServer(function(req, res){
   url = req.url;
   if (url == "/"){url="/game.html"}
   //The api
   if (url == "/api"){
-    if (config.enableAPI){
-      var gameList = [];
-      var playersOnline = 0;
-      for (var i = 0; i < games.length; i++){
-        var game = games[i];
-        playersOnline += game.clients.length;
-        gameList.push(Object.assign({
-          playersOnline: game.clients.length,
-          gamemode: game.gamemode.name,
-          playerLimit: game.config.playerLimit,
-          name: game.name
-        }, game.gamemode.getAPIData()));
-      }
-
-      res.writeHead(500);
-      return res.end(JSON.stringify({
-        serverPort: config.port,
-        serverName: config.servername,
-        motd: config.motd,
-        playersOnline: playersOnline,
-        games: gameList
-      }));
-    }else{
-      return res.end("API is disabled!");
-    }
+    return api(req, res, lc);
   }
   var filename = __dirname+"/../client"+url;
   //console.log(filename)
