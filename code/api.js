@@ -1,3 +1,8 @@
+/*
+  This is for the web API. It can be seen with serverdomain/api.
+  The API can be disabled in the config.
+*/
+
 module.exports = function(req, res, lc){
   if (!lc) return res.end("Server is starting!");;
   if (loader.config.enableAPI){
@@ -14,7 +19,7 @@ module.exports = function(req, res, lc){
       }, game.gamemode.getAPIData()));
     }
 
-    res.writeHead(500);
+    res.writeHead(200);
     return res.end(JSON.stringify({
       serverPort: loader.config.port,
       serverName: loader.config.servername,
