@@ -15,6 +15,9 @@ bucket:
 #How many ticks per second should happen
 tickRate: 60
 
+#IP address from which we will listen only
+host: "127.0.0.1"
+
 #Use the http API?
 enableAPI: true
 

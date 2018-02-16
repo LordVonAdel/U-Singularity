@@ -28,7 +28,7 @@ var http = require("http").createServer(function(req, res){
     res.writeHead(200);
     res.end(data);
   });
-}).listen(loader.config.port,function(){console.log("[Server]Listening on port "+loader.config.port)});
+}).listen(loader.config.port, loader.config.host, function(){console.log("[Server]Listening on port "+loader.config.port)});
 
 io = require("socket.io")(http);
 require("./networking.js");

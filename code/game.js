@@ -94,8 +94,8 @@ Game.prototype.changeWorld = function(player, index, spawnX, spawnY, extraData){
   var ent = world.spawnEntity("player", spawnX, spawnY, extraData);
   player.world = world;
   player.ent = ent;
-  player.camSet(ent);
   Object.assign(player.ent.sync, sync);
+  player.camSet(ent);
   ent.client = player;
   player.updateBucket();
   if (player.ent.bucket != null){
