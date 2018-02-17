@@ -30,6 +30,10 @@ Entity.prototype.isVisible = function(){
 
 Entity.prototype.update = function(data){
   //world.cellSetOverwrite(this.tx,this.ty,{})
+  if (this.id == camId){
+    cam = this;
+  }
+
   Object.assign(this,data);
   if (data.layer){
     this.changeLayer(data.layer);
