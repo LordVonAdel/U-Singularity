@@ -139,6 +139,7 @@ GM.prototype.step = function(delta){
 GM.prototype.playerJoined = function(player){
   player.ready = false;
   player.setup = false;
+  player.ent.sync.alive = false;
 
   if (this.stage == "survive"){
     player.popup("info", "./html/info.html", {info: "Wait for the lift!"});
@@ -201,6 +202,7 @@ GM.prototype.network = function(client, data){
       if (cls) {
         client.ent.sync.class = data.class;
         client.ent.sync.gender = data.sex;
+        client.ent.sync.alive = true;
 
         client.ent.update();
         client.shareSelf();
