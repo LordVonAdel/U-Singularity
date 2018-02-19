@@ -112,4 +112,8 @@ function initNetworking(){
   socket.on('kick', function(msg){
     
   });
+
+  socket.on('msgids', function(data){
+    msgids = data;
+  });
 }

@@ -2,16 +2,19 @@ var utils = require('./utils.js');
 var fs = require('fs');
 var item = require('./item.js');
 
+var msgids = require('./../msgids.json');
+
 //all handler for incoming data
 nw = {
-  move(data){
+  move(direction){
     if (this.game != null && this.ent.sync.alive){
-      if (!this.ent.isMoving) {
-        this.ent.moveDir(data.dir, this.speed);
-        this.ent.sync.direction = data.dir;
-        this.ent.update();
-        this.updateBucket();
-      }
+      if (typeof direction != 'number'){return; }
+      if (this.ent.isMoving){return; }
+
+      this.ent.moveDir(direction, this.speed);
+      this.ent.sync.direction = direction;
+      this.ent.update();
+      this.updateBucket();
     }
   },
   chat(data){
@@ -198,7 +201,7 @@ function Client(socket, id) {
 
   var that = this;
 
-  socket.on('move', nw.move.bind(this));
+  socket.on(msgids["move"], nw.move.bind(this));
   socket.on('chat', nw.chat.bind(this));
   socket.on('invActive', nw.invActive.bind(this));
   socket.on('useOnFloor', nw.useOnFloor.bind(this));

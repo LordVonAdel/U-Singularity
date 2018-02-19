@@ -1,8 +1,11 @@
+var msgids = require('./../msgids.json');
+
 io.on('connection', function(socket){
   var ip = socket.request.connection.remoteAddress;
   var isPlayerNew = true;
 
   socket.emit('resource',{tiles: loader.res.tiles});
+  socket.emit('msgids', msgids);
 
   /*
   playerlist.forEach(function(obj){

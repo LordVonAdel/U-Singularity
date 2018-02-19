@@ -59,16 +59,16 @@ Player.prototype.step = function (data) {
     var speed = player.speed;
     if (!chat_is_open) {
       if (keyboardCheck(input.UP)) {
-        socket.emit('move', { dir: 1 });
+        socket.emit(msgids["move"], 1);
       }
       if (keyboardCheck(input.RIGHT)) {
-        socket.emit('move', { dir: 0 });
+        socket.emit(msgids["move"], 0);
       }
       if (keyboardCheck(input.DOWN)) {
-        socket.emit('move', { dir: 3 });
+        socket.emit(msgids["move"], 3);
       }
       if (keyboardCheck(input.LEFT)) {
-        socket.emit('move', { dir: 2 });
+        socket.emit(msgids["move"], 2);
       }
     }
 

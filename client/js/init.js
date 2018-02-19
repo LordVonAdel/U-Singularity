@@ -7,6 +7,8 @@ players = {};
 ents = {};
 hoverlist = [];
 
+msgids = {};
+
 gm = {};
 
 config = {
