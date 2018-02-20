@@ -1,6 +1,7 @@
-//Entity constuctor
-utils = require('./utils.js');
+const msgids = require('./../msgids.json');
+const utils = require('./utils.js');
 
+//Entity constuctor
 function Entity(world, type, tx, ty, extraData){
   this.id = world.nextEntId;
   this.ent = loader.res.objects[type];
@@ -197,9 +198,9 @@ Entity.prototype.share = function(data){
     var obj = this.getClientData();
   }
   if (this.bucket != null){
-    this.bucket.broadcastArea('ent_data',obj);
+    this.bucket.broadcastArea(msgids["ent:data"], obj);
   }else{
-    this.world.broadcast('ent_data',obj);
+    this.world.broadcast(msgids["ent:data"], obj);
   }
 }
 
@@ -228,7 +229,7 @@ Entity.prototype.destroy = function(){
       this.world.entsStep.splice(index, 1);
     }
   }
-  this.world.broadcast('ent_destroy',{id: this.id}); //let anybody know you are no longer existing
+  this.world.broadcast(msgids["ent:destroy"], this.id); //let anybody know you are no longer existing
   if (this.bucket != null){
     this.bucket.removeObject(this); //free you from the bucket
   }
@@ -317,7 +318,7 @@ Entity.prototype.getClientData = function(){
 Entity.prototype.spawn = function(){
   this.updateBucket();
   if (this.bucket != null){
-    this.bucket.broadcastArea('ent_spawn', this.getClientData());
+    this.bucket.broadcastArea(msgids["ent:spawn"], this.getClientData());
   }
 }
 
@@ -443,9 +444,9 @@ Entity.prototype.setHidden = function(isHidden){
   //if (this.isHidden == isHidden){return false}
   this.isHidden = isHidden;
   if (isHidden){
-    this.world.broadcast('ent_destroy',{id: this.id});
+    this.world.broadcast(msgids["ent:destroy"], this.id);
   }else{
-    this.bucket.broadcastArea('ent_spawn', this.getClientData());
+    this.bucket.broadcastArea(msgids["ent:spawn"], this.getClientData());
   }
 }
 

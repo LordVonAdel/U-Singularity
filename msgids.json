@@ -1,3 +1,6 @@
 {
-  "move": 1
+  "move": 1,
+  "ent:data": 2,
+  "ent:spawn": 3,
+  "ent:destroy": 4
 }

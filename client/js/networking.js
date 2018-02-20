@@ -17,6 +17,13 @@ function initNetworking(){
     console.log("World Cleared!");
   });
 
+  socket.on('msgids', function(data){
+    msgids = data;
+    initIncomes();
+  });
+}
+
+function initIncomes(){
   socket.on('cam', function(data){
     console.log("Change cam to entity with id "+data);
     camId = data;
@@ -51,15 +58,15 @@ function initNetworking(){
     console.log("Received world region data!");
   });
 
-  socket.on('ent_spawn',function(data){
-    if (data == null){return;}
-    var ent = new Entity(data.id,data.tx*32,data.ty*32,data);
+  socket.on(msgids["ent:spawn"],function(data){
+    if (!data) return;
+    var ent = new Entity(data.id, data.tx*32, data.ty*32, data);
     ent.update(data);
     ents[data.id] = ent;
   });
 
-  socket.on('ent_data',function(data){
-    if (data == null){return;}
+  socket.on(msgids["ent:data"], function(data){
+    if (!data) return;
     var ent = ents[data.id];
     if (ent == undefined){
       socket.emit('entRequest',data.id);
@@ -67,7 +74,7 @@ function initNetworking(){
       if (data.tx == undefined || data.spriteData == undefined){
         
       }else{
-        ents[data.id] = new Entity(data.id,data.tx*32,data.ty*32,data);
+        ents[data.id] = new Entity(data.id, data.tx*32, data.ty*32, data);
         ent = ents[data.id];
       }
     }else{
@@ -75,8 +82,9 @@ function initNetworking(){
     }
   });
 
-  socket.on('ent_destroy',function(data){
-    var ent = ents[data.id];
+  socket.on(msgids["ent:destroy"],function(data){
+    if (!data) return;
+    var ent = ents[data];
     if (ent){
       ent.destroy();
       delete ents[data.id];
@@ -111,9 +119,5 @@ function initNetworking(){
 
   socket.on('kick', function(msg){
     
-  });
-
-  socket.on('msgids', function(data){
-    msgids = data;
   });
 }

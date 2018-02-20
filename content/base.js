@@ -1,4 +1,5 @@
-var item = require('../code/item.js');
+const item = require('../code/item.js');
+const utils = require('../code/utils.js');
 
 module.exports = {
   tiles: { //-------------------------Tiles-------------------------

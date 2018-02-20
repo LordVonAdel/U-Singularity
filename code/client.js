@@ -140,7 +140,7 @@ nw = {
   entRequest(data){
     var ent = this.world.getEntById(data.id);
     if (ent) {
-      socket.emit('ent_data', ent.getClientData());
+      socket.emit(msgids["ents:data"], ent.getClientData());
     }
   },
   inventoryCombine(data){

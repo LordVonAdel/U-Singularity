@@ -1,4 +1,5 @@
 //A bucket is used to split the world into multiple parts, like chunks in minecraft
+const msgids = require('./../msgids.json');
 
 //the constructor for a bucket instance
 function Bucket(x,y,world){ 
@@ -55,10 +56,10 @@ Bucket.prototype.broadcastArea = function(msg,data,range){
 Bucket.prototype.sendMegaPacket = function(socket){ //to the left you see a function which tells everything about himself what a player should know about him
   for(k in this.objects){
     if (!k.isHidden){
-      socket.emit('ent_data',this.objects[k].getClientData());
+      socket.emit(msgids["ent:data"], this.objects[k].getClientData());
     }
   }
-  socket.emit('world_region',{str: this.world.grid.saveRegion(this.x*this.width, this.y*this.height, this.width, this.height),x:this.x*this.width,y:this.y*this.height,w:this.width})
+  socket.emit('world_region', {str: this.world.grid.saveRegion(this.x*this.width, this.y*this.height, this.width, this.height), x: this.x*this.width , y: this.y*this.height, w: this.width})
 }
 
 //and here we have the same but it sends data of his neighbors too
