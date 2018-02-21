@@ -21,6 +21,10 @@ function initNetworking(){
     msgids = data;
     initIncomes();
   });
+
+  socket.on('resource',function(data){
+    load(data);
+  });
 }
 
 function initIncomes(){
@@ -38,10 +42,6 @@ function initIncomes(){
   socket.on('chat',function(data){
     $("#chat_msg").append("<br>"+data.msg);
     $("#chat_msg").scrollTop($("#chat_msg").prop("scrollHeight"));
-  });
-
-  socket.on('resource',function(data){
-    load(data);
   });
 
   socket.on('server_content',function(data){
