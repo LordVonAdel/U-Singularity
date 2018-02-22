@@ -200,7 +200,7 @@ World.prototype.loadRegionFromFile = function(filename, x, y){
   var that = this;
   fs.readFile(filename,function(err, data){
     if (err){
-      that.broadcast('chat',{msg: "Failed to load map: "+filename});
+      that.broadcast(msgids["server:chat"],{msg: "Failed to load map: "+filename});
     }else{
       var obj = JSON.parse(data);
       that.loadRegion(obj, x, y);
@@ -245,7 +245,7 @@ World.prototype.load = function(filename){
   fs.readFile(filename,function(err, data){
     if (err){
       console.error(that.consolePrefix+"Failed to load map: "+filename, err);
-      that.broadcast('chat',{msg: "Failed to load map: "+filename});
+      that.broadcast(msgids["server:chat"], {msg: "Failed to load map: "+filename});
     }else{
       that.clear();
       var obj = JSON.parse(data);

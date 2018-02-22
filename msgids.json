@@ -1,6 +1,8 @@
 {
-  "move": 1,
-  "ent:data": 2,
-  "ent:spawn": 3,
-  "ent:destroy": 4
+  "player:move": 1,
+  "player:chat": 2,
+  "server:chat": 3,
+  "ent:data": 10,
+  "ent:spawn": 11,
+  "ent:destroy": 12
 }

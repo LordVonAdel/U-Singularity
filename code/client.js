@@ -7,24 +7,26 @@ var msgids = require('./../msgids.json');
 //all handler for incoming data
 nw = {
   move(direction){
-    if (this.game != null && this.ent.sync.alive){
-      if (typeof direction != 'number'){return; }
-      if (this.ent.isMoving){return; }
+    if (!this.game) return;
+    if (!this.ent.sync.alive) return;
+    if (typeof direction != 'number'){return; }
+    if (this.ent.isMoving){return; }
 
-      this.ent.moveDir(direction, this.speed);
-      this.ent.sync.direction = direction;
-      this.ent.update();
-      this.updateBucket();
-    }
+    this.ent.moveDir(direction, this.speed);
+    this.ent.sync.direction = direction;
+    this.ent.update();
+    this.updateBucket();
   },
   chat(data){
+    if (!data.msg) return;
+
     data.msg = this.stringSave(data.msg);
     console.log(this.game.consolePrefix+this.name + ": " + data.msg);
     if (data.msg.charAt(0) == "/") { //if the message is a command
       var args = data.msg.slice(1).split(" ");
       this.executeCommand(args);
     } else {
-      this.game.broadcast('chat', { msg: '<span class="name">' + this.name + ":</span> " + data.msg, player: this.id, raw: data.msg });
+      this.game.broadcast(msgids["server:chat"], { msg: '<span class="name">' + this.name + ":</span> " + data.msg, player: this.id, raw: data.msg });
     }
   },
   invActive(data){
@@ -201,8 +203,8 @@ function Client(socket, id) {
 
   var that = this;
 
-  socket.on(msgids["move"], nw.move.bind(this));
-  socket.on('chat', nw.chat.bind(this));
+  socket.on(msgids["player:move"], nw.move.bind(this));
+  socket.on(msgids["player:chat"], nw.chat.bind(this));
   socket.on('invActive', nw.invActive.bind(this));
   socket.on('useOnFloor', nw.useOnFloor.bind(this));
   socket.on('entClick', nw.onUseEnt.bind(this));
@@ -258,7 +260,7 @@ Client.prototype.popup = function (id, filename, data) {
 
 //Sends a chat message to the player
 Client.prototype.msg = function (msg) {
-  this.socket.emit('chat', { msg: msg, id: this.id });
+  this.socket.emit(msgids["server:chat"], { msg: msg, id: this.id });
 }
 
 //When the player disconnects

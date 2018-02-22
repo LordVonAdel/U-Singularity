@@ -15,5 +15,5 @@ function transition(now,target,speed,ease){
   }
 }
 function chat(msg){
-  socket.emit('chat',{msg: msg}); 
+  socket.emit(msgids["player:chat"],{msg: msg}); 
 }

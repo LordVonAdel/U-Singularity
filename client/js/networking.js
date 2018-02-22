@@ -39,7 +39,7 @@ function initIncomes(){
     }
   });
 
-  socket.on('chat',function(data){
+  socket.on(msgids["server:chat"], function(data){
     $("#chat_msg").append("<br>"+data.msg);
     $("#chat_msg").scrollTop($("#chat_msg").prop("scrollHeight"));
   });
