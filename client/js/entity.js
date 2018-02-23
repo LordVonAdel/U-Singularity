@@ -22,9 +22,10 @@ function Entity(id, x, y, data){
 }
 
 Entity.prototype.isVisible = function(){
+
   for (var i = 0; i < this.spriteData.length; i ++){
     if (this.spriteData[i].visible || this.spriteData[i].visible == undefined) return true;
-  } 
+  }
   return false;
 }
 
@@ -32,35 +33,39 @@ Entity.prototype.update = function(data){
   //world.cellSetOverwrite(this.tx,this.ty,{})
   if (this.id == camId){
     cam = this;
+    if (player.mode == "spectator") return;
   }
 
-  Object.assign(this,data);
+  Object.assign(this, data);
+
   if (data.layer){
     this.changeLayer(data.layer);
   }
-  if (data.x != undefined){
-    this.tx = Math.floor(data.x/32);
-    if (data.teleport){
-      this.x = this.tx * 32;
-    }
-  }
-  if (data.y != undefined){
-    this.ty = Math.floor(data.y/32);
-    if (data.teleport){
-      this.y = this.ty * 32;
-    }
-  }
-  if (data.spriteData != undefined){
-    for (var i=0; i<this.spriteData.length; i++){
-      var sprite = this.sprites[i];
-      var sprData = data.spriteData[i];
-      var path = subfolder+"sprites/"+sprData.source;
-      if (!sprite){
-        sprite = new PIXI.Sprite(getTextureFrame(path, sprData.index, sprData.width || 32, sprData.height || 32));
-        this.sprites[i] = sprite;
-        this.container.addChild(sprite);
+  if (this.isVisible()){
+    if (data.x != undefined){
+      this.tx = Math.floor(data.x/32);
+      if (data.teleport){
+        this.x = this.tx * 32;
       }
-      sprite.setTexture(getTextureFrame(path, data.index, data.width || 32, data.height || 32));
+    }
+    if (data.y != undefined){
+      this.ty = Math.floor(data.y/32);
+      if (data.teleport){
+        this.y = this.ty * 32;
+      }
+    }
+    if (data.spriteData != undefined){
+      for (var i=0; i<this.spriteData.length; i++){
+        var sprite = this.sprites[i];
+        var sprData = data.spriteData[i];
+        var path = subfolder+"sprites/"+sprData.source;
+        if (!sprite){
+          sprite = new PIXI.Sprite(getTextureFrame(path, sprData.index, sprData.width || 32, sprData.height || 32));
+          this.sprites[i] = sprite;
+          this.container.addChild(sprite);
+        }
+        sprite.setTexture(getTextureFrame(path, data.index, data.width || 32, data.height || 32));
+      }
     }
   }
   if (data.lightData != undefined){
@@ -74,7 +79,7 @@ Entity.prototype.update = function(data){
 }
 
 Entity.prototype.step = function(delta){
-  if (player.mode == "spectator" && this == cam){return false;}
+  if (player.mode == "spectator" && this == cam) return false;
 
   var spd = this.speed*(delta/10);
 
@@ -83,11 +88,14 @@ Entity.prototype.step = function(delta){
   if (Math.abs(this.tx*32-this.x)<spd){this.x = this.tx*32}
   if (Math.abs(this.ty*32-this.y)<spd){this.y = this.ty*32}
 
+  if (!this.isVisible()) return;
   this.container.x = this.x;
   this.container.y = this.y;
   for (var i = 0; i < this.spriteData.length; i++){
     var data = this.spriteData[i];
     var sprite = this.sprites[i];
+    if (!sprite) continue;
+
     if(!data.source == ""){
       var path = subfolder+"sprites/"+data.source;
       sprite.x = data.x || 0;

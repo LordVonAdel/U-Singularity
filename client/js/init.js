@@ -6,6 +6,7 @@ camId = null;
 players = {};
 ents = {};
 hoverlist = [];
+player = null;
 
 msgids = {};
 
