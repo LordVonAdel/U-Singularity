@@ -7,6 +7,8 @@ const Bucket = require('./bucket.js');
 const PowerSystem = require('./systems/power.js');
 const Atmos = require('./systems/atmos.js');
 
+const msgids = require('./../msgids.json');
+
 //The constructor for a world instance
 function World(game, index){
   this.width = 100;
@@ -156,7 +158,10 @@ World.prototype.loadRegion = function(region, x, y){
         console.error("There are things in this map, of which we don't know what they are! ("+spwn.type+")");
       }else{
         if (spwn.sync){
-          Object.assign(ent.sync, spwn.sync);
+          //Object.assign() does not work here
+          for (var k in spwn.sync){
+            ent.sync[k] = spwn.sync[k];
+          }
         }
         ent.update();
       }
