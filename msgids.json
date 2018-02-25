@@ -4,5 +4,6 @@
   "server:chat": 3,
   "ent:data": 10,
   "ent:spawn": 11,
-  "ent:destroy": 12
+  "ent:destroy": 12,
+  "world:change_tile": 20
 }
