@@ -1,6 +1,6 @@
-var utils = require('./utils.js');
-var fs = require('fs');
-var item = require('./item.js');
+const utils = require('./utils.js');
+const fs = require('fs');
+const item = require('./item.js');
 
 var msgids = require('./../msgids.json');
 

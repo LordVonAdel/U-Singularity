@@ -1,3 +1,5 @@
+//Items are json objects which are manipulated with the item functions. They don't have any methods.
+
 
 //item factory function
 function createItem(type){
