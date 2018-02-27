@@ -396,19 +396,19 @@ Client.prototype.changeMode = function(mode){
     this.ent.setHidden(true);
   }else{
     this.ent.setHidden(false);
-    this.socket.emit('cam', this.ent.id);
+    this.socket.emit(msgids["cam"], this.ent.id);
   }
 }
 
 //sets the camera of the client
 Client.prototype.camSet = function(entity){
   this.cam = entity;
-  this.socket.emit('cam', entity.id);
+  this.socket.emit(msgids["cam"], entity.id);
 }
 
 //resets the camera of the client to its entity
 Client.prototype.camReset = function(){
-  this.socket.emit('cam', this.ent.id);
+  this.socket.emit(msgids["cam"], this.ent.id);
   this.cam = this.ent;
 }
 

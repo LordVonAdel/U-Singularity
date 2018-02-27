@@ -28,7 +28,7 @@ function initNetworking() {
 }
 
 function initIncomes() {
-  socket.on('cam', function (data) {
+  socket.on(msgids["cam"], function (data) {
     console.log("Change cam to entity with id " + data);
     camId = data;
     var ent = ents[data];
@@ -49,7 +49,7 @@ function initIncomes() {
     contentSet(data.id, data.html);
   });
 
-  socket.on(msg["world:change_tile"], function (data) {
+  socket.on(msgids["world:change_tile"], function (data) {
     world.tileSet(data.x, data.y, data.id);
   })
 
