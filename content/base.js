@@ -174,6 +174,10 @@ module.exports = {
     }
   },
   objects: { //-----------------------Objects-----------------------------
+    fire: {
+      image:[{number:4, source:"effects/fire_human_back.png", width:32, height:32}],
+      collision: false
+    },
     door_default: {
       image:[{"number":8,"source":"objects/door_default.png", "width": 32, "height": 32}],
       collision:true, 
