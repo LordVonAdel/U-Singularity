@@ -106,10 +106,14 @@ Entity.prototype.step = function(delta){
         sprite.x = 32;
         sprite.y = 16;
       }
+      //client side animations
       if (data.animation == "jump"){
         var f = ((this.x % 32)/32)+((this.y % 32)/32);
         sprite.y = -(Math.sin(f*Math.PI)*4) + data.y;
+      } else if (data.animation == "strip"){
+        data.index = Math.floor((Date.now() % data.animationTime) / (data.animationTime / data.number));
       }
+
       if (data.visible != undefined){
         sprite.visible = data.visible;
       }

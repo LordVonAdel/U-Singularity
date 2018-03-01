@@ -175,7 +175,7 @@ module.exports = {
   },
   objects: { //-----------------------Objects-----------------------------
     fire: {
-      image:[{number:4, source:"effects/fire_human_back.png", width:32, height:32}],
+      image:[{number:4, source:"effects/fire_human_back.png", width:32, height:32, animation: "strip", animationTime: 250}],
       collision: false
     },
     door_default: {
