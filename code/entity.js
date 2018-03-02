@@ -273,6 +273,12 @@ Entity.prototype.moveTo = function(x,y,speed){
 //Why are there so many move function!!?
 Entity.prototype.move = function(x,y){
   if (!this.world.collisionCheck(x,y) || this.noclip){
+    //ents on the tile we are moving at
+    var ents = this.world.getEntsByPosition(x, y);
+    for (var i = 0; i < ents.length; i++){
+      ents[i].fire('onOverlap', this);
+    }
+
     this.world.gridEntFree(this.tx,this.ty,this);
     this.world.gridEntAdd(x,y,this);
     var dx = this.tx;

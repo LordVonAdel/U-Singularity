@@ -176,7 +176,10 @@ module.exports = {
   objects: { //-----------------------Objects-----------------------------
     fire: {
       image:[{number:4, source:"effects/fire_human_back.png", width:32, height:32, animation: "strip", animationTime: 250}],
-      collision: false
+      collision: false,
+      onOverlap(other){
+        other.setState("burning", true);
+      }
     },
     door_default: {
       image:[{"number":8,"source":"objects/door_default.png", "width": 32, "height": 32}],
@@ -194,7 +197,7 @@ module.exports = {
         this.collision = (Math.floor(this.sync.frame)==0);this.update(); this.share(); 
         if(this.sync.frame == this.sync.open){this.animation = false}
       },
-      onPush:function(pusher){
+      onPush(pusher){
         if (!this.sync.isLocked){
           this.sync.open = 1;
           this.animation = true
