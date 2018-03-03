@@ -52,3 +52,10 @@ var step = function() {
     console.log("The server is overloaded or the system time changed! Delta: " + delta);
   }
 }
+
+function stopHandler(){
+  console.log("Stopping the server...");
+  lc.kickAll("Server stopped", "");
+}
+
+process.on('exit', stopHandler);

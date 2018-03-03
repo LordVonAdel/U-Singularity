@@ -17,12 +17,14 @@ function LobbyController(config){
 
 }
 
+//Will be called every step
 LobbyController.prototype.step = function(delta){
   for (var i = 0; i < this.games.length; i++) {
     this.games[i].step(delta);
   }
 }
 
+//Creates a player
 LobbyController.prototype.createPlayer = function(socket){
   var pl = new Client(socket, this.nextPlayerId++);
   if (this.games[0].addPlayer(pl)){ //return false if the player can't join the game
@@ -31,11 +33,15 @@ LobbyController.prototype.createPlayer = function(socket){
   }
 }
 
+//Removes a player
+//ToDo: Check if this function is needed
 LobbyController.prototype.removePlayer = function(player){
   var index = this.clients.indexOf(player);
   this.clients.splice(index, 1);
+  delete player;
 }
 
+//Restarts a game
 LobbyController.prototype.restartGame = function(index){
   var game = this.games[index];
   if (!game){return; }
@@ -45,6 +51,16 @@ LobbyController.prototype.restartGame = function(index){
 
   var cGame = this.config.games[index];
   this.games[index] = new Game(this, cGame.gamemode, cGame, index);
+}
+
+//this will kick every player in all games. Useful when the server is closed
+LobbyController.prototype.kickAll = function(title, message){
+  for (var i = 0; i < this.games.length; i++){
+    var clients = this.games[i].clients;
+    for (var j = 0; j < clients.length; j++){
+      clients[j].kick(title, message);
+    }
+  }
 }
 
 module.exports = LobbyController;
