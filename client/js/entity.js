@@ -88,7 +88,7 @@ Entity.prototype.step = function(delta){
   if (Math.abs(this.tx*32-this.x)<spd){this.x = this.tx*32}
   if (Math.abs(this.ty*32-this.y)<spd){this.y = this.ty*32}
 
-  if (!this.isVisible()) return;
+  if (!this.isVisible() || !this.container.transform ) return;
   this.container.x = this.x;
   this.container.y = this.y;
   for (var i = 0; i < this.spriteData.length; i++){
