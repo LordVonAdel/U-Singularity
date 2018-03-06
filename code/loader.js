@@ -22,7 +22,7 @@ Loader.prototype.loadClasses = function(){
   try {
     var doc = yaml.safeLoad(fs.readFileSync('./config/classes.yml', 'utf8'));
     this.res.classes = doc;
-    var keys = Object.keys(res.classes);
+    var keys = Object.keys(doc.classes);
     console.log("[Loader]Loaded "+keys.length+" classes: "+keys.join(", "));
   } catch (e) {
     console.error("[Loader]Classes: ", e);
@@ -48,7 +48,7 @@ Loader.prototype.loadConfig = function(){
     var doc = yaml.safeLoad(fs.readFileSync('./config/config.yml', 'utf8'));
     this.config = doc;
     console.log("[Loader]Loaded config");
-    console.log("[Loader]Found "+config.games.length+" game configurations");
+    console.log("[Loader]Found "+doc.games.length+" game configurations");
   } catch (e) {
     console.error("[Loader]Config: ", e);
   }
