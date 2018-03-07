@@ -5,9 +5,10 @@ module.exports = {
     }
   },
   objects: {
-    "item":{ //the item entity
-      "sync":{item: null},
-      "image":[{layer: 2, source: "items/item_crowbar.png", width:32, height: 32}],
+    item:{ //the item entity
+      sync:{item: null},
+      image:[{source: "items/item_crowbar.png", width:32, height: 32}],
+      layer: 2,
       onClick(user, _item){
         if(_item.type == "hand"){
           user.ent.sync.inventory[user.ent.sync.inventoryActive] = this.sync.item;
@@ -30,12 +31,12 @@ module.exports = {
           this.share();
         }
       },
-      "actions":{}
+      actions:{}
     },
-    "player":{
-      "draggable": true,
-      "collision":true,
-      "sync":{
+    player:{
+      draggable: true,
+      collision:true,
+      sync:{
         client: null, 
         hp: 100, 
         alive: true, 
@@ -49,9 +50,10 @@ module.exports = {
         direction: 0,
         job: null
       },
-      "layer": 3,
-      "image":[
+      layer: 3,
+      image:[
         {
+          layer: 3,
           source: "chars/char_chemist_f.png",
           image: 0,
           width: 32,
@@ -70,7 +72,7 @@ module.exports = {
           y: 8
         }
       ],
-      "actions": {
+      actions: {
         stab(){
           if (this.client){
             this.sync.dmgBrute += 5;
