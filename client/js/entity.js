@@ -1,3 +1,4 @@
+//Constructor of the entity object
 function Entity(id, x, y, data){
   this.x = x; //x-coordinate in pixels
   this.y = y; //y-coordinate in pixels
@@ -21,6 +22,7 @@ function Entity(id, x, y, data){
   this.update(data);
 }
 
+//Checks if the entity is visible
 Entity.prototype.isVisible = function(){
 
   for (var i = 0; i < this.spriteData.length; i ++){
@@ -29,6 +31,7 @@ Entity.prototype.isVisible = function(){
   return false;
 }
 
+//Updates some values of the entity
 Entity.prototype.update = function(data){
   //world.cellSetOverwrite(this.tx,this.ty,{})
   if (this.id == camId){
@@ -78,6 +81,7 @@ Entity.prototype.update = function(data){
   }
 }
 
+//Called every step
 Entity.prototype.step = function(delta){
   if (player.mode == "spectator" && this == cam) return false;
 
@@ -153,6 +157,7 @@ Entity.prototype.step = function(delta){
   
 }
 
+//Destroys the entity and removes it from the world
 Entity.prototype.destroy = function(){
   for (var i = 0; i < this.sprites.lenght; i++){
     this.sprites[i].destroy();
@@ -170,6 +175,7 @@ Entity.prototype.destroy = function(){
   }
 }
 
+//Changes the drawing layer of the entity
 Entity.prototype.changeLayer = function(layer){
   if (layer != this.layer){
     stageEntities.children[this.layer].removeChild(this.container);
