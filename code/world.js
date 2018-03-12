@@ -244,13 +244,14 @@ World.prototype.clearRegion = function(x, y, width, height){
 }
 
 //loads the world from a file
-World.prototype.load = function(filename){
+World.prototype.load = function(filename, callback){
   console.log(this.consolePrefix + "Loading world from file "+filename);
   var that = this;
   fs.readFile(filename,function(err, data){
     if (err){
       console.error(that.consolePrefix+"Failed to load map: "+filename, err);
       that.broadcast(msgids["server:chat"], {msg: "Failed to load map: "+filename});
+      callback(err);
     }else{
       that.clear();
       var obj = JSON.parse(data);
@@ -259,6 +260,7 @@ World.prototype.load = function(filename){
       that.spawnY = +obj.spawnY || 0;
       that.nextEntId = obj.nextEntId || 100;
       that.loadRegion(obj, 0, 0);
+      callback(null);
     }
   });
 }

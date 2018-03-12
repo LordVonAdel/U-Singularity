@@ -48,6 +48,12 @@ module.exports = {
 
         }
       }
+    },
+    elevatorPosition: {
+      sync: {
+        width: 5,
+        height: 5
+      }
     }
   }
 }

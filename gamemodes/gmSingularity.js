@@ -7,7 +7,7 @@ var GM = function(game, gmConfig){
   this.countdown = null;
   this.classes = [
     "chemist", "physicist", "engineer"
-  ]
+  ];
   this.second = 0; //Used to send things only every second and not every tick!
   this.elevatorRemainTime = gmConfig.elevatorTime || 30;
   this.elevatorDepartRemainTime = gmConfig.elevatorDepartTime || 10;
