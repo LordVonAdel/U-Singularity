@@ -260,7 +260,7 @@ World.prototype.load = function(filename, callback){
       that.spawnY = +obj.spawnY || 0;
       that.nextEntId = obj.nextEntId || 100;
       that.loadRegion(obj, 0, 0);
-      callback(null);
+      if (callback) callback(null);
     }
   });
 }
