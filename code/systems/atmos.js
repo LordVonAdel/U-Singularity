@@ -6,8 +6,8 @@ function Atmos(world){
   this.modulename = "Atmos";
 
   world.gridAtmos = new Grid(100,100);
-  world.gridAtmos.forEach(function(tileX,tileY){
-    world.gridAtmos.cellSet(tileX,tileY,Mixture.air());
+  world.gridAtmos.map(function(tileX,tileY){
+    return Mixture.air();
   });
 }
 

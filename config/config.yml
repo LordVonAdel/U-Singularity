@@ -32,6 +32,11 @@ player:
 
 #A server can host multiple rounds at the same time
 games:
+  - name: "Waste Test"
+    playerLimit: 20
+    gamemode: "gmWaste"
+    maps:
+    - "waste/facilityA"
   - name: "Default Game" #Name of the game which is displayed in the api
     maps: #Maps to be loaded for the game. 
     - "lab/lab"

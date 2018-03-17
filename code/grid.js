@@ -16,7 +16,7 @@ function Grid(width,height){
 
 //gets the content of a cell at a specific position
 Grid.prototype.cellGet = function(x,y){
-  if (x < 0 || y < 0){return null}
+  if (isNaN(x) || isNaN(y) || x < 0 || y < 0){return null}
   if (this.grid[x] instanceof Array){
     return this.grid[x][y];
   }
@@ -24,7 +24,7 @@ Grid.prototype.cellGet = function(x,y){
 
 //sets the content of a cell at a specific position
 Grid.prototype.cellSet = function(x,y,value){
-  if (x < 0 || y < 0){return null}
+  if (isNaN(x) || isNaN(y) || x < 0 || y < 0){return null}
   if (this.grid[x] instanceof Array){
     this.grid[x][y] = value;
   }
@@ -32,8 +32,24 @@ Grid.prototype.cellSet = function(x,y,value){
 
 //changes the size of the grid
 Grid.prototype.resize = function(width, height){
-  this.grid.width = width;
-  this.grid.height = height;
+
+  if (isNaN(width) || isNaN(height) || width <= 0 || height <= 0) {console.error("Can't resize grid to this dimension ("+width+"x"+height+") !"); return;}
+
+  var grid = [];
+  for(i=0; i<width; i++){
+    grid[i] = [];
+    for(j=0; j<height; j++){
+      if (i < this.width && j < this.height) {
+        grid[i][j] = this.grid[i][j];
+        continue;
+      }
+      grid[i][j] = 0;
+    }
+  }
+
+  this.width = width;
+  this.height = height;
+  this.grid = grid;
 }
 
 //saves the grid. Returns a string with the information needed to load the grid again.
@@ -115,7 +131,7 @@ Grid.prototype.loadRegion = function(str,x,y,width){
 }
 
 //does something for each cell.
-Grid.prototype.forEach = function(callback, thisArg){
+Grid.prototype.map = function(callback, thisArg){
   var i,j;
   for(i=0; i<this.width; i++){
     //grid[i] = [];
@@ -125,8 +141,23 @@ Grid.prototype.forEach = function(callback, thisArg){
       }else{
         var a = callback(i, j, this.cellGet(i, j));
       }
-      if (a){
+      if (a != undefined){
         this.cellSet(i, j);
+      }
+    }
+  }
+}
+
+//itterates all cells.
+Grid.prototype.forEach = function(callback, thisArg){
+  var i,j;
+  for(i=0; i<this.width; i++){
+    //grid[i] = [];
+    for(j=0; j<this.height; j++){
+      if (thisArg){
+        callback.call(thisArg, i, j, this.cellGet(i, j));
+      }else{
+       callback(i, j, this.cellGet(i, j));
       }
     }
   }

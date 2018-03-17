@@ -19,14 +19,14 @@ function World(game, index){
   this.gridEntities = new Grid(this.width, this.height);
   this.nextEntId = 0;
   this.index = index;
-  this.gridEntities.forEach(function(tileX,tileY){
+  this.gridEntities.map(function(tileX, tileY){
     return [];
   });
   
   this.spawnX = 0;
   this.spawnY = 0;
   this.buckets = new Grid(this.width/loader.config.bucket.width,this.height/loader.config.bucket.height);
-  this.buckets.forEach(function(tileX,tileY){
+  this.buckets.map(function(tileX,tileY){
     return new Bucket(tileX,tileY,this);
   }, this);
   this.game = game;
@@ -52,7 +52,7 @@ World.prototype.resize = function(width, height){
   this.width = width;
   this.height = height;
   this.grid.resize(width, height);
-  this.gridEntities.resize(width,height);
+  this.gridEntities.resize(width, height);
   this.buckets.resize(Math.floor(width/loader.config.bucket.width), Math.floor(height/loader.config.bucket.height))
   this.buckets.forEach(function(tileX,tileY){
     this.buckets.cellSet(tileX,tileY,new Bucket(tileX,tileY,this));
@@ -251,7 +251,7 @@ World.prototype.load = function(filename, callback){
     if (err){
       console.error(that.consolePrefix+"Failed to load map: "+filename, err);
       that.broadcast(msgids["server:chat"], {msg: "Failed to load map: "+filename});
-      callback(err);
+      if (callback) callback(err);
     }else{
       that.clear();
       var obj = JSON.parse(data);

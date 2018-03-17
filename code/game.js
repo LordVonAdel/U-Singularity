@@ -47,7 +47,7 @@ Game.prototype.addPlayer = function(player){
   this.clients.push(player);
   player.ent = new Entity(this.worlds[0], "player", this.spawnX, this.spawnY);
   this.changeWorld(player, 0);
-  if (this.gamemode){
+  if (this.gamemode && this.gamemode.playerJoined){
     this.gamemode.playerJoined(player);
   }
   return true;
@@ -61,7 +61,7 @@ Game.prototype.step = function(delta){
   this.clients.forEach(function(player){
     player.step(delta);
   });
-  if (this.gamemode){
+  if (this.gamemode && this.gamemode.step){
     this.gamemode.step(delta);
   }
 }
