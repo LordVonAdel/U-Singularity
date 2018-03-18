@@ -17,7 +17,7 @@ var GM = function(game, gmConfig){
   this.singularity = null;
 }
 
-//will be executed when the game starts. Currently only executable via "/start" command
+//will be executed when the game starts
 GM.prototype.start = function(){
   if (this.stage == "lobby"){
     this.countdown = 5;

@@ -13,9 +13,17 @@ function Game(lobbyController, gamemode, gameConfig, index){
   this.consolePrefix = "[Game:"+this.index+"]";
 
   //Load a map
+  var loadedMaps = 0;
   for (var i = 0; i < gameConfig.maps.length; i++){
     world = new World(this, i);
-    world.load("maps/"+gameConfig.maps[i]+".json");
+    world.load("maps/"+gameConfig.maps[i]+".json", (err)=>{
+      if (!err){
+        loadedMaps ++;
+        if (loadedMaps >= this.worlds.length){
+          if (this.gamemode.onAllWorldsLoaded) this.gamemode.onAllWorldsLoaded();
+        }
+      }
+    });
     this.worlds[i] = world;
   }
   this.gamemode = null;

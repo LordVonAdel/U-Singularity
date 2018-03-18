@@ -24,8 +24,9 @@ module.exports = {
     armor_plating:     {"name":"Armor Plating"    ,"onUseFloor":"buildArmor" ,"image":"items/item_armor_plating.png"},
     fire_ext:          {"name":"Fire Extinguisher","onUseFloor":"extinguish" ,"image":"items/item_fire_extinguisher.png","actions":["fire_ext_box"]},
     atmo_scanner:      {"name":"Atmo scanner"     ,"onUseFloor":"scanAtmo"   ,"image":"items/item_atmo_scanner.png"},
-    stick:             {"name":"Stick"                                       ,"image":"items/item_stick.png", on: {carve: function(){item.transform(this, "stick_sharp")}}},
-    stick_sharp:       {"name":"Sharp Stick"                                 ,"image":"items/item_stick_sharp.png", "actions":["stab"]}
+    stick:             {"name":"Stick"                                       ,"image":"items/item_stick.png", on: {carve(){item.transform(this, "stick_sharp")}}},
+    stick_sharp:       {"name":"Sharp Stick"                                 ,"image":"items/item_stick_sharp.png", "actions":["stab"]},
+    welding_tool:      {name: "Welding Tool", image: "items/item_welding_tool.png", actions: ["weld"]}
   },
   commands: {  //-------------------------Commands-------------------------
     ping: {

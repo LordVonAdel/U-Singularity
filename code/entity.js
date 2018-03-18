@@ -394,7 +394,7 @@ Entity.prototype.toggleState = function(state){
 
 //Reloads the entity
 Entity.prototype.reload = function(){
-  this.ent = res.objects[this.type];
+  this.ent = loader.res.objects[this.type];
   this.update();
 }
 

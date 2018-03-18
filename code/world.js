@@ -45,6 +45,7 @@ function World(game, index){
     console.log(this.consolePrefix+"Initialized " + this.systems[k].modulename);
   }
 
+  this.isLoaded = false;
 }
 
 //resizes the world to a new width and height
@@ -226,6 +227,8 @@ World.prototype.clear = function(){
   this.spawnY = 0;
   this.resize(100,100);
   this.ents = {};
+
+  this.isLoaded = true;
 }
 
 //clears a region in the world
@@ -261,6 +264,7 @@ World.prototype.load = function(filename, callback){
       that.nextEntId = obj.nextEntId || 100;
       that.loadRegion(obj, 0, 0);
       if (callback) callback(null);
+      that.isLoaded = true;
     }
   });
 }

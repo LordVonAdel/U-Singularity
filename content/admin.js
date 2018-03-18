@@ -55,7 +55,7 @@ module.exports = {
 
         loader.auto();
         
-        games.forEach((game, i) => {
+        lc.games.forEach((game, i) => {
           game.config = loader.config.games[i];
           game.worlds.forEach((world => {
             for (k in world.ents){
