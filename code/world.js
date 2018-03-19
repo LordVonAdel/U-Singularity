@@ -409,10 +409,11 @@ World.prototype.getEntsByRegion = function(x, y, w, h){
 }
 
 //Spawn an entity somewhere in the world
-World.prototype.spawnEntity = function(type, x, y){
+World.prototype.spawnEntity = function(type, x, y, extra){
   var x = x || 0;
   var y = y || 0;
-  var entity = new Entity(this, type, x, y);
+  var entity = new Entity(this, type, x, y, extra);
+
   if (!entity.error){
     entity.spawn();
     this.nextEntId ++;
@@ -434,11 +435,7 @@ World.prototype.spawnEntity = function(type, x, y){
 
 //Spawn Item
 World.prototype.spawnItem = function(x, y, item){
-  var entity = new Entity(this, "item", x, y);
-  entity.spawn();
-  entity.sync.item = item;
-  entity.update();
-  this.nextEntId ++;
+  var entity = this.spawnEntity("item", x, y, {sync: {item: item}});
   return entity;
 }
 

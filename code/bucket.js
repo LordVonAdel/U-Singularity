@@ -54,7 +54,7 @@ Bucket.prototype.broadcastArea = function(msg,data,range){
 
 
 Bucket.prototype.sendMegaPacket = function(socket){ //to the left you see a function which tells everything about himself what a player should know about him
-  for(k in this.objects){
+  for (k in this.objects){
     if (!k.isHidden){
       socket.emit(msgids["ent:data"], this.objects[k].getClientData());
     }

@@ -22,6 +22,11 @@ GM.prototype.start = function(){
   });
 }
 
+GM.prototype.playerJoined = function(player){
+  player.setup = true;
+  player.ent.sync.class = "engineer";
+}
+
 GM.prototype.getAPIData = function(){
   return {
     score: this.score
@@ -34,7 +39,7 @@ GM.prototype.step = function(delta){
     this.leakTimer = 5000;
     var wastes = this.game.worlds[0].getEntsByType("waste_level1");
     if (wastes.length > 0){
-      var index = Math.floor((Math.random()-0.01) * wastes.length);
+      var index = Math.floor((Math.random()) * (wastes.length - 1));
       wastes[index].sync.leaked = true;
       wastes[index].update();
     }

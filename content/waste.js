@@ -5,9 +5,13 @@ module.exports = {
       draggable: true,
       collision: true,
       sync: {
-        leaked: false
+        leaked: false,
+        includesExplosive: false
       },
-      onUpdate(){
+      onInit() {
+        this.sync.includesExplosive = (Math.random() > 0.8);
+      },
+      onUpdate() {
         if (this.sync.leaked) {
           this.changeSprite(0, {source: "objects/waste_level1_leaked.png"})
         } else {

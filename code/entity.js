@@ -213,7 +213,7 @@ Entity.prototype.update = function(){
 }
 
 //suicide
-Entity.prototype.destroy = function(){
+Entity.prototype.destroy = function() {
   this.clearDragger();
   this.fire("onDestroy");
 
@@ -231,7 +231,7 @@ Entity.prototype.destroy = function(){
     }
   }
   this.world.broadcast(msgids["ent:destroy"], this.id); //let anybody know you are no longer existing
-  if (this.bucket != null){
+  if (this.bucket){
     this.bucket.removeObject(this); //free you from the bucket
   }
   //now you can go into entity heaven

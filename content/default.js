@@ -10,12 +10,12 @@ module.exports = {
       image:[{source: "items/item_crowbar.png", width:32, height: 32}],
       layer: 2,
       onClick(user, _item){
-        if(_item.type == "hand"){
+        if(_item.type == "hand") {
           user.ent.sync.inventory[user.ent.sync.inventoryActive] = this.sync.item;
           user.shareSelf();
           user.update();
           this.destroy();
-        }else{
+        } else {
           item.combine(this.sync.item, _item);
           this.sync.item = item.update(this.sync.item);
           this.update();

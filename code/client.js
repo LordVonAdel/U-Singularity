@@ -269,6 +269,9 @@ Client.prototype.disconnect = function () {
     this.ent.destroy();
     this.game.broadcast('disc', { id: this.id });
     this.game.clients.splice(this.game.clients.indexOf(this), 1);
+    if (this.bucket) {
+      this.bucket.removePlayer(this);
+    }
   }
   lc.removePlayer(this);
 }
