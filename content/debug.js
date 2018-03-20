@@ -8,7 +8,8 @@ module.exports = {
     },
     ents: {
       fun: function(sender,args){
-        sender.msg(JSON.stringify(sender.world.ents));
+        sender.msg("Number of entites in the world:");
+        sender.msg("number: "+sender.world.ents.length);
       }
     },
     cellGet: {

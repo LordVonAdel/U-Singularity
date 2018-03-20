@@ -111,7 +111,7 @@ module.exports = {
   },
   actions: { //----------------------------Actions-----------------------------
     build_metal(world, tileX, tileY){
-      var index = world.cellGet(tileX,tileY);
+      var index = +world.cellGet(tileX,tileY);
       switch(index){
         case 0:
           world.cellSet(tileX,tileY,6);
@@ -125,7 +125,7 @@ module.exports = {
       }
     },
     buildArmor(world, tileX, tileY){
-      var index = world.cellGet(tileX,tileY);
+      var index = +world.cellGet(tileX,tileY);
       if (index == 2){
         world.cellSet(tileX,tileY,7);
       }
@@ -134,7 +134,7 @@ module.exports = {
       }
     },
     buildGlass(world, tileX,tileY){
-      var index = world.cellGet(tileX,tileY);
+      var index = +world.cellGet(tileX,tileY);
       if (index == 5){
         world.cellSet(tileX,tileY,4);
       }
@@ -146,7 +146,7 @@ module.exports = {
       world.cellSet(tileX,tileY,5);
     },
     crowbar(world, tileX, tileY){
-      var index = world.cellGet(tileX,tileY);
+      var index = +world.cellGet(tileX,tileY);
       switch(index){
         case 6:
           world.cellSet(tileX,tileY,10);
@@ -157,7 +157,7 @@ module.exports = {
       }
     },
     extinguish(world, tileX,tileY){
-      var index = world.cellGet(tileX,tileY);
+      var index = +world.cellGet(tileX,tileY);
       if (!res.tiles[index].collision){
         //world.spawnEntity("gas_argon",tileX,tileY);
       }
