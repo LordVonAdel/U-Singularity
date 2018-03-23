@@ -18,6 +18,8 @@ module.exports = {
         sender.msg("TileID: "+index);
         var collisions = sender.world.collisionsGet(sender.ent.tx, sender.ent.ty)
         sender.msg(collisions.length+" collisions: "+collisions.map((ent)=>{return ent.type}).join(", "));
+        var entities = sender.world.getEntsByPosition(sender.ent.tx, sender.ent.ty);
+        sender.msg(entities.length + " entities: "+entities.map((ent)=>{return ent.type}).join(", "));
       }
     },
     help: {
