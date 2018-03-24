@@ -28,7 +28,7 @@ module.exports = {
         for (var k in loader.commands) {
           str += k + "<br>"
         }
-        sender.msg(str)
+        sender.msg(str);
       }
     },
     create: {
