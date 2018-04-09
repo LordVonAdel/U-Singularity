@@ -60,9 +60,8 @@ function initIncomes() {
 
   socket.on(msgids["ent:spawn"], function (data) {
     if (!data) return;
-    var ent = new Entity(data.id, data.tx * 32, data.ty * 32, data);
-    ent.update(data);
-    ents[data.id] = ent;
+    if (ents[data.id]) return;
+    ents[data.id] = new Entity(data.id, data.tx * 32, data.ty * 32, data);
   });
 
   socket.on(msgids["ent:data"], function (data) {
@@ -72,7 +71,7 @@ function initIncomes() {
       socket.emit('entRequest', data.id);
 
       if (data.tx == undefined || data.spriteData == undefined) {
-
+q
       } else {
         ents[data.id] = new Entity(data.id, data.tx * 32, data.ty * 32, data);
         ent = ents[data.id];

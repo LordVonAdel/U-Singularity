@@ -1,5 +1,10 @@
 //Constructor of the entity object
 function Entity(id, x, y, data){
+  if (ents[id]) {
+    console.error("Entity with this ID already exists!");
+  }
+
+  console.log("Spawned entity with id: "+id);
   this.x = x; //x-coordinate in pixels
   this.y = y; //y-coordinate in pixels
   this.tx = Math.floor(x/32); //target x-coordinate in tiles
@@ -159,7 +164,9 @@ Entity.prototype.step = function(delta){
 
 //Destroys the entity and removes it from the world
 Entity.prototype.destroy = function(){
-  for (var i = 0; i < this.sprites.lenght; i++){
+  console.log("Destroyed entity", this);
+
+  for (var i = 0; i < this.sprites.length; i++){
     this.sprites[i].destroy();
   }
   for (var i = 0; i < this.lights.length; i++){

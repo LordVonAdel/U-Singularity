@@ -325,7 +325,8 @@ Entity.prototype.getClientData = function(){
 Entity.prototype.spawn = function(){
   this.updateBucket();
   if (this.bucket != null){
-    this.bucket.broadcastArea(msgids["ent:spawn"], this.getClientData());
+    //this.bucket.broadcastArea(msgids["ent:spawn"], this.getClientData());
+    this.bucket.broadcastArea(msgids["ent:data"], this.getClientData());
   }
 }
 
