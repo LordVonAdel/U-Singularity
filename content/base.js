@@ -148,10 +148,11 @@ module.exports = {
     crowbar(world, tileX, tileY){
       var index = +world.cellGet(tileX,tileY);
       switch(index){
-        case 6:
-          world.cellSet(tileX,tileY,10);
+        case 6: //floor is metal
+          world.cellSet(tileX,tileY, 10);
+          this.world.spawnItem(tileX, tileY, item.create("metal"))
         break;
-        default:
+        default: //floor is something else
           world.cellSet(tileX,tileY,0);
         break;
       }
