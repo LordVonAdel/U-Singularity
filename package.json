@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"main": "app.js",
 	"dependencies": {
-		"js-yaml": "^3.10.0",
-		"socket.io": "*"
+		"js-yaml": "^3.13.1",
+		"socket.io": "^2.3.0"
 	}
 }
