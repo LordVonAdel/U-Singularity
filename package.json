@@ -4,6 +4,6 @@
 	"main": "app.js",
 	"dependencies": {
 		"js-yaml": "^3.13.1",
-		"socket.io": "^2.3.0"
+		"socket.io": "^2.4.0"
 	}
 }
